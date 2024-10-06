@@ -1,35 +1,34 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
+
 namespace RestaurantApp.Infrastructure.Common;
 
 public class Repository : IRepository
 {
-    public Task AddAsync<T>(T entity) where T : class
-    {
-        throw new NotImplementedException();
-    }
+    private readonly RestaurantAppDbContext _context;
 
-    public IQueryable<T> All<T>() where T : class
+    public Repository(RestaurantAppDbContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
+    public IQueryable<T> All<T>() where T : class
+            => DbSet<T>();
 
     public IQueryable<T> AllAsReadOnly<T>() where T : class
-    {
-        throw new NotImplementedException();
-    }
+        => DbSet<T>().AsNoTracking();
 
-    public Task<T?> GetByIdAsync<T>(object id) where T : class
-    {
-        throw new NotImplementedException();
-    }
+    public async Task AddAsync<T>(T entity) where T : class
+        => await _context.AddAsync(entity);
+
+    public async Task<int> SaveChangesAsync()
+        => await _context.SaveChangesAsync();
+
+    public async Task<T?> GetByIdAsync<T>(object id) where T : class
+        => await DbSet<T>().FindAsync(id);
 
     public void Remove<T>(T entity) where T : class
-    {
-        throw new NotImplementedException();
-    }
+        => DbSet<T>().Remove(entity);
 
-    public Task<int> SaveChangesAsync()
-    {
-        throw new NotImplementedException();
-    }
+    private DbSet<T> DbSet<T>() where T : class
+        => _context.Set<T>();
 }

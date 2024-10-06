@@ -1,0 +1,14 @@
+﻿namespace RestaurantApp.Infrastructure.Models;
+
+using System.ComponentModel.DataAnnotations;
+using static RestaurantApp.Infrastructure.Constants;
+
+public class DrinkType
+{
+    public int Id { get; set; }
+
+    [MaxLength(MaxDrinkTypeNameLength)]
+    public string Name { get; set; } = string.Empty;
+
+    public IEnumerable<Drink> Drinks { get; set; } = new List<Drink>();
+}
