@@ -7,9 +7,11 @@ public class Order
     public int Id { get; set; }
 
     [Required]
-    public DateTime CreatedOn { get; set; }
+    public DateTime Created { get; set; }
 
-    public DateTime? ServedOn { get; set; }
+    public DateTime? Completed { get; set; }
+
+    public DateTime Modified { get; set; }
 
     [Required]
     public string OrderName { get; set; } = string.Empty;

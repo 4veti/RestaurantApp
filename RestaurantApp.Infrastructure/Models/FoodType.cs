@@ -11,5 +11,11 @@ public class FoodType
     [MaxLength(FoodNameMaxLength)]
     public string Name { get; set; } = string.Empty;
 
+    [Required]
+    public DateTime Created { get; set; }
+
+    [Required]
+    public DateTime Modified { get; set; }
+
     public IEnumerable<Food> Foods { get; set; } = new List<Food>();
 }

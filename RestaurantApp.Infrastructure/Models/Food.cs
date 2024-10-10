@@ -24,5 +24,11 @@ public class Food
     [ForeignKey(nameof(FoodTypeId))]
     public FoodType FoodType { get; set; } = null!;
 
+    [Required]
+    public DateTime Created { get; set; }
+
+    [Required]
+    public DateTime Modified { get; set; }
+
     public IEnumerable<FoodOrder> FoodOrders { get; set; } = new List<FoodOrder>();
 }

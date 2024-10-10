@@ -10,5 +10,11 @@ public class DrinkType
     [MaxLength(MaxDrinkTypeNameLength)]
     public string Name { get; set; } = string.Empty;
 
+    [Required]
+    public DateTime Created { get; set; }
+
+    [Required]
+    public DateTime Modified { get; set; }
+
     public IEnumerable<Drink> Drinks { get; set; } = new List<Drink>();
 }

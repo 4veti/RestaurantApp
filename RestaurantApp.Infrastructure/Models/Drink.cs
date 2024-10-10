@@ -21,9 +21,15 @@ public class Drink
     [ForeignKey(nameof(DrinkTypeId))]
     public DrinkType DrinkType { get; set; } = null!;
 
-    public int Millimetres { get; set; }
+    public int Millilitres { get; set; }
 
     public bool IsAlcoholic { get; set; }
+
+    [Required]
+    public DateTime Created { get; set; }
+
+    [Required]
+    public DateTime Modified { get; set; }
 
     public double? AlcoholPercentage { get; set; }
 }

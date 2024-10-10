@@ -14,4 +14,7 @@ public class FoodOrder
 
     [ForeignKey(nameof(OrderId))]
     public Order Order { get; set; } = null!;
+
+    [Required]
+    public DateTime Created { get; set; }
 }
