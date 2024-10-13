@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RestaurantApp.Core\RestaurantApp.Core.csproj" />
+    <ProjectReference Include="..\RestaurantApp.Core\RestaurantApp.Services.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

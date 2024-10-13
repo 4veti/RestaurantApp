@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using static RestaurantApp.Infrastructure.Constants;
+﻿namespace RestaurantApp.Domain.Entities;
 
-namespace RestaurantApp.Infrastructure.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using static RestaurantApp.Domain.Constants;
 
 public class Food
 {

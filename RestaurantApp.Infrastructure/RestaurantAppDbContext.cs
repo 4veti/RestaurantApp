@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RestaurantApp.Infrastructure.Models;
+using RestaurantApp.Domain.Entities;
 
 namespace RestaurantApp.Infrastructure;
 

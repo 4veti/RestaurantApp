@@ -1,7 +1,7 @@
-﻿namespace RestaurantApp.Infrastructure.Models;
+﻿namespace RestaurantApp.Domain.Entities;
 
 using System.ComponentModel.DataAnnotations;
-using static RestaurantApp.Infrastructure.Constants;
+using static RestaurantApp.Domain.Constants;
 
 public class DrinkType
 {

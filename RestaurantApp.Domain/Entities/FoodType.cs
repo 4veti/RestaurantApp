@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using static RestaurantApp.Infrastructure.Constants;
+﻿namespace RestaurantApp.Domain.Entities;
 
-namespace RestaurantApp.Infrastructure.Models;
+using System.ComponentModel.DataAnnotations;
+using static RestaurantApp.Domain.Constants;
 
 public class FoodType
 {

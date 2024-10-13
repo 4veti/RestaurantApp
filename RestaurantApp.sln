@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApp", "RestaurantApp\RestaurantApp.csproj", "{A1AB7770-7F58-414C-B314-A92F8DE5862B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApp.Client", "RestaurantApp\RestaurantApp.Client.csproj", "{A1AB7770-7F58-414C-B314-A92F8DE5862B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantApp.Api", "RestaurantApp.Api\RestaurantApp.Api.csproj", "{0169BBC0-4421-47CC-A920-08F548F72797}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApp.ClientApi", "RestaurantApp.Api\RestaurantApp.ClientApi.csproj", "{0169BBC0-4421-47CC-A920-08F548F72797}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantApp.Core", "RestaurantApp.Core\RestaurantApp.Core.csproj", "{B2BFD0F9-6A9C-4A95-ABC8-358326B8AB8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApp.Services.Abstractions", "RestaurantApp.Core\RestaurantApp.Services.Abstractions.csproj", "{B2BFD0F9-6A9C-4A95-ABC8-358326B8AB8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantApp.Infrastructure", "RestaurantApp.Infrastructure\RestaurantApp.Infrastructure.csproj", "{CA92D96E-D794-4963-A701-2D15DEB5C442}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApp.Infrastructure", "RestaurantApp.Infrastructure\RestaurantApp.Infrastructure.csproj", "{CA92D96E-D794-4963-A701-2D15DEB5C442}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantApp.Domain", "RestaurantApp.Domain\RestaurantApp.Domain.csproj", "{F22D9A9F-C551-4180-80E4-D1638E77F538}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantApp.Contracts", "RestaurantApp.Contracts\RestaurantApp.Contracts.csproj", "{C26FB5DD-2397-4F23-AE0B-032A1C5A031D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantApp.Services", "RestaurantApp.Services\RestaurantApp.Services.csproj", "{4927B484-56CA-4C2E-A433-849FA519680B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +41,18 @@ Global
 		{CA92D96E-D794-4963-A701-2D15DEB5C442}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA92D96E-D794-4963-A701-2D15DEB5C442}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA92D96E-D794-4963-A701-2D15DEB5C442}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F22D9A9F-C551-4180-80E4-D1638E77F538}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F22D9A9F-C551-4180-80E4-D1638E77F538}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F22D9A9F-C551-4180-80E4-D1638E77F538}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F22D9A9F-C551-4180-80E4-D1638E77F538}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C26FB5DD-2397-4F23-AE0B-032A1C5A031D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C26FB5DD-2397-4F23-AE0B-032A1C5A031D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C26FB5DD-2397-4F23-AE0B-032A1C5A031D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C26FB5DD-2397-4F23-AE0B-032A1C5A031D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4927B484-56CA-4C2E-A433-849FA519680B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4927B484-56CA-4C2E-A433-849FA519680B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4927B484-56CA-4C2E-A433-849FA519680B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4927B484-56CA-4C2E-A433-849FA519680B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
