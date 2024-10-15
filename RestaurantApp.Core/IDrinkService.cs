@@ -1,5 +1,12 @@
-﻿namespace RestaurantApp.Services.Abstractions;
+﻿using RestaurantApp.Contracts;
+
+namespace RestaurantApp.Services.Abstractions;
 
 public interface IDrinkService
 {
+    Task<IEnumerable<DrinkDto>> GetAllByDrinkTypeIdAsync(int drinkType);
+    Task<DrinkDto> GetByIdAsync(int id);
+    Task AddAsync(DrinkDto dto);
+    Task UpdateAsync(int id, DrinkDto dto);
+    Task DeleteByIdAsync(int id);
 }

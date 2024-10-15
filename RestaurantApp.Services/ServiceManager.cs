@@ -2,7 +2,7 @@
 
 namespace RestaurantApp.Services;
 
-public sealed class ServiceManager
+public sealed class ServiceManager : IServiceManager
 {
     private readonly Lazy<IFoodService> _lazyFoodService;
     private readonly Lazy<IDrinkService> _lazyDrinkService;
@@ -20,7 +20,7 @@ public sealed class ServiceManager
     }
 
     public IFoodService FoodService => _lazyFoodService.Value;
-    public IDrinkService drinkService => _lazyDrinkService.Value;
+    public IDrinkService DrinkService => _lazyDrinkService.Value;
     public IOrderService OrderService => _lazyOrderService.Value;
     public IFoodTypeService FoodTypeService => _lazyFoodTypeService.Value;
     public IDrinkTypeService DrinkTypeService => _lazyDrinkTypeService.Value;
