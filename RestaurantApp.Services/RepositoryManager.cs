@@ -1,10 +1,10 @@
-﻿using RestaurantApp.Domain.Contracts;
+﻿using RestaurantApp.Domain.Contracts.Repositories;
 using RestaurantApp.Infrastructure.Repositories;
 using RestaurantApp.Services.Abstractions;
 
 namespace RestaurantApp.Services;
 
-public class RepositoryManager : IRepositoryManager
+public sealed class RepositoryManager : IRepositoryManager
 {
     private readonly Lazy<IDrinkRepository> _lazyDrinkRepository;
     private readonly Lazy<IDrinkTypeRepository> _lazyDrinkTypeRepository;

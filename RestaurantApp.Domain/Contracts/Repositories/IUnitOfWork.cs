@@ -1,4 +1,4 @@
-﻿namespace RestaurantApp.Domain.Contracts;
+﻿namespace RestaurantApp.Domain.Contracts.Repositories;
 
 public interface IUnitOfWork
 {

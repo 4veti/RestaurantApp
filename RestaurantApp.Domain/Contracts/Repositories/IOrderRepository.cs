@@ -1,4 +1,4 @@
-﻿namespace RestaurantApp.Domain.Contracts;
+﻿namespace RestaurantApp.Domain.Contracts.Repositories;
 using RestaurantApp.Domain.Entities;
 
 public interface IOrderRepository

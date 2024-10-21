@@ -1,4 +1,4 @@
-﻿using RestaurantApp.Domain.Contracts;
+﻿using RestaurantApp.Domain.Contracts.Repositories;
 
 namespace RestaurantApp.Infrastructure.Repositories;
 
