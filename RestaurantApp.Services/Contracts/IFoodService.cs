@@ -1,6 +1,6 @@
 ﻿using RestaurantApp.Domain.Contracts.DTOs;
 
-namespace RestaurantApp.Services.Abstractions;
+namespace RestaurantApp.Services.Contracts;
 
 public interface IFoodService
 {

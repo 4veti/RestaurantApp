@@ -1,6 +1,7 @@
 ﻿using RestaurantApp.Domain.Contracts.Repositories;
+using RestaurantApp.Infrastructure;
 using RestaurantApp.Infrastructure.Repositories;
-using RestaurantApp.Services.Abstractions;
+using RestaurantApp.Services.Contracts;
 
 namespace RestaurantApp.Services;
 
@@ -14,15 +15,15 @@ public sealed class RepositoryManager : IRepositoryManager
     private readonly Lazy<IFoodOrderRepository> _lazyFoodOrderRepository;
     private readonly Lazy<IUnitOfWork> _lazyUnitOfWork;
 
-    public RepositoryManager()
+    public RepositoryManager(RestaurantAppDbContext context)
     {
-        _lazyDrinkRepository = new Lazy<IDrinkRepository>(() => new DrinkRepository());
-        _lazyDrinkTypeRepository = new Lazy<IDrinkTypeRepository>(() => new DrinkTypeRepository());
-        _lazyFoodRepository = new Lazy<IFoodRepository>(() => new FoodRepository());
-        _lazyFoodTypeRepository = new Lazy<IFoodTypeRepository>(() => new FoodTypeRepository());
-        _lazyOrderRepository = new Lazy<IOrderRepository>(() => new OrderRepository());
-        _lazyFoodOrderRepository = new Lazy<IFoodOrderRepository>(() => new FoodOrderRepository());
-        _lazyUnitOfWork = new Lazy<IUnitOfWork>(() => new UnitOfWork());
+        _lazyDrinkRepository = new Lazy<IDrinkRepository>(() => new DrinkRepository(context));
+        _lazyDrinkTypeRepository = new Lazy<IDrinkTypeRepository>(() => new DrinkTypeRepository(context));
+        _lazyFoodRepository = new Lazy<IFoodRepository>(() => new FoodRepository(context));
+        _lazyFoodTypeRepository = new Lazy<IFoodTypeRepository>(() => new FoodTypeRepository(context));
+        _lazyOrderRepository = new Lazy<IOrderRepository>(() => new OrderRepository(context));
+        _lazyFoodOrderRepository = new Lazy<IFoodOrderRepository>(() => new FoodOrderRepository(context));
+        _lazyUnitOfWork = new Lazy<IUnitOfWork>(() => new UnitOfWork(context));
     }
 
     public IDrinkRepository DrinkRepository => _lazyDrinkRepository.Value;

@@ -5,6 +5,13 @@ namespace RestaurantApp.Infrastructure.Repositories;
 
 public sealed class FoodRepository : IFoodRepository
 {
+    private readonly RestaurantAppDbContext _context;
+
+    public FoodRepository(RestaurantAppDbContext context)
+    {
+        _context = context;
+    }
+
     public Task EditAsync(Food order)
     {
         throw new NotImplementedException();

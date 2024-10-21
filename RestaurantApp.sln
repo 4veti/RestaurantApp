@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApp.Client", "Res
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApp.ClientApi", "RestaurantApp.Api\RestaurantApp.ClientApi.csproj", "{0169BBC0-4421-47CC-A920-08F548F72797}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApp.Services.Abstractions", "RestaurantApp.Core\RestaurantApp.Services.Abstractions.csproj", "{B2BFD0F9-6A9C-4A95-ABC8-358326B8AB8F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApp.Infrastructure", "RestaurantApp.Infrastructure\RestaurantApp.Infrastructure.csproj", "{CA92D96E-D794-4963-A701-2D15DEB5C442}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestaurantApp.Domain", "RestaurantApp.Domain\RestaurantApp.Domain.csproj", "{F22D9A9F-C551-4180-80E4-D1638E77F538}"
@@ -31,10 +29,6 @@ Global
 		{0169BBC0-4421-47CC-A920-08F548F72797}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0169BBC0-4421-47CC-A920-08F548F72797}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0169BBC0-4421-47CC-A920-08F548F72797}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2BFD0F9-6A9C-4A95-ABC8-358326B8AB8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2BFD0F9-6A9C-4A95-ABC8-358326B8AB8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2BFD0F9-6A9C-4A95-ABC8-358326B8AB8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2BFD0F9-6A9C-4A95-ABC8-358326B8AB8F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CA92D96E-D794-4963-A701-2D15DEB5C442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CA92D96E-D794-4963-A701-2D15DEB5C442}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA92D96E-D794-4963-A701-2D15DEB5C442}.Release|Any CPU.ActiveCfg = Release|Any CPU

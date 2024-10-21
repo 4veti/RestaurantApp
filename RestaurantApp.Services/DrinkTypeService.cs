@@ -1,10 +1,17 @@
 ﻿using RestaurantApp.Domain.Contracts.DTOs;
-using RestaurantApp.Services.Abstractions;
+using RestaurantApp.Services.Contracts;
 
 namespace RestaurantApp.Services;
 
 internal class DrinkTypeService : IDrinkTypeService
 {
+    private readonly IRepositoryManager _repositoryManager;
+
+    public DrinkTypeService(IRepositoryManager repositoryManager)
+    {
+        _repositoryManager = repositoryManager;
+    }
+
     public Task AddAsync(DrinkTypeDto dto)
     {
         throw new NotImplementedException();
