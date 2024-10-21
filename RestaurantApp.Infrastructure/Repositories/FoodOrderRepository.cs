@@ -5,12 +5,12 @@ namespace RestaurantApp.Infrastructure.Repositories;
 
 public class FoodOrderRepository : IFoodOrderRepository
 {
-    public Task<IQueryable<FoodOrder>> GetAllAsync(CancellationToken cancellationToken = default)
+    public Task<IQueryable<FoodOrder>> GetAllAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<FoodOrder> GetByIdAsync(int orderId, int foodId, CancellationToken cancellationToken = default)
+    public Task<FoodOrder> GetByIdAsync(int orderId, int foodId)
     {
         throw new NotImplementedException();
     }

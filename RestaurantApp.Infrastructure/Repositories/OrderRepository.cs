@@ -10,12 +10,12 @@ public sealed class OrderRepository : IOrderRepository
         throw new NotImplementedException();
     }
 
-    public Task<IQueryable<Order>> GetAllAsync(CancellationToken cancellationToken = default)
+    public Task<IQueryable<Order>> GetAllAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<Order> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public Task<Order> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }

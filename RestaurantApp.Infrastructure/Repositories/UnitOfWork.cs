@@ -4,7 +4,7 @@ namespace RestaurantApp.Infrastructure.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {
-    public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public Task<int> SaveChangesAsync()
     {
         throw new NotImplementedException();
     }

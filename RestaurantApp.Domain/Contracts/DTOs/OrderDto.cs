@@ -1,4 +1,4 @@
-﻿namespace RestaurantApp.Contracts;
+﻿namespace RestaurantApp.Domain.Contracts.DTOs;
 
 public class OrderDto
 {

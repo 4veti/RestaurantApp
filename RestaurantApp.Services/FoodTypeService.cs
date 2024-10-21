@@ -1,4 +1,4 @@
-﻿using RestaurantApp.Contracts;
+﻿using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Services.Abstractions;
 
 namespace RestaurantApp.Services;

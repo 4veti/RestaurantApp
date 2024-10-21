@@ -10,12 +10,12 @@ public sealed class FoodTypeRepository : IFoodTypeRepository
         throw new NotImplementedException();
     }
 
-    public Task<IQueryable<FoodType>> GetAllAsync(CancellationToken cancellationToken = default)
+    public Task<IQueryable<FoodType>> GetAllAsync()
     {
         throw new NotImplementedException();
     }
 
-    public Task<FoodType> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public Task<FoodType> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }

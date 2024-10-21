@@ -10,12 +10,12 @@ namespace RestaurantApp.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IQueryable<DrinkType>> GetAllAsync(CancellationToken cancellationToken = default)
+        public Task<IQueryable<DrinkType>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<DrinkType> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public Task<DrinkType> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
