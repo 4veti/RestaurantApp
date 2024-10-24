@@ -11,8 +11,6 @@ public class UnitOfWork : IUnitOfWork
         _context = context;
     }
 
-    public Task<int> SaveChangesAsync()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<int> SaveChangesAsync()
+        => await _context.SaveChangesAsync();
 }

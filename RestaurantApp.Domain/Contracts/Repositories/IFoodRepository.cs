@@ -4,9 +4,9 @@ namespace RestaurantApp.Domain.Contracts.Repositories;
 
 public interface IFoodRepository
 {
-    Task<IQueryable<Food>> GetAllAsync();
-    Task<Food> GetByIdAsync(int id);
-    Task InsertAsync(Food order);
-    Task EditAsync(Food order);
-    Task RemoveAsync(Food order);
+    IQueryable<Food> GetAllAsync(bool asNoTracking = false);
+    Task<Food?> GetByIdAsync(int id);
+    Task InsertAsync(Food food);
+    void Update(Food food);
+    void Remove(Food food);
 }

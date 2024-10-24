@@ -1,4 +1,5 @@
-﻿using RestaurantApp.Domain.Contracts.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantApp.Domain.Contracts.Repositories;
 using RestaurantApp.Domain.Entities;
 
 namespace RestaurantApp.Infrastructure.Repositories;
@@ -12,28 +13,27 @@ public sealed class FoodRepository : IFoodRepository
         _context = context;
     }
 
-    public Task EditAsync(Food order)
+    public IQueryable<Food> GetAllAsync(bool asNoTracking = false)
     {
-        throw new NotImplementedException();
+        IQueryable<Food> orders = _context.Set<Food>();
+
+        if (asNoTracking)
+        {
+            orders = orders.AsNoTracking();
+        }
+
+        return orders;
     }
 
-    public Task<IQueryable<Food>> GetAllAsync()
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<Food?> GetByIdAsync(int id)
+        => await _context.FindAsync<Food>(id);
 
-    public Task<Food> GetByIdAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
+    public void Update(Food food)
+        => _context.Update(food);
 
-    public Task InsertAsync(Food order)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task InsertAsync(Food food)
+        => await _context.AddAsync(food);
 
-    public Task RemoveAsync(Food order)
-    {
-        throw new NotImplementedException();
-    }
+    public void Remove(Food food)
+        => _context.Remove(food);
 }
