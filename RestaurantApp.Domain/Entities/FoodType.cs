@@ -5,6 +5,7 @@ using static RestaurantApp.Domain.Constants;
 
 public class FoodType
 {
+    [Key]
     public int Id { get; set; }
 
     [Required]

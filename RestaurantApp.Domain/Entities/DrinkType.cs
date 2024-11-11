@@ -5,6 +5,7 @@ using static RestaurantApp.Domain.Constants;
 
 public class DrinkType
 {
+    [Key]
     public int Id { get; set; }
 
     [MaxLength(MaxDrinkTypeNameLength)]

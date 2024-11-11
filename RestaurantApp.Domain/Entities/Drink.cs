@@ -6,6 +6,7 @@ using static RestaurantApp.Domain.Constants;
 
 public class Drink
 {
+    [Key]
     public int Id { get; set; }
 
     [Required]
