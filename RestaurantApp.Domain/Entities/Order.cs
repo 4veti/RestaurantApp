@@ -1,4 +1,5 @@
 ﻿namespace RestaurantApp.Domain.Entities;
+using static RestaurantApp.Domain.Constants;
 
 using System.ComponentModel.DataAnnotations;
 
@@ -15,6 +16,7 @@ public class Order
     public DateTime Modified { get; set; }
 
     [Required]
+    [MaxLength(OrderNameMaxLength)]
     public string OrderName { get; set; } = string.Empty;
 
     public bool IsPaid { get; set; } = false;

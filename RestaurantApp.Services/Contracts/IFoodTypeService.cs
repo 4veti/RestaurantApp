@@ -5,8 +5,8 @@ namespace RestaurantApp.Services.Contracts;
 public interface IFoodTypeService
 {
     Task<IEnumerable<FoodTypeDto>> GetAllAsync();
-    Task<FoodTypeDto> GetByIdAsync(int id);
+    Task<FoodTypeDto?> GetByIdAsync(int id);
     Task AddAsync(FoodTypeDto dto);
-    Task UpdateAsync(int id, FoodTypeDto dto);
-    Task DeleteByIdAsync(int id);
+    Task<bool> UpdateAsync(int id, FoodTypeDto dto);
+    Task<bool> DeleteByIdAsync(int id);
 }

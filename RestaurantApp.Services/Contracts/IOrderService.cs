@@ -5,8 +5,10 @@ namespace RestaurantApp.Services.Contracts;
 public interface IOrderService
 {
     Task<IEnumerable<OrderDto>> GetAllByParamsAsync(OrderQueryParams queryParams);
-    Task<OrderDto> GetByIdAsync(int id);
-    Task AddAsync(OrderDto foodDto);
+    Task<OrderDto?> GetByIdAsync(int id);
+    Task<bool> AddAsync(OrderDto foodDto);
     Task UpdateAsync(int id, OrderDto foodDto);
-    Task DeleteByIdAsync(int id);
+    Task<bool> DeleteByIdAsync(int id);
+    Task<bool> MarkPaidAsync();
+    Task<bool> MarkCompletedAsync();
 }

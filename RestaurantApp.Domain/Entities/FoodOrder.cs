@@ -17,4 +17,7 @@ public class FoodOrder
 
     [Required]
     public DateTime Created { get; set; }
+
+    [Required]
+    public int Count { get; set; }
 }

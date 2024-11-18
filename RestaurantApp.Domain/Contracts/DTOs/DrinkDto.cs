@@ -1,6 +1,4 @@
-﻿using RestaurantApp.Domain.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static RestaurantApp.Domain.Constants;
 
 namespace RestaurantApp.Domain.Contracts.DTOs;
@@ -16,16 +14,12 @@ public class DrinkDto
 
     public int DrinkTypeId { get; set; }
 
-    public string DrinkType { get; set; } = null!;
+    public string DrinkType { get; set; } = string.Empty;
 
     [Range(MinMillilitres, MaxMillilitres)]
     public int Millilitres { get; set; }
 
     public bool IsAlcoholic { get; set; }
-
-    public DateTime Created { get; set; }
-
-    public DateTime Modified { get; set; }
 
     [Range(MinAlcoholPercentage, MaxAlcoholPercentage)]
     public double? AlcoholPercentage { get; set; }

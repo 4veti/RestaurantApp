@@ -5,8 +5,8 @@ public static class Constants
     public const int FoodNameMinLength = 2;
     public const int FoodNameMaxLength = 3;
 
-    public const int NetGramsMinLength = 10;
-    public const int NetGramsMaxLength = 1500;
+    public const int NetGramsMin = 10;
+    public const int NetGramsMax = 1500;
 
     public const int OrderNameMinLength = 2;
     public const int OrderNameMaxLength = 50;
