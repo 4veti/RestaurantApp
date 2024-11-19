@@ -28,6 +28,16 @@ internal class OrderService : IOrderService
         await _repositoryManager.UnitOfWork.SaveChangesAsync();
     }
 
+    public Task<bool> AddDrinkItem(DrinkDto drink, int count)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> AddFoodItem(FoodDto food, int count)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<bool> DeleteByIdAsync(int id)
     {
         Order? deleteOrder = await _repositoryManager.OrderRepository.GetByIdAsync(id);
@@ -86,6 +96,11 @@ internal class OrderService : IOrderService
     }
 
     public Task<bool> MarkPaidAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> RemoveFoodItem()
     {
         throw new NotImplementedException();
     }

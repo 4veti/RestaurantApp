@@ -11,4 +11,7 @@ public interface IOrderService
     Task<bool> DeleteByIdAsync(int id);
     Task<bool> MarkPaidAsync();
     Task<bool> MarkCompletedAsync();
+    Task<bool> AddFoodItem(FoodDto food, int count);
+    Task<bool> AddDrinkItem(DrinkDto drink, int count);
+    Task<bool> RemoveFoodItem();
 }

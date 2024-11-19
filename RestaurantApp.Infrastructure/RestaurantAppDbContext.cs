@@ -17,11 +17,15 @@ public class RestaurantAppDbContext : DbContext
     public DbSet<Food> Foods { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<FoodOrder> FoodsOrders { get; set; }
+    public DbSet<DrinkOrder> DrinksOrders { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<FoodOrder>()
             .HasKey(fo => new { fo.FoodId, fo.OrderId });
+
+        modelBuilder.Entity<DrinkOrder>()
+            .HasKey(dr => new { dr.DrinkId, dr.OrderId });
 
         base.OnModelCreating(modelBuilder);
     }
