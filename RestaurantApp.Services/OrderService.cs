@@ -100,14 +100,37 @@ internal class OrderService : IOrderService
         return orderDto;
     }
 
-    public Task<bool> MarkCompletedAsync(int orderId)
+    public async Task<bool> MarkCompletedAsync(int orderId)
     {
-        throw new NotImplementedException();
+        Order? order = await _repositoryManager.OrderRepository.GetByIdAsync(orderId);
+
+        if (order is null)
+        {
+            return false;
+        }
+
+        order.IsServed = true;
+        order.Completed = DateTime.Now;
+
+        bool isMarkedSuccessfully = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+
+        return isMarkedSuccessfully;
     }
 
-    public Task<bool> MarkPaidAsync(int orderId)
+    public async Task<bool> MarkPaidAsync(int orderId)
     {
-        throw new NotImplementedException();
+        Order? order = await _repositoryManager.OrderRepository.GetByIdAsync(orderId);
+
+        if (order is null)
+        {
+            return false;
+        }
+
+        order.IsPaid = true;
+
+        bool isMarkedSuccessfully = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+
+        return isMarkedSuccessfully;
     }
 
     public async Task<bool> UpdateAsync(int id, OrderDto dto)
