@@ -13,6 +13,7 @@ public sealed class RepositoryManager : IRepositoryManager
     private readonly Lazy<IFoodTypeRepository> _lazyFoodTypeRepository;
     private readonly Lazy<IOrderRepository> _lazyOrderRepository;
     private readonly Lazy<IFoodOrderRepository> _lazyFoodOrderRepository;
+    private readonly Lazy<IDrinkOrderRepository> _drinkOrderRepository;
     private readonly Lazy<IUnitOfWork> _lazyUnitOfWork;
 
     public RepositoryManager(RestaurantAppDbContext context)
@@ -23,6 +24,7 @@ public sealed class RepositoryManager : IRepositoryManager
         _lazyFoodTypeRepository = new Lazy<IFoodTypeRepository>(() => new FoodTypeRepository(context));
         _lazyOrderRepository = new Lazy<IOrderRepository>(() => new OrderRepository(context));
         _lazyFoodOrderRepository = new Lazy<IFoodOrderRepository>(() => new FoodOrderRepository(context));
+        _drinkOrderRepository = new Lazy<IDrinkOrderRepository>(() => new DrinkOrderRepository(context));
         _lazyUnitOfWork = new Lazy<IUnitOfWork>(() => new UnitOfWork(context));
     }
 
@@ -32,5 +34,6 @@ public sealed class RepositoryManager : IRepositoryManager
     public IFoodTypeRepository FoodTypeRepository => _lazyFoodTypeRepository.Value;
     public IOrderRepository OrderRepository => _lazyOrderRepository.Value;
     public IFoodOrderRepository FoodOrderRepository => _lazyFoodOrderRepository.Value;
+    public IDrinkOrderRepository DrinkOrderRepository => _drinkOrderRepository.Value;
     public IUnitOfWork UnitOfWork => _lazyUnitOfWork.Value;
 }

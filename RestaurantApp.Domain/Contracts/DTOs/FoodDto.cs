@@ -20,4 +20,6 @@ public class FoodDto
     public int FoodTypeId { get; set; }
 
     public string FoodType { get; set; } = string.Empty!;
+
+    public int Count { get; set; }
 }

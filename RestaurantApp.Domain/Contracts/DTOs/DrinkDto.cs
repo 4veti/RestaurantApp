@@ -5,6 +5,8 @@ namespace RestaurantApp.Domain.Contracts.DTOs;
 
 public class DrinkDto
 {
+    public int Id { get; set; }
+
     [StringLength(MaxDrinkNameLength,
         MinimumLength = MinDrinkNameLength)]
     public string Name { get; set; } = string.Empty;
@@ -23,4 +25,6 @@ public class DrinkDto
 
     [Range(MinAlcoholPercentage, MaxAlcoholPercentage)]
     public double? AlcoholPercentage { get; set; }
+
+    public int Count { get; set; }
 }

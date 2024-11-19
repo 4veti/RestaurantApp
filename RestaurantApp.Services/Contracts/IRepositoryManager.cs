@@ -10,5 +10,6 @@ public interface IRepositoryManager
     IFoodTypeRepository FoodTypeRepository { get; }
     IOrderRepository OrderRepository { get; }
     IFoodOrderRepository FoodOrderRepository { get; }
+    IDrinkOrderRepository DrinkOrderRepository { get; }
     IUnitOfWork UnitOfWork { get; }
 }

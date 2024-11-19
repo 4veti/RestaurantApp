@@ -18,4 +18,7 @@ public class OrderDto
     public bool IsPaid { get; set; } = false;
 
     public bool IsServed { get; set; } = false;
+
+    public IEnumerable<FoodDto> Foods { get; set; } = new List<FoodDto>();
+    public IEnumerable<DrinkDto> Drinks { get; set; } = new List<DrinkDto>();
 }

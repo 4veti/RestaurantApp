@@ -14,7 +14,7 @@ internal class OrderService : IOrderService
         _repositoryManager = repositoryManager;
     }
 
-    public async Task AddAsync(OrderDto dto)
+    public async Task<bool> AddAsync(OrderDto dto)
     {
         Order addOrder = new Order()
         {
@@ -25,17 +25,27 @@ internal class OrderService : IOrderService
         };
 
         await _repositoryManager.OrderRepository.InsertAsync(addOrder);
-        await _repositoryManager.UnitOfWork.SaveChangesAsync();
-    }
+        bool addedOrder = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
 
-    public Task<bool> AddDrinkItem(DrinkDto drink, int count)
-    {
-        throw new NotImplementedException();
-    }
+        await _repositoryManager.FoodOrderRepository
+            .InsertRangeAsync(dto.Foods.Select(f => new FoodOrder()
+            {
+                FoodId = f.Id,
+                OrderId = addOrder.Id,
+                Count = f.Count
+            }));
 
-    public Task<bool> AddFoodItem(FoodDto food, int count)
-    {
-        throw new NotImplementedException();
+        await _repositoryManager.DrinkOrderRepository
+            .InsertRangeAsync(dto.Drinks.Select(d => new DrinkOrder()
+            {
+                DrinkId = d.Id,
+                OrderId = addOrder.Id,
+                Count = d.Count
+            }));
+
+        bool addedOrderItems = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+
+        return addedOrder && addedOrderItems;
     }
 
     public async Task<bool> DeleteByIdAsync(int id)
@@ -90,17 +100,12 @@ internal class OrderService : IOrderService
         return orderDto;
     }
 
-    public Task<bool> MarkCompletedAsync()
+    public Task<bool> MarkCompletedAsync(int orderId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<bool> MarkPaidAsync()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> RemoveFoodItem()
+    public Task<bool> MarkPaidAsync(int orderId)
     {
         throw new NotImplementedException();
     }
@@ -121,15 +126,5 @@ internal class OrderService : IOrderService
         bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
 
         return successfulUpdate;
-    }
-
-    Task<bool> IOrderService.AddAsync(OrderDto foodDto)
-    {
-        throw new NotImplementedException();
-    }
-
-    Task IOrderService.UpdateAsync(int id, OrderDto foodDto)
-    {
-        throw new NotImplementedException();
     }
 }
