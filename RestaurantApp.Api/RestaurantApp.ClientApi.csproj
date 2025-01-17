@@ -13,13 +13,19 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.0" />
     <PackageReference Include="System.Formats.Asn1" Version="9.0.0" />
     <PackageReference Include="System.Text.Json" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RestaurantApp.Core\RestaurantApp.Services.Abstractions.csproj" />
+    <ProjectReference Include="..\RestaurantApp.Infrastructure\RestaurantApp.Infrastructure.csproj" />
+    <ProjectReference Include="..\RestaurantApp.Services\RestaurantApp.Services.csproj" />
   </ItemGroup>
 
 </Project>

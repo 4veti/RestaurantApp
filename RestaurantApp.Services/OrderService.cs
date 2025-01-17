@@ -80,9 +80,9 @@ internal class OrderService : IOrderService
         return orders;
     }
 
-    public async Task<OrderDto?> GetByIdAsync(int id)
+    public async Task<OrderDto?> GetByIdAsync(int orderId)
     {
-        Order? order = await _repositoryManager.OrderRepository.GetByIdAsync(id);
+        Order? order = await _repositoryManager.OrderRepository.GetByIdAsync(orderId);
         OrderDto? orderDto = null;
 
         if (order is not null)
@@ -133,9 +133,9 @@ internal class OrderService : IOrderService
         return isMarkedSuccessfully;
     }
 
-    public async Task<bool> UpdateAsync(int id, OrderDto dto)
+    public async Task<bool> UpdateAsync(int orderId, OrderDto dto)
     {
-        Order? originalOrder = await _repositoryManager.OrderRepository.GetByIdAsync(id);
+        Order? originalOrder = await _repositoryManager.OrderRepository.GetByIdAsync(orderId);
 
         if (originalOrder is null)
         {

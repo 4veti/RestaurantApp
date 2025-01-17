@@ -1,25 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
+using RestaurantApp.Services;
 
 namespace RestaurantApp.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class KitchenController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+        private readonly ServiceManager _serviceManager;
 
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public KitchenController(ServiceManager serviceManager)
         {
-            _logger = logger;
+            _serviceManager = serviceManager;
         }
 
+
+
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<WeatherForecast> Test()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
