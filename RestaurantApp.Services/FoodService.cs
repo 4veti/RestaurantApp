@@ -17,7 +17,7 @@ internal class FoodService : IFoodService
 
     public async Task<string> AddAsync(FoodDto foodDto)
     {
-        Food AddFood = new Food()
+        Food addFood = new Food()
         {
             Name = foodDto.Name,
             NetGrams = foodDto.NetGrams,
@@ -34,25 +34,34 @@ internal class FoodService : IFoodService
             return string.Join(" ", validationResult);
         }
 
-        await _repositoryManager.FoodRepository.InsertAsync(AddFood);
+        await _repositoryManager.FoodRepository.InsertAsync(addFood);
         await _repositoryManager.UnitOfWork.SaveChangesAsync();
+
+        foodDto.Id = addFood.Id;
 
         return string.Empty;
     }
 
-    public async Task<bool> DeleteByIdAsync(int id)
+    public async Task<bool?> DeleteByIdAsync(int id)
     {
-        Food? deleteFood = await _repositoryManager.FoodRepository.GetByIdAsync(id);
-
-        if (deleteFood is not null)
+        try
         {
+            Food? deleteFood = await _repositoryManager.FoodRepository.GetByIdAsync(id);
+
+            if (deleteFood is null)
+            {
+                return null;
+            }
+
             _repositoryManager.FoodRepository.Remove(deleteFood);
             bool isDeleted = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
 
             return isDeleted;
         }
-
-        return false;
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
     public async Task<IEnumerable<FoodDto>> GetAllByFoodTypeIdAsync(int foodTypeId)
@@ -93,22 +102,29 @@ internal class FoodService : IFoodService
         return foodDto;
     }
 
-    public async Task<bool> UpdateAsync(int id, FoodDto foodDto)
+    public async Task<bool?> UpdateAsync(int id, FoodDto foodDto)
     {
-        Food? originalFood = await _repositoryManager.FoodRepository.GetByIdAsync(id);
+        try
+        {
+            Food? originalFood = await _repositoryManager.FoodRepository.GetByIdAsync(id);
 
-        if (originalFood is null)
+            if (originalFood is null)
+            {
+                return null;
+            }
+
+            originalFood.Name = foodDto.Name;
+            originalFood.Modified = DateTime.Now;
+
+            _repositoryManager.FoodRepository.Update(originalFood);
+            bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+
+            return successfulUpdate;
+        }
+        catch (Exception)
         {
             return false;
         }
-
-        originalFood.Name = foodDto.Name;
-        originalFood.Modified = DateTime.Now;
-
-        _repositoryManager.FoodRepository.Update(originalFood);
-        bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
-
-        return successfulUpdate;
     }
 
     private async Task<List<string>> ValidateFoodDto(FoodDto dto)
