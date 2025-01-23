@@ -2,6 +2,8 @@
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Domain.Entities;
 using RestaurantApp.Services.Contracts;
+using static RestaurantApp.Domain.Constants;
+using static RestaurantApp.Domain.ErrorMessages;
 
 namespace RestaurantApp.Services;
 
@@ -14,7 +16,7 @@ internal class DrinkService : IDrinkService
         _repositoryManager = repositoryManager;
     }
 
-    public async Task AddAsync(DrinkDto dto)
+    public async Task<string> AddAsync(DrinkDto dto)
     {
         Drink drink = new Drink()
         {
@@ -28,11 +30,20 @@ internal class DrinkService : IDrinkService
             AlcoholPercentage = dto.AlcoholPercentage,
         };
 
+        List<string> validationResult = await ValidateDrinkDto(dto);
+
+        if (validationResult.Any())
+        {
+            return string.Join(" ", validationResult);
+        }
+
         await _repositoryManager.DrinkRepository.InsertAsync(drink);
         await _repositoryManager.UnitOfWork.SaveChangesAsync();
+
+        return string.Empty;
     }
 
-    public async Task<bool> DeleteByIdAsync(int id)
+    public async Task<bool?> DeleteByIdAsync(int id)
     {
         Drink? drinkToDelete = await _repositoryManager.DrinkRepository.GetByIdAsync(id);
 
@@ -90,13 +101,20 @@ internal class DrinkService : IDrinkService
         return drinkDto;
     }
 
-    public async Task<bool> UpdateAsync(int id, DrinkDto dto)
+    public async Task<string?> UpdateAsync(int id, DrinkDto dto)
     {
         Drink? originalDrink = await _repositoryManager.DrinkRepository.GetByIdAsync(id);
 
         if (originalDrink is null)
         {
-            return false;
+            return null;
+        }
+
+        List<string> validationResult = await ValidateDrinkDto(dto);
+
+        if (validationResult.Any())
+        {
+            return string.Join(" ", validationResult);
         }
 
         originalDrink.Name = dto.Name;
@@ -110,6 +128,56 @@ internal class DrinkService : IDrinkService
         _repositoryManager.DrinkRepository.Update(originalDrink);
         bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
 
-        return successfulUpdate;
+        if (successfulUpdate == false)
+        {
+            return string.Format(FailedToInsert, dto.Name);
+        }
+
+        return string.Empty;
+    }
+
+    private async Task<List<string>> ValidateDrinkDto(DrinkDto dto)
+    {
+        List<string> result = new List<string>();
+
+        bool nameExists = await _repositoryManager.DrinkRepository
+            .GetAllAsync()
+            .Where(d => d.Name == dto.Name)
+            .AnyAsync();
+
+        if (nameExists)
+        {
+            result.Add(string.Format(FoodNameAlreadyExists, dto.Name));
+        }
+
+        bool isValidDrinkTypeId = dto.DrinkTypeId > 0 && await _repositoryManager.DrinkTypeRepository
+            .GetAllAsync()
+            .Where(dt => dt.Id == dto.DrinkTypeId)
+            .AnyAsync();
+
+        if (isValidDrinkTypeId == false)
+        {
+            result.Add(string.Format(InvalidDrinkTypeId, dto.DrinkTypeId));
+        }
+
+        if (dto.Millilitres < MinMillilitres || dto.Millilitres > MaxMillilitres)
+        {
+            result.Add(string.Format(MillilitresOutOfRange, MinMillilitres, MaxMillilitres));
+        }
+
+        if ((double)dto.Price < MinPrice || (double)dto.Price > MaxPrice)
+        {
+            result.Add(string.Format(PriceOutOfRange, MinPrice, MaxPrice));
+        }
+
+        if (dto.AlcoholPercentage is not null)
+        {
+            if (dto.AlcoholPercentage < MinAlcoholPercentage || dto.AlcoholPercentage > MaxAlcoholPercentage)
+            {
+                result.Add(string.Format(AlcoholPercentageOutOfRange, MinAlcoholPercentage, MaxAlcoholPercentage));
+            }
+        }
+
+        return result;
     }
 }

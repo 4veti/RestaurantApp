@@ -2,6 +2,7 @@
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Domain.Entities;
 using RestaurantApp.Services.Contracts;
+using static RestaurantApp.Domain.Constants;
 using static RestaurantApp.Domain.ErrorMessages;
 
 namespace RestaurantApp.Services;
@@ -36,8 +37,6 @@ internal class FoodService : IFoodService
 
         await _repositoryManager.FoodRepository.InsertAsync(addFood);
         await _repositoryManager.UnitOfWork.SaveChangesAsync();
-
-        foodDto.Id = addFood.Id;
 
         return string.Empty;
     }
@@ -102,29 +101,37 @@ internal class FoodService : IFoodService
         return foodDto;
     }
 
-    public async Task<bool?> UpdateAsync(int id, FoodDto foodDto)
+    public async Task<string?> UpdateAsync(int id, FoodDto foodDto)
     {
-        try
+        Food? originalFood = await _repositoryManager.FoodRepository.GetByIdAsync(id);
+
+        if (originalFood is null)
         {
-            Food? originalFood = await _repositoryManager.FoodRepository.GetByIdAsync(id);
-
-            if (originalFood is null)
-            {
-                return null;
-            }
-
-            originalFood.Name = foodDto.Name;
-            originalFood.Modified = DateTime.Now;
-
-            _repositoryManager.FoodRepository.Update(originalFood);
-            bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
-
-            return successfulUpdate;
+            return null;
         }
-        catch (Exception)
+
+        List<string> validationResult = await ValidateFoodDto(foodDto);
+
+        if (validationResult.Any())
         {
-            return false;
+            return string.Join(" ", validationResult);
         }
+
+        originalFood.Name = foodDto.Name;
+        originalFood.NetGrams = foodDto.NetGrams;
+        originalFood.Price = foodDto.Price;
+        originalFood.FoodTypeId = foodDto.FoodTypeId;
+        originalFood.Modified = DateTime.Now;
+
+        _repositoryManager.FoodRepository.Update(originalFood);
+        bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+
+        if (successfulUpdate == false)
+        {
+            return string.Format(FailedToInsert, foodDto.Name);
+        }
+
+        return string.Empty;
     }
 
     private async Task<List<string>> ValidateFoodDto(FoodDto dto)
@@ -141,14 +148,24 @@ internal class FoodService : IFoodService
             result.Add(string.Format(FoodNameAlreadyExists, dto.Name));
         }
 
-        bool isValidFoodTypeId = await _repositoryManager.FoodTypeRepository
+        bool isValidFoodTypeId = dto.FoodTypeId > 0 && await _repositoryManager.FoodTypeRepository
             .GetAllAsync()
             .Where(ft => ft.Id == dto.FoodTypeId)
             .AnyAsync();
 
-        if (dto.FoodTypeId < 1 || isValidFoodTypeId == false)
+        if (isValidFoodTypeId == false)
         {
             result.Add(string.Format(InvalidFoodTypeId, dto.FoodTypeId));
+        }
+
+        if (dto.NetGrams < NetGramsMin || dto.NetGrams > NetGramsMax)
+        {
+            result.Add(string.Format(NetGramsOutOfRange, NetGramsMin, NetGramsMax));
+        }
+
+        if ((double)dto.Price < MinPrice || (double)dto.Price > MaxPrice)
+        {
+            result.Add(string.Format(PriceOutOfRange, MinPrice, MaxPrice));
         }
 
         return result;

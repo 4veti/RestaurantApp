@@ -65,15 +65,15 @@ namespace RestaurantApp.ClientApi.Controllers
                     return BadRequest(ModelState);
                 }
 
-                bool? isUpdated = await _serviceManager.FoodService.UpdateAsync(foodId, dto);
+                string? updateResult = await _serviceManager.FoodService.UpdateAsync(foodId, dto);
 
-                if (isUpdated is null)
+                if (updateResult is null)
                 {
                     return NotFound();
                 }
-                else if (isUpdated == false)
+                else if (string.IsNullOrEmpty(updateResult) == false)
                 {
-                    return StatusCode(500);
+                    return BadRequest(updateResult);
                 }
 
                 return Ok();
@@ -106,6 +106,75 @@ namespace RestaurantApp.ClientApi.Controllers
                 }
 
                 return NoContent();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Drink(DrinkDto dto)
+        {
+            try
+            {
+                if (dto is null)
+                {
+                    return BadRequest();
+                }
+
+                if (ModelState.IsValid == false)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                string result = await _serviceManager.DrinkService.AddAsync(dto);
+
+                if (string.IsNullOrEmpty(result) == false)
+                {
+                    return BadRequest(result);
+                }
+
+                return Created();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Drink(int drinkId, DrinkDto dto)
+        {
+            try
+            {
+                if (dto is null)
+                {
+                    return BadRequest();
+                }
+
+                if (drinkId < 1)
+                {
+                    return BadRequest();
+                }
+
+                if (ModelState.IsValid == false)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                string? updateResult = await _serviceManager.DrinkService.UpdateAsync(drinkId, dto);
+
+                if (updateResult is null)
+                {
+                    return NotFound();
+                }
+                else if (string.IsNullOrEmpty(updateResult) == false)
+                {
+                    return BadRequest(updateResult);
+                }
+
+                return Ok();
             }
             catch (Exception)
             {

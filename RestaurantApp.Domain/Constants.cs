@@ -25,5 +25,4 @@ public static class Constants
 
     public const double MinPrice = 0.1;
     public const double MaxPrice = 350;
-
 }
