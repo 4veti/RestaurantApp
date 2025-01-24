@@ -1,22 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Services;
+using RestaurantApp.Services.Contracts;
 
 namespace RestaurantApp.ClientApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class FrontDeskController : Controller
+    public class FrontDeskController : ControllerBase
     {
-        private readonly ServiceManager _serviceManager;
+        private readonly IServiceManager _serviceManager;
 
-        public FrontDeskController(ServiceManager serviceManager)
+        public FrontDeskController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Food(FoodDto dto)
+        [HttpGet]
+        public async Task<IActionResult> Test()
+        {
+            return Ok();
+        }
+
+        [HttpPost("Food")]
+        public async Task<IActionResult> Food([FromBody] FoodDto dto)
         {
             try
             {
@@ -45,8 +52,8 @@ namespace RestaurantApp.ClientApi.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Food(int foodId, FoodDto dto)
+        [HttpPut("Food")]
+        public async Task<IActionResult> Food([FromHeader] int foodId, [FromBody] FoodDto dto)
         {
             try
             {
@@ -84,8 +91,8 @@ namespace RestaurantApp.ClientApi.Controllers
             }
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Food(int foodId)
+        [HttpDelete("Food")]
+        public async Task<IActionResult> Food([FromHeader] int foodId)
         {
             try
             {
@@ -100,7 +107,7 @@ namespace RestaurantApp.ClientApi.Controllers
                 {
                     return NotFound();
                 }
-                else if (string.IsNullOrEmpty(deletedResult))
+                else if (string.IsNullOrEmpty(deletedResult) == false)
                 {
                     return BadRequest(deletedResult);
                 }
@@ -198,7 +205,7 @@ namespace RestaurantApp.ClientApi.Controllers
                 {
                     return NotFound();
                 }
-                else if (string.IsNullOrEmpty(deletedResult))
+                else if (string.IsNullOrEmpty(deletedResult) == false)
                 {
                     return BadRequest(deletedResult);
                 }

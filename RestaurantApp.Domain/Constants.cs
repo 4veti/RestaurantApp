@@ -3,7 +3,7 @@
 public static class Constants
 {
     public const int FoodNameMinLength = 2;
-    public const int FoodNameMaxLength = 3;
+    public const int FoodNameMaxLength = 60;
 
     public const int NetGramsMin = 10;
     public const int NetGramsMax = 1500;

@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using RestaurantApp.Infrastructure;
+using RestaurantApp.Services;
+using RestaurantApp.Services.Contracts;
 
 namespace RestaurantApp.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -17,18 +19,22 @@ namespace RestaurantApp.Api
                 options.UseSqlServer(connectionString));
             builder.Services.AddControllers();
 
+            builder.Services.AddScoped<IServiceManager, ServiceManager>();
+            builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseRouting();
 
+            app.UseAuthorization();
 
             app.MapControllers();
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }

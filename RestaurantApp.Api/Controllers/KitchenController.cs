@@ -11,16 +11,15 @@ namespace RestaurantApp.Api.Controllers
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
-        private readonly ServiceManager _serviceManager;
 
-        public KitchenController(ServiceManager serviceManager)
+        public KitchenController()
         {
-            _serviceManager = serviceManager;
         }
 
 
 
         [HttpGet]
+        [Route("Test")]
         public IEnumerable<WeatherForecast> Test()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
