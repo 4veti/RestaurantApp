@@ -8,5 +8,5 @@ public interface IFoodService
     Task<FoodDto?> GetByIdAsync(int id);
     Task<string> AddAsync(FoodDto foodDto);
     Task<string?> UpdateAsync(int id, FoodDto foodDto);
-    Task<bool?> DeleteByIdAsync(int id);
+    Task<string?> DeleteByIdAsync(int id);
 }

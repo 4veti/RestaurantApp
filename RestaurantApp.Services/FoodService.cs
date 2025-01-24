@@ -41,26 +41,24 @@ internal class FoodService : IFoodService
         return string.Empty;
     }
 
-    public async Task<bool?> DeleteByIdAsync(int id)
+    public async Task<string?> DeleteByIdAsync(int id)
     {
-        try
+        Food? deleteFood = await _repositoryManager.FoodRepository.GetByIdAsync(id);
+
+        if (deleteFood is null)
         {
-            Food? deleteFood = await _repositoryManager.FoodRepository.GetByIdAsync(id);
-
-            if (deleteFood is null)
-            {
-                return null;
-            }
-
-            _repositoryManager.FoodRepository.Remove(deleteFood);
-            bool isDeleted = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
-
-            return isDeleted;
+            return null;
         }
-        catch (Exception)
+
+        _repositoryManager.FoodRepository.Remove(deleteFood);
+        bool isDeleted = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+
+        if (isDeleted == false)
         {
-            return false;
+            return string.Format(FailedToDelete, deleteFood.Name);
         }
+
+        return string.Empty;
     }
 
     public async Task<IEnumerable<FoodDto>> GetAllByFoodTypeIdAsync(int foodTypeId)

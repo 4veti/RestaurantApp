@@ -43,19 +43,24 @@ internal class DrinkService : IDrinkService
         return string.Empty;
     }
 
-    public async Task<bool?> DeleteByIdAsync(int id)
+    public async Task<string?> DeleteByIdAsync(int id)
     {
         Drink? drinkToDelete = await _repositoryManager.DrinkRepository.GetByIdAsync(id);
 
-        if (drinkToDelete is not null)
+        if (drinkToDelete is null)
         {
-            _repositoryManager.DrinkRepository.Remove(drinkToDelete);
-            bool successfulDelete = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
-
-            return successfulDelete;
+            return null;
         }
 
-        return false;
+        _repositoryManager.DrinkRepository.Remove(drinkToDelete);
+        bool isDeleted = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+
+        if (isDeleted == false)
+        {
+            return string.Format(FailedToDelete, drinkToDelete.Name);
+        }
+
+        return string.Empty;
     }
 
     public async Task<IEnumerable<DrinkDto>> GetAllByDrinkTypeIdAsync(int drinkType)

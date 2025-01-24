@@ -94,15 +94,15 @@ namespace RestaurantApp.ClientApi.Controllers
                     return BadRequest();
                 }
 
-                bool? isDeleted = await _serviceManager.FoodService.DeleteByIdAsync(foodId);
+                string? deletedResult = await _serviceManager.FoodService.DeleteByIdAsync(foodId);
 
-                if (isDeleted is null)
+                if (deletedResult is null)
                 {
                     return NotFound();
                 }
-                else if (isDeleted == false)
+                else if (string.IsNullOrEmpty(deletedResult))
                 {
-                    return StatusCode(500);
+                    return BadRequest(deletedResult);
                 }
 
                 return NoContent();
@@ -175,6 +175,35 @@ namespace RestaurantApp.ClientApi.Controllers
                 }
 
                 return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Drink(int drinkId)
+        {
+            try
+            {
+                if (drinkId < 1)
+                {
+                    return BadRequest();
+                }
+
+                string? deletedResult = await _serviceManager.DrinkService.DeleteByIdAsync(drinkId);
+
+                if (deletedResult is null)
+                {
+                    return NotFound();
+                }
+                else if (string.IsNullOrEmpty(deletedResult))
+                {
+                    return BadRequest(deletedResult);
+                }
+
+                return NoContent();
             }
             catch (Exception)
             {
