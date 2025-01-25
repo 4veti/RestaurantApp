@@ -7,6 +7,6 @@ public interface IFoodTypeService
     Task<IEnumerable<FoodTypeDto>> GetAllAsync();
     Task<FoodTypeDto?> GetByIdAsync(int id);
     Task<string> AddAsync(FoodTypeDto dto);
-    Task<bool> UpdateAsync(int id, FoodTypeDto dto);
-    Task<bool> DeleteByIdAsync(int id);
+    Task<string?> UpdateAsync(FoodTypeDto dto);
+    Task<string?> DeleteByIdAsync(int id);
 }

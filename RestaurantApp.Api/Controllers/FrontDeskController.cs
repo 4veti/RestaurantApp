@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RestaurantApp.Domain.Contracts.DTOs;
-using RestaurantApp.Services;
 using RestaurantApp.Services.Contracts;
 
 namespace RestaurantApp.ClientApi.Controllers
@@ -17,7 +16,7 @@ namespace RestaurantApp.ClientApi.Controllers
         }
 
         [HttpPost("Food")]
-        public async Task<IActionResult> Food([FromBody] FoodDto dto)
+        public async Task<IActionResult> AddFood([FromBody] FoodDto dto)
         {
             try
             {
@@ -47,16 +46,11 @@ namespace RestaurantApp.ClientApi.Controllers
         }
 
         [HttpPut("Food")]
-        public async Task<IActionResult> Food([FromHeader] int foodId, [FromBody] FoodDto dto)
+        public async Task<IActionResult> UpdateFood([FromBody] FoodDto dto)
         {
             try
             {
                 if (dto is null)
-                {
-                    return BadRequest();
-                }
-                
-                if (foodId < 1)
                 {
                     return BadRequest();
                 }
@@ -66,7 +60,7 @@ namespace RestaurantApp.ClientApi.Controllers
                     return BadRequest(ModelState);
                 }
 
-                string? updateResult = await _serviceManager.FoodService.UpdateAsync(foodId, dto);
+                string? updateResult = await _serviceManager.FoodService.UpdateAsync(dto);
 
                 if (updateResult is null)
                 {
@@ -86,7 +80,7 @@ namespace RestaurantApp.ClientApi.Controllers
         }
 
         [HttpDelete("Food")]
-        public async Task<IActionResult> Food([FromHeader] int foodId)
+        public async Task<IActionResult> DeleteFood([FromBody] int foodId)
         {
             try
             {
@@ -110,7 +104,7 @@ namespace RestaurantApp.ClientApi.Controllers
         }
 
         [HttpPost("Drink")]
-        public async Task<IActionResult> Drink(DrinkDto dto)
+        public async Task<IActionResult> AddDrink([FromBody] DrinkDto dto)
         {
             try
             {
@@ -140,16 +134,11 @@ namespace RestaurantApp.ClientApi.Controllers
         }
 
         [HttpPut("Drink")]
-        public async Task<IActionResult> Drink(int drinkId, DrinkDto dto)
+        public async Task<IActionResult> UpdateDrink([FromBody] DrinkDto dto)
         {
             try
             {
                 if (dto is null)
-                {
-                    return BadRequest();
-                }
-
-                if (drinkId < 1)
                 {
                     return BadRequest();
                 }
@@ -159,7 +148,7 @@ namespace RestaurantApp.ClientApi.Controllers
                     return BadRequest(ModelState);
                 }
 
-                string? updateResult = await _serviceManager.DrinkService.UpdateAsync(drinkId, dto);
+                string? updateResult = await _serviceManager.DrinkService.UpdateAsync(dto);
 
                 if (updateResult is null)
                 {
@@ -179,7 +168,7 @@ namespace RestaurantApp.ClientApi.Controllers
         }
 
         [HttpDelete("Drink")]
-        public async Task<IActionResult> Drink(int drinkId)
+        public async Task<IActionResult> DeleteDrink([FromBody] int drinkId)
         {
             try
             {
@@ -203,7 +192,7 @@ namespace RestaurantApp.ClientApi.Controllers
         }
 
         [HttpPost("FoodType")]
-        public async Task<IActionResult> FoodType(FoodTypeDto dto)
+        public async Task<IActionResult> AddFoodType([FromBody] FoodTypeDto dto)
         {
             try
             {
@@ -212,7 +201,67 @@ namespace RestaurantApp.ClientApi.Controllers
                     return BadRequest();
                 }
 
-                string? result = await _serviceManager.FoodTypeService.AddAsync(dto)
+                string result = await _serviceManager.FoodTypeService.AddAsync(dto);
+
+                if (string.IsNullOrEmpty(result) == false)
+                {
+                    return BadRequest(result);
+                }
+
+                return Created();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPut("FoodType")]
+        public async Task<IActionResult> UpdateFoodType([FromBody] FoodTypeDto dto)
+        {
+            try
+            {
+                if (dto is null)
+                {
+                    return BadRequest();
+                }
+
+                string? updateResult = await _serviceManager.FoodTypeService.UpdateAsync(dto);
+
+                if (updateResult is null)
+                {
+                    return NotFound();
+                }
+                else if (string.IsNullOrEmpty(updateResult) == false)
+                {
+                    return BadRequest(updateResult);
+                }
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpDelete("FoodType")]
+        public async Task<IActionResult> DeleteFoodType([FromBody] int foodTypeId)
+        {
+            try
+            {
+                string? deleteResult = await _serviceManager.FoodTypeService.DeleteByIdAsync(foodTypeId);
+
+                if (deleteResult is null)
+                {
+                    return NotFound();
+                }
+                if (string.IsNullOrEmpty(deleteResult) == false)
+                {
+                    return BadRequest(deleteResult);
+                }
+
+                return NoContent();
             }
             catch (Exception)
             {

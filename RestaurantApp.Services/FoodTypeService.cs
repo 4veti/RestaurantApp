@@ -36,24 +36,39 @@ internal class FoodTypeService : IFoodTypeService
         };
 
         await _repositoryManager.FoodTypeRepository.InsertAsync(addFoodType);
-        await _repositoryManager.UnitOfWork.SaveChangesAsync();
+        bool successfulInsert = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+
+        if (successfulInsert == false)
+        {
+            return string.Format(FailedToInsert, typeof(FoodType));
+        }
 
         return string.Empty;
     }
 
-    public async Task<bool> DeleteByIdAsync(int id)
+    public async Task<string?> DeleteByIdAsync(int id)
     {
-        FoodType? deleteFoodType = await _repositoryManager.FoodTypeRepository.GetByIdAsync(id);
-
-        if (deleteFoodType is not null)
+        if (id < 1)
         {
-            _repositoryManager.FoodTypeRepository.Remove(deleteFoodType);
-            bool isDeleted = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
-
-            return isDeleted;
+            return IdMustBeAboveZero;
         }
 
-        return false;
+        FoodType? deleteFoodType = await _repositoryManager.FoodTypeRepository.GetByIdAsync(id);
+
+        if (deleteFoodType is null)
+        {
+            return null;
+        }
+
+        _repositoryManager.FoodTypeRepository.Remove(deleteFoodType);
+        bool isDeleted = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+
+        if (isDeleted == false)
+        {
+            return string.Format(FailedToDelete, typeof(FoodType));
+        }
+
+        return string.Empty;
     }
 
     public async Task<IEnumerable<FoodTypeDto>> GetAllAsync()
@@ -85,13 +100,24 @@ internal class FoodTypeService : IFoodTypeService
         return foodTypeDto;
     }
 
-    public async Task<bool> UpdateAsync(int id, FoodTypeDto dto)
+    public async Task<string?> UpdateAsync(FoodTypeDto dto)
     {
-        FoodType? originalFoodType = await _repositoryManager.FoodTypeRepository.GetByIdAsync(id);
+        if (dto.Id < 1)
+        {
+            return IdMustBeAboveZero;
+        }
+
+
+        if (dto.Name.Length < FoodNameMinLength || dto.Name.Length > FoodNameMaxLength)
+        {
+            return string.Format(InvalidNameLength, FoodNameMinLength, FoodNameMaxLength);
+        }
+
+        FoodType? originalFoodType = await _repositoryManager.FoodTypeRepository.GetByIdAsync(dto.Id);
 
         if (originalFoodType is null)
         {
-            return false;
+            return null;
         }
 
         originalFoodType.Name = dto.Name;
@@ -100,6 +126,11 @@ internal class FoodTypeService : IFoodTypeService
         _repositoryManager.FoodTypeRepository.Update(originalFoodType);
         bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
 
-        return successfulUpdate;
+        if (successfulUpdate == false)
+        {
+            return string.Format(FailedToUpdate, typeof(FoodType));
+        }
+
+        return string.Empty;
     }
 }

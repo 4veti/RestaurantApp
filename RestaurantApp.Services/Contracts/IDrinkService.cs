@@ -7,6 +7,6 @@ public interface IDrinkService
     Task<IEnumerable<DrinkDto>> GetAllByDrinkTypeIdAsync(int drinkType);
     Task<DrinkDto?> GetByIdAsync(int id);
     Task<string> AddAsync(DrinkDto dto);
-    Task<string?> UpdateAsync(int id, DrinkDto dto);
+    Task<string?> UpdateAsync(DrinkDto dto);
     Task<string?> DeleteByIdAsync(int id);
 }

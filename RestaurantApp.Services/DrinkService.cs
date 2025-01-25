@@ -38,7 +38,12 @@ internal class DrinkService : IDrinkService
         }
 
         await _repositoryManager.DrinkRepository.InsertAsync(drink);
-        await _repositoryManager.UnitOfWork.SaveChangesAsync();
+        bool successfulInsert = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+
+        if (successfulInsert == false)
+        {
+            return string.Format(FailedToInsert, typeof(Drink));
+        }
 
         return string.Empty;
     }
@@ -62,7 +67,7 @@ internal class DrinkService : IDrinkService
 
         if (isDeleted == false)
         {
-            return string.Format(FailedToDelete, drinkToDelete.Name);
+            return string.Format(FailedToDelete, typeof(Drink));
         }
 
         return string.Empty;
@@ -111,9 +116,14 @@ internal class DrinkService : IDrinkService
         return drinkDto;
     }
 
-    public async Task<string?> UpdateAsync(int id, DrinkDto dto)
+    public async Task<string?> UpdateAsync(DrinkDto dto)
     {
-        Drink? originalDrink = await _repositoryManager.DrinkRepository.GetByIdAsync(id);
+        if (dto.Id < 0)
+        {
+            return IdMustBeAboveZero;
+        }
+
+        Drink? originalDrink = await _repositoryManager.DrinkRepository.GetByIdAsync(dto.Id);
 
         if (originalDrink is null)
         {
@@ -140,7 +150,7 @@ internal class DrinkService : IDrinkService
 
         if (successfulUpdate == false)
         {
-            return string.Format(FailedToInsert, dto.Name);
+            return string.Format(FailedToInsert, typeof(Drink));
         }
 
         return string.Empty;

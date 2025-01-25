@@ -6,8 +6,9 @@ public static class ErrorMessages
 
     public const string DefaultError = "An unexpected error occured.";
 
-    public const string FailedToInsert = "ERROR: Failed to insert object with name {0} in the database.";
-    public const string FailedToDelete = "ERROR: Failed to delete object with name {0}.";
+    public const string FailedToInsert = "ERROR: Failed to insert {0}.";
+    public const string FailedToUpdate = "ERROR: Failed to update {0}.";
+    public const string FailedToDelete = "ERROR: Failed to delete {0}.";
 
     public const string NameCannotBeNullOrEmpty = "ERROR: Name cannot be null or an empty string!";
     public const string FoodNameAlreadyExists = "ERROR: Food with name \"{0}\" already exists!";

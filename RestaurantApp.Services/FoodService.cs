@@ -36,7 +36,12 @@ internal class FoodService : IFoodService
         }
 
         await _repositoryManager.FoodRepository.InsertAsync(addFood);
-        await _repositoryManager.UnitOfWork.SaveChangesAsync();
+        bool successfulInsert = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+
+        if (successfulInsert == false)
+        {
+            return string.Format(FailedToInsert, typeof(Food));
+        }
 
         return string.Empty;
     }
@@ -60,7 +65,7 @@ internal class FoodService : IFoodService
 
         if (isDeleted == false)
         {
-            return string.Format(FailedToDelete, deleteFood.Name);
+            return string.Format(FailedToDelete, typeof(Food));
         }
 
         return string.Empty;
@@ -104,9 +109,14 @@ internal class FoodService : IFoodService
         return foodDto;
     }
 
-    public async Task<string?> UpdateAsync(int id, FoodDto foodDto)
+    public async Task<string?> UpdateAsync(FoodDto foodDto)
     {
-        Food? originalFood = await _repositoryManager.FoodRepository.GetByIdAsync(id);
+        if (foodDto.Id < 1)
+        {
+            return IdMustBeAboveZero;
+        }
+
+        Food? originalFood = await _repositoryManager.FoodRepository.GetByIdAsync(foodDto.Id);
 
         if (originalFood is null)
         {
@@ -131,7 +141,7 @@ internal class FoodService : IFoodService
 
         if (successfulUpdate == false)
         {
-            return string.Format(FailedToInsert, foodDto.Name);
+            return string.Format(FailedToUpdate, typeof(Food));
         }
 
         return string.Empty;
