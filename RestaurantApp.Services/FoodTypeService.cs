@@ -2,6 +2,8 @@
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Domain.Entities;
 using RestaurantApp.Services.Contracts;
+using static RestaurantApp.Domain.Constants;
+using static RestaurantApp.Domain.ErrorMessages;
 
 namespace RestaurantApp.Services;
 
@@ -14,8 +16,18 @@ internal class FoodTypeService : IFoodTypeService
         _repositoryManager = repositoryManager;
     }
 
-    public async Task AddAsync(FoodTypeDto dto)
+    public async Task<string> AddAsync(FoodTypeDto dto)
     {
+        if (string.IsNullOrWhiteSpace(dto.Name))
+        {
+            return NameCannotBeNullOrEmpty;
+        }
+
+        if (dto.Name.Length < FoodNameMinLength || dto.Name.Length > FoodNameMaxLength)
+        {
+            return string.Format(InvalidNameLength, FoodNameMinLength, FoodNameMaxLength);
+        }
+
         FoodType addFoodType = new FoodType()
         {
             Name = dto.Name,
@@ -25,6 +37,8 @@ internal class FoodTypeService : IFoodTypeService
 
         await _repositoryManager.FoodTypeRepository.InsertAsync(addFoodType);
         await _repositoryManager.UnitOfWork.SaveChangesAsync();
+
+        return string.Empty;
     }
 
     public async Task<bool> DeleteByIdAsync(int id)

@@ -16,12 +16,6 @@ namespace RestaurantApp.ClientApi.Controllers
             _serviceManager = serviceManager;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Test()
-        {
-            return Ok();
-        }
-
         [HttpPost("Food")]
         public async Task<IActionResult> Food([FromBody] FoodDto dto)
         {
@@ -96,11 +90,6 @@ namespace RestaurantApp.ClientApi.Controllers
         {
             try
             {
-                if (foodId < 1)
-                {
-                    return BadRequest();
-                }
-
                 string? deletedResult = await _serviceManager.FoodService.DeleteByIdAsync(foodId);
 
                 if (deletedResult is null)
@@ -120,7 +109,7 @@ namespace RestaurantApp.ClientApi.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("Drink")]
         public async Task<IActionResult> Drink(DrinkDto dto)
         {
             try
@@ -150,7 +139,7 @@ namespace RestaurantApp.ClientApi.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("Drink")]
         public async Task<IActionResult> Drink(int drinkId, DrinkDto dto)
         {
             try
@@ -189,16 +178,11 @@ namespace RestaurantApp.ClientApi.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("Drink")]
         public async Task<IActionResult> Drink(int drinkId)
         {
             try
             {
-                if (drinkId < 1)
-                {
-                    return BadRequest();
-                }
-
                 string? deletedResult = await _serviceManager.DrinkService.DeleteByIdAsync(drinkId);
 
                 if (deletedResult is null)
@@ -211,6 +195,24 @@ namespace RestaurantApp.ClientApi.Controllers
                 }
 
                 return NoContent();
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost("FoodType")]
+        public async Task<IActionResult> FoodType(FoodTypeDto dto)
+        {
+            try
+            {
+                if (dto is null)
+                {
+                    return BadRequest();
+                }
+
+                string? result = await _serviceManager.FoodTypeService.AddAsync(dto)
             }
             catch (Exception)
             {

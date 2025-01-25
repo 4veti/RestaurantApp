@@ -43,6 +43,11 @@ internal class FoodService : IFoodService
 
     public async Task<string?> DeleteByIdAsync(int id)
     {
+        if (id < 1)
+        {
+            return IdMustBeAboveZero;
+        }
+
         Food? deleteFood = await _repositoryManager.FoodRepository.GetByIdAsync(id);
 
         if (deleteFood is null)

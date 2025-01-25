@@ -9,7 +9,9 @@ public static class ErrorMessages
     public const string FailedToInsert = "ERROR: Failed to insert object with name {0} in the database.";
     public const string FailedToDelete = "ERROR: Failed to delete object with name {0}.";
 
+    public const string NameCannotBeNullOrEmpty = "ERROR: Name cannot be null or an empty string!";
     public const string FoodNameAlreadyExists = "ERROR: Food with name \"{0}\" already exists!";
+    public const string InvalidNameLength = "ERROR: Name" + GenericOutOfRange;
     public const string NetGramsOutOfRange = "ERROR: Net grams!" + GenericOutOfRange;
     public const string PriceOutOfRange = "ERROR: Price" + GenericOutOfRange;
     public const string InvalidFoodTypeId = "ERROR: Food type with Id {0} does not exist!";
@@ -17,4 +19,5 @@ public static class ErrorMessages
     public const string InvalidDrinkTypeId = "ERROR: Drink type with Id {0} does not exist!";
     public const string MillilitresOutOfRange = "ERROR: Millilitres" + GenericOutOfRange;
     public const string AlcoholPercentageOutOfRange = "ERROR: Alcohol percentage" + GenericOutOfRange;
+    public const string IdMustBeAboveZero = "ERROR: Id must be a positive number above zero!";
 }

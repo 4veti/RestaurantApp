@@ -45,6 +45,11 @@ internal class DrinkService : IDrinkService
 
     public async Task<string?> DeleteByIdAsync(int id)
     {
+        if (id < 1)
+        {
+            return IdMustBeAboveZero;
+        }
+
         Drink? drinkToDelete = await _repositoryManager.DrinkRepository.GetByIdAsync(id);
 
         if (drinkToDelete is null)
