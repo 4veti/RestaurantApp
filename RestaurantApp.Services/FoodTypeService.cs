@@ -2,8 +2,8 @@
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Domain.Entities;
 using RestaurantApp.Services.Contracts;
+using RestaurantApp.Domain;
 using static RestaurantApp.Domain.Constants;
-using static RestaurantApp.Domain.ErrorMessages;
 
 namespace RestaurantApp.Services;
 
@@ -18,14 +18,9 @@ internal class FoodTypeService : IFoodTypeService
 
     public async Task<string> AddAsync(FoodTypeDto dto)
     {
-        if (string.IsNullOrWhiteSpace(dto.Name))
-        {
-            return NameCannotBeNullOrEmpty;
-        }
-
         if (dto.Name.Length < FoodNameMinLength || dto.Name.Length > FoodNameMaxLength)
         {
-            return string.Format(InvalidNameLength, FoodNameMinLength, FoodNameMaxLength);
+            return string.Format(ErrorMessages.InvalidNameLength, FoodNameMinLength, FoodNameMaxLength);
         }
 
         FoodType addFoodType = new FoodType()
@@ -40,7 +35,7 @@ internal class FoodTypeService : IFoodTypeService
 
         if (successfulInsert == false)
         {
-            return string.Format(FailedToInsert, typeof(FoodType));
+            return string.Format(ErrorMessages.FailedToInsert, typeof(FoodType));
         }
 
         return string.Empty;
@@ -50,7 +45,7 @@ internal class FoodTypeService : IFoodTypeService
     {
         if (id < 1)
         {
-            return IdMustBeAboveZero;
+            return ErrorMessages.IdMustBeAboveZero;
         }
 
         FoodType? deleteFoodType = await _repositoryManager.FoodTypeRepository.GetByIdAsync(id);
@@ -65,7 +60,7 @@ internal class FoodTypeService : IFoodTypeService
 
         if (isDeleted == false)
         {
-            return string.Format(FailedToDelete, typeof(FoodType));
+            return string.Format(ErrorMessages.FailedToDelete, typeof(FoodType));
         }
 
         return string.Empty;
@@ -104,13 +99,13 @@ internal class FoodTypeService : IFoodTypeService
     {
         if (dto.Id < 1)
         {
-            return IdMustBeAboveZero;
+            return ErrorMessages.IdMustBeAboveZero;
         }
 
 
         if (dto.Name.Length < FoodNameMinLength || dto.Name.Length > FoodNameMaxLength)
         {
-            return string.Format(InvalidNameLength, FoodNameMinLength, FoodNameMaxLength);
+            return string.Format(ErrorMessages.InvalidNameLength, FoodNameMinLength, FoodNameMaxLength);
         }
 
         FoodType? originalFoodType = await _repositoryManager.FoodTypeRepository.GetByIdAsync(dto.Id);
@@ -128,7 +123,7 @@ internal class FoodTypeService : IFoodTypeService
 
         if (successfulUpdate == false)
         {
-            return string.Format(FailedToUpdate, typeof(FoodType));
+            return string.Format(ErrorMessages.FailedToUpdate, typeof(FoodType));
         }
 
         return string.Empty;

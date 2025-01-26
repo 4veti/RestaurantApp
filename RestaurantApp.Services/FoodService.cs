@@ -2,8 +2,8 @@
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Domain.Entities;
 using RestaurantApp.Services.Contracts;
+using RestaurantApp.Domain;
 using static RestaurantApp.Domain.Constants;
-using static RestaurantApp.Domain.ErrorMessages;
 
 namespace RestaurantApp.Services;
 
@@ -18,6 +18,13 @@ internal class FoodService : IFoodService
 
     public async Task<string> AddAsync(FoodDto foodDto)
     {
+        List<string> validationResult = await ValidateFoodDto(foodDto);
+
+        if (validationResult.Any())
+        {
+            return string.Join(" ", validationResult);
+        }
+
         Food addFood = new Food()
         {
             Name = foodDto.Name,
@@ -28,19 +35,12 @@ internal class FoodService : IFoodService
             Modified = DateTime.Now
         };
 
-        List<string> validationResult = await ValidateFoodDto(foodDto);
-
-        if (validationResult.Any())
-        {
-            return string.Join(" ", validationResult);
-        }
-
         await _repositoryManager.FoodRepository.InsertAsync(addFood);
         bool successfulInsert = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
 
         if (successfulInsert == false)
         {
-            return string.Format(FailedToInsert, typeof(Food));
+            return string.Format(ErrorMessages.FailedToInsert, typeof(Food));
         }
 
         return string.Empty;
@@ -50,7 +50,7 @@ internal class FoodService : IFoodService
     {
         if (id < 1)
         {
-            return IdMustBeAboveZero;
+            return ErrorMessages.IdMustBeAboveZero;
         }
 
         Food? deleteFood = await _repositoryManager.FoodRepository.GetByIdAsync(id);
@@ -65,7 +65,7 @@ internal class FoodService : IFoodService
 
         if (isDeleted == false)
         {
-            return string.Format(FailedToDelete, typeof(Food));
+            return string.Format(ErrorMessages.FailedToDelete, typeof(Food));
         }
 
         return string.Empty;
@@ -113,7 +113,7 @@ internal class FoodService : IFoodService
     {
         if (foodDto.Id < 1)
         {
-            return IdMustBeAboveZero;
+            return ErrorMessages.IdMustBeAboveZero;
         }
 
         Food? originalFood = await _repositoryManager.FoodRepository.GetByIdAsync(foodDto.Id);
@@ -141,7 +141,7 @@ internal class FoodService : IFoodService
 
         if (successfulUpdate == false)
         {
-            return string.Format(FailedToUpdate, typeof(Food));
+            return string.Format(ErrorMessages.FailedToUpdate, typeof(Food));
         }
 
         return string.Empty;
@@ -158,7 +158,7 @@ internal class FoodService : IFoodService
 
         if (nameExists)
         {
-            result.Add(string.Format(FoodNameAlreadyExists, dto.Name));
+            result.Add(string.Format(ErrorMessages. FoodNameAlreadyExists, dto.Name));
         }
 
         bool isValidFoodTypeId = dto.FoodTypeId > 0 && await _repositoryManager.FoodTypeRepository
@@ -168,17 +168,17 @@ internal class FoodService : IFoodService
 
         if (isValidFoodTypeId == false)
         {
-            result.Add(string.Format(InvalidFoodTypeId, dto.FoodTypeId));
+            result.Add(string.Format(ErrorMessages.InvalidFoodTypeId, dto.FoodTypeId));
         }
 
         if (dto.NetGrams < NetGramsMin || dto.NetGrams > NetGramsMax)
         {
-            result.Add(string.Format(NetGramsOutOfRange, NetGramsMin, NetGramsMax));
+            result.Add(string.Format(ErrorMessages.NetGramsOutOfRange, NetGramsMin, NetGramsMax));
         }
 
         if ((double)dto.Price < MinPrice || (double)dto.Price > MaxPrice)
         {
-            result.Add(string.Format(PriceOutOfRange, MinPrice, MaxPrice));
+            result.Add(string.Format(ErrorMessages.PriceOutOfRange, MinPrice, MaxPrice));
         }
 
         return result;

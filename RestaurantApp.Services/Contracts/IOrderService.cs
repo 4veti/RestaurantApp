@@ -6,7 +6,7 @@ public interface IOrderService
 {
     Task<IEnumerable<OrderDto>> GetAllByParamsAsync(OrderQueryParams queryParams);
     Task<OrderDto?> GetByIdAsync(int orderId);
-    Task<bool> AddAsync(OrderDto foodDto);
+    Task<string> AddAsync(OrderDto foodDto);
     Task<bool> UpdateAsync(int orderId, OrderDto foodDto);
     Task<bool> DeleteByIdAsync(int orderId);
     Task<bool> MarkPaidAsync(int orderId);

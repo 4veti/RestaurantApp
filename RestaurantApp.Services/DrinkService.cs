@@ -2,8 +2,8 @@
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Domain.Entities;
 using RestaurantApp.Services.Contracts;
+using RestaurantApp.Domain;
 using static RestaurantApp.Domain.Constants;
-using static RestaurantApp.Domain.ErrorMessages;
 
 namespace RestaurantApp.Services;
 
@@ -18,6 +18,13 @@ internal class DrinkService : IDrinkService
 
     public async Task<string> AddAsync(DrinkDto dto)
     {
+        List<string> validationResult = await ValidateDrinkDto(dto);
+
+        if (validationResult.Any())
+        {
+            return string.Join(" ", validationResult);
+        }
+
         Drink drink = new Drink()
         {
             Name = dto.Name,
@@ -30,19 +37,12 @@ internal class DrinkService : IDrinkService
             AlcoholPercentage = dto.AlcoholPercentage,
         };
 
-        List<string> validationResult = await ValidateDrinkDto(dto);
-
-        if (validationResult.Any())
-        {
-            return string.Join(" ", validationResult);
-        }
-
         await _repositoryManager.DrinkRepository.InsertAsync(drink);
         bool successfulInsert = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
 
         if (successfulInsert == false)
         {
-            return string.Format(FailedToInsert, typeof(Drink));
+            return string.Format(ErrorMessages.FailedToInsert, typeof(Drink));
         }
 
         return string.Empty;
@@ -52,7 +52,7 @@ internal class DrinkService : IDrinkService
     {
         if (id < 1)
         {
-            return IdMustBeAboveZero;
+            return ErrorMessages.IdMustBeAboveZero;
         }
 
         Drink? drinkToDelete = await _repositoryManager.DrinkRepository.GetByIdAsync(id);
@@ -67,7 +67,7 @@ internal class DrinkService : IDrinkService
 
         if (isDeleted == false)
         {
-            return string.Format(FailedToDelete, typeof(Drink));
+            return string.Format(ErrorMessages.FailedToDelete, typeof(Drink));
         }
 
         return string.Empty;
@@ -120,7 +120,7 @@ internal class DrinkService : IDrinkService
     {
         if (dto.Id < 0)
         {
-            return IdMustBeAboveZero;
+            return ErrorMessages.IdMustBeAboveZero;
         }
 
         Drink? originalDrink = await _repositoryManager.DrinkRepository.GetByIdAsync(dto.Id);
@@ -150,7 +150,7 @@ internal class DrinkService : IDrinkService
 
         if (successfulUpdate == false)
         {
-            return string.Format(FailedToInsert, typeof(Drink));
+            return string.Format(ErrorMessages.FailedToInsert, typeof(Drink));
         }
 
         return string.Empty;
@@ -167,7 +167,7 @@ internal class DrinkService : IDrinkService
 
         if (nameExists)
         {
-            result.Add(string.Format(FoodNameAlreadyExists, dto.Name));
+            result.Add(string.Format(ErrorMessages.FoodNameAlreadyExists, dto.Name));
         }
 
         bool isValidDrinkTypeId = dto.DrinkTypeId > 0 && await _repositoryManager.DrinkTypeRepository
@@ -177,24 +177,35 @@ internal class DrinkService : IDrinkService
 
         if (isValidDrinkTypeId == false)
         {
-            result.Add(string.Format(InvalidDrinkTypeId, dto.DrinkTypeId));
+            result.Add(string.Format(ErrorMessages.InvalidDrinkTypeId, dto.DrinkTypeId));
         }
 
         if (dto.Millilitres < MinMillilitres || dto.Millilitres > MaxMillilitres)
         {
-            result.Add(string.Format(MillilitresOutOfRange, MinMillilitres, MaxMillilitres));
+            result.Add(string.Format(ErrorMessages.MillilitresOutOfRange, MinMillilitres, MaxMillilitres));
         }
 
         if ((double)dto.Price < MinPrice || (double)dto.Price > MaxPrice)
         {
-            result.Add(string.Format(PriceOutOfRange, MinPrice, MaxPrice));
+            result.Add(string.Format(ErrorMessages.PriceOutOfRange, MinPrice, MaxPrice));
         }
 
-        if (dto.AlcoholPercentage is not null)
+        if (dto.IsAlcoholic)
         {
-            if (dto.AlcoholPercentage < MinAlcoholPercentage || dto.AlcoholPercentage > MaxAlcoholPercentage)
+            if (dto.AlcoholPercentage is null)
             {
-                result.Add(string.Format(AlcoholPercentageOutOfRange, MinAlcoholPercentage, MaxAlcoholPercentage));
+                result.Add(ErrorMessages.AlcoholByVolumeIsMandatory);
+            }
+            else if (dto.AlcoholPercentage < MinAlcoholPercentage || dto.AlcoholPercentage > MaxAlcoholPercentage)
+            {
+                result.Add(string.Format(ErrorMessages.AlcoholPercentageOutOfRange, MinAlcoholPercentage, MaxAlcoholPercentage));
+            }
+        }
+        else
+        {
+            if (dto.AlcoholPercentage is not null)
+            {
+                result.Add(ErrorMessages.AlcoholByVolumeIsOnlyForAlcoholicDrinks);
             }
         }
 

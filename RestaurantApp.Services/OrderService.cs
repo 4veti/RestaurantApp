@@ -1,7 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data.Common;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using RestaurantApp.Domain;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Domain.Entities;
 using RestaurantApp.Services.Contracts;
+using static RestaurantApp.Domain.Constants;
 
 namespace RestaurantApp.Services;
 
@@ -14,38 +18,67 @@ internal class OrderService : IOrderService
         _repositoryManager = repositoryManager;
     }
 
-    public async Task<bool> AddAsync(OrderDto dto)
+    public async Task<string> AddAsync(OrderDto dto)
     {
-        Order addOrder = new Order()
+        try
         {
-            Created = DateTime.Now,
-            Modified = DateTime.Now,
-            OrderName = dto.OrderName,
-            IsPaid = dto.IsPaid
-        };
+            List<string> validationErrors = await ValidateOrder(dto);
 
-        await _repositoryManager.OrderRepository.InsertAsync(addOrder);
-        bool addedOrder = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
-
-        await _repositoryManager.FoodOrderRepository
-            .InsertRangeAsync(dto.Foods.Select(f => new FoodOrder()
+            if (validationErrors.Any())
             {
-                FoodId = f.Id,
-                OrderId = addOrder.Id,
-                Count = f.Count
-            }));
+                return string.Join(" ", validationErrors);
+            }
 
-        await _repositoryManager.DrinkOrderRepository
-            .InsertRangeAsync(dto.Drinks.Select(d => new DrinkOrder()
+            Order addOrder = new Order()
             {
-                DrinkId = d.Id,
-                OrderId = addOrder.Id,
-                Count = d.Count
-            }));
+                Created = DateTime.Now,
+                Modified = DateTime.Now,
+                OrderName = dto.OrderName,
+                IsPaid = dto.IsPaid
+            };
 
-        bool addedOrderItems = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+            await _repositoryManager.OrderRepository.InsertAsync(addOrder);
+            bool addedOrder = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
 
-        return addedOrder && addedOrderItems;
+            if (addedOrder == false)
+            {
+                return ErrorMessages.DefaultError;
+            }
+
+            await _repositoryManager.FoodOrderRepository
+                .InsertRangeAsync(dto.Foods.Select(f => new FoodOrder()
+                {
+                    FoodId = f.Id,
+                    OrderId = addOrder.Id,
+                    Count = f.Count
+                }));
+
+            await _repositoryManager.DrinkOrderRepository
+                .InsertRangeAsync(dto.Drinks.Select(d => new DrinkOrder()
+                {
+                    DrinkId = d.Id,
+                    OrderId = addOrder.Id,
+                    Count = d.Count
+                }));
+
+            int expectedInsertCount = dto.Foods.Count() + dto.Drinks.Count();
+            bool addedOrderItems = await _repositoryManager.UnitOfWork.SaveChangesAsync() == expectedInsertCount;
+
+            if (addedOrderItems == false)
+            {
+                return string.Format(ErrorMessages.NotAllOrderItemsWereInserted, addOrder.Id);
+            }
+
+            return string.Empty;
+        }
+        catch (Exception ex) when (ex is DbUpdateException || ex is SqlException || ex is DbException)
+        {
+            return ErrorMessages.UnexpectedDatabaseError;
+        }
+        catch (Exception)
+        {
+            return ErrorMessages.DefaultError;
+        }
     }
 
     public async Task<bool> DeleteByIdAsync(int id)
@@ -149,5 +182,48 @@ internal class OrderService : IOrderService
         bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
 
         return successfulUpdate;
+    }
+
+    private async Task<List<string>> ValidateOrder(OrderDto dto)
+    {
+        List<string> errors = new List<string>();
+
+        try
+        {
+            if (dto.OrderName.Length < OrderNameMinLength || dto.OrderName.Length > OrderNameMaxLength)
+            {
+                errors.Add(string.Format(ErrorMessages.InvalidNameLength, OrderNameMinLength, OrderNameMaxLength));
+            }
+
+            bool falseVariable = false;
+            List<int> invalidFoodIDs = await _repositoryManager.FoodRepository
+                .GetAllAsync()
+                .Select(f => f.Id)
+                .Where(f => dto.Foods.Select(x => x.Id).Contains(f) == falseVariable)
+                .ToListAsync();
+
+            if (invalidFoodIDs.Any())
+            {
+                errors.Add(string.Format(ErrorMessages.InvalidFoodIDs, string.Join(", ", invalidFoodIDs)));
+            }
+
+            List<int> invalidDrinkIDs = await _repositoryManager.DrinkRepository
+                .GetAllAsync()
+                .Select(d => d.Id)
+                .Where(d => dto.Foods.Select(x => x.Id).Contains(d) == falseVariable)
+                .ToListAsync();
+
+            if (invalidDrinkIDs.Any())
+            {
+                errors.Add(string.Format(ErrorMessages.InvalidDrinkIDs, string.Join(", ", invalidDrinkIDs)));
+            }
+
+            return errors;
+        }
+        catch (Exception)
+        {
+            errors.Add(ErrorMessages.UnexpectedValidationError);
+            return errors;
+        }
     }
 }
