@@ -18,255 +18,192 @@ namespace RestaurantApp.ClientApi.Controllers
         [HttpPost("Food")]
         public async Task<IActionResult> AddFood([FromBody] FoodDto dto)
         {
-            try
+            if (dto is null)
             {
-                if (dto is null)
-                {
-                    return BadRequest();
-                }
-
-                if (ModelState.IsValid == false)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                string result = await _serviceManager.FoodService.AddAsync(dto);
-
-                if (string.IsNullOrEmpty(result) == false)
-                {
-                    return BadRequest(result);
-                }
-
-                return Created();
+                return BadRequest();
             }
-            catch (Exception)
+
+            if (ModelState.IsValid == false)
             {
-                return StatusCode(500);
+                return BadRequest(ModelState);
             }
+
+            string result = await _serviceManager.FoodService.AddAsync(dto);
+
+            if (string.IsNullOrEmpty(result) == false)
+            {
+                return BadRequest(result);
+            }
+
+            return Created();
         }
 
         [HttpPut("Food")]
         public async Task<IActionResult> UpdateFood([FromBody] FoodDto dto)
         {
-            try
+            if (dto is null)
             {
-                if (dto is null)
-                {
-                    return BadRequest();
-                }
-
-                if (ModelState.IsValid == false)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                string? updateResult = await _serviceManager.FoodService.UpdateAsync(dto);
-
-                if (updateResult is null)
-                {
-                    return NotFound();
-                }
-                else if (string.IsNullOrEmpty(updateResult) == false)
-                {
-                    return BadRequest(updateResult);
-                }
-
-                return Ok();
+                return BadRequest();
             }
-            catch (Exception)
+
+            if (ModelState.IsValid == false)
             {
-                return StatusCode(500);
+                return BadRequest(ModelState);
             }
+
+            string? updateResult = await _serviceManager.FoodService.UpdateAsync(dto);
+
+            if (updateResult is null)
+            {
+                return NotFound();
+            }
+            else if (string.IsNullOrEmpty(updateResult) == false)
+            {
+                return BadRequest(updateResult);
+            }
+
+            return Ok();
         }
 
         [HttpDelete("Food")]
         public async Task<IActionResult> DeleteFood([FromBody] int foodId)
         {
-            try
-            {
-                string? deletedResult = await _serviceManager.FoodService.DeleteByIdAsync(foodId);
+            string? deletedResult = await _serviceManager.FoodService.DeleteByIdAsync(foodId);
 
-                if (deletedResult is null)
-                {
-                    return NotFound();
-                }
-                else if (string.IsNullOrEmpty(deletedResult) == false)
-                {
-                    return BadRequest(deletedResult);
-                }
-
-                return NoContent();
-            }
-            catch (Exception)
+            if (deletedResult is null)
             {
-                return StatusCode(500);
+                return NotFound();
             }
+            else if (string.IsNullOrEmpty(deletedResult) == false)
+            {
+                return BadRequest(deletedResult);
+            }
+
+            return NoContent();
         }
 
         [HttpPost("Drink")]
         public async Task<IActionResult> AddDrink([FromBody] DrinkDto dto)
         {
-            try
+            if (dto is null)
             {
-                if (dto is null)
-                {
-                    return BadRequest();
-                }
-
-                if (ModelState.IsValid == false)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                string result = await _serviceManager.DrinkService.AddAsync(dto);
-
-                if (string.IsNullOrEmpty(result) == false)
-                {
-                    return BadRequest(result);
-                }
-
-                return Created();
+                return BadRequest();
             }
-            catch (Exception)
+
+            if (ModelState.IsValid == false)
             {
-                return StatusCode(500);
+                return BadRequest(ModelState);
             }
+
+            string result = await _serviceManager.DrinkService.AddAsync(dto);
+
+            if (string.IsNullOrEmpty(result) == false)
+            {
+                return BadRequest(result);
+            }
+
+            return Created();
         }
 
         [HttpPut("Drink")]
         public async Task<IActionResult> UpdateDrink([FromBody] DrinkDto dto)
         {
-            try
+            if (dto is null)
             {
-                if (dto is null)
-                {
-                    return BadRequest();
-                }
-
-                if (ModelState.IsValid == false)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                string? updateResult = await _serviceManager.DrinkService.UpdateAsync(dto);
-
-                if (updateResult is null)
-                {
-                    return NotFound();
-                }
-                else if (string.IsNullOrEmpty(updateResult) == false)
-                {
-                    return BadRequest(updateResult);
-                }
-
-                return Ok();
+                return BadRequest();
             }
-            catch (Exception)
+
+            if (ModelState.IsValid == false)
             {
-                return StatusCode(500);
+                return BadRequest(ModelState);
             }
+
+            string? updateResult = await _serviceManager.DrinkService.UpdateAsync(dto);
+
+            if (updateResult is null)
+            {
+                return NotFound();
+            }
+            else if (string.IsNullOrEmpty(updateResult) == false)
+            {
+                return BadRequest(updateResult);
+            }
+
+            return Ok();
         }
 
         [HttpDelete("Drink")]
         public async Task<IActionResult> DeleteDrink([FromBody] int drinkId)
         {
-            try
-            {
-                string? deletedResult = await _serviceManager.DrinkService.DeleteByIdAsync(drinkId);
+            string? deletedResult = await _serviceManager.DrinkService.DeleteByIdAsync(drinkId);
 
-                if (deletedResult is null)
-                {
-                    return NotFound();
-                }
-                else if (string.IsNullOrEmpty(deletedResult) == false)
-                {
-                    return BadRequest(deletedResult);
-                }
-
-                return NoContent();
-            }
-            catch (Exception)
+            if (deletedResult is null)
             {
-                return StatusCode(500);
+                return NotFound();
             }
+            else if (string.IsNullOrEmpty(deletedResult) == false)
+            {
+                return BadRequest(deletedResult);
+            }
+
+            return NoContent();
         }
 
         [HttpPost("FoodType")]
         public async Task<IActionResult> AddFoodType([FromBody] FoodTypeDto dto)
         {
-            try
+            if (dto is null)
             {
-                if (dto is null)
-                {
-                    return BadRequest();
-                }
-
-                string result = await _serviceManager.FoodTypeService.AddAsync(dto);
-
-                if (string.IsNullOrEmpty(result) == false)
-                {
-                    return BadRequest(result);
-                }
-
-                return Created();
+                return BadRequest();
             }
-            catch (Exception)
+
+            string result = await _serviceManager.FoodTypeService.AddAsync(dto);
+
+            if (string.IsNullOrEmpty(result) == false)
             {
-                return StatusCode(500);
+                return BadRequest(result);
             }
+
+            return Created();
         }
 
         [HttpPut("FoodType")]
         public async Task<IActionResult> UpdateFoodType([FromBody] FoodTypeDto dto)
         {
-            try
+            if (dto is null)
             {
-                if (dto is null)
-                {
-                    return BadRequest();
-                }
-
-                string? updateResult = await _serviceManager.FoodTypeService.UpdateAsync(dto);
-
-                if (updateResult is null)
-                {
-                    return NotFound();
-                }
-                else if (string.IsNullOrEmpty(updateResult) == false)
-                {
-                    return BadRequest(updateResult);
-                }
-
-                return Ok();
+                return BadRequest();
             }
-            catch (Exception)
+
+            string? updateResult = await _serviceManager.FoodTypeService.UpdateAsync(dto);
+
+            if (updateResult is null)
             {
-                return StatusCode(500);
+                return NotFound();
             }
+            else if (string.IsNullOrEmpty(updateResult) == false)
+            {
+                return BadRequest(updateResult);
+            }
+
+            return Ok();
         }
 
         [HttpDelete("FoodType")]
         public async Task<IActionResult> DeleteFoodType([FromBody] int foodTypeId)
         {
-            try
-            {
-                string? deleteResult = await _serviceManager.FoodTypeService.DeleteByIdAsync(foodTypeId);
+            string? deleteResult = await _serviceManager.FoodTypeService.DeleteByIdAsync(foodTypeId);
 
-                if (deleteResult is null)
-                {
-                    return NotFound();
-                }
-                if (string.IsNullOrEmpty(deleteResult) == false)
-                {
-                    return BadRequest(deleteResult);
-                }
-
-                return NoContent();
-            }
-            catch (Exception)
+            if (deleteResult is null)
             {
-                return StatusCode(500);
+                return NotFound();
             }
+            if (string.IsNullOrEmpty(deleteResult) == false)
+            {
+                return BadRequest(deleteResult);
+            }
+
+            return NoContent();
         }
 
         [HttpPost("DrinkType")]

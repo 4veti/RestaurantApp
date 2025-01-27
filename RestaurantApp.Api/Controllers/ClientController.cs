@@ -18,31 +18,24 @@ namespace RestaurantApp.ClientApi.Controllers
         [HttpPost("Order")]
         public async Task<IActionResult> CreateOrder(OrderDto dto)
         {
-            try
+            if (dto is null)
             {
-                if (dto is null)
-                {
-                    return BadRequest();
-                }
-
-                if (ModelState.IsValid == false)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                string addResult = await _serviceManager.OrderService.AddAsync(dto);
-
-                if (string.IsNullOrEmpty(addResult))
-                {
-                    return BadRequest(addResult);
-                }
-
-                return Created();
+                return BadRequest();
             }
-            catch (Exception)
+
+            if (ModelState.IsValid == false)
             {
-                return StatusCode(500);
+                return BadRequest(ModelState);
             }
+
+            string addResult = await _serviceManager.OrderService.AddAsync(dto);
+
+            if (string.IsNullOrEmpty(addResult))
+            {
+                return BadRequest(addResult);
+            }
+
+            return Created();
         }
 
         [HttpGet("Menu")]

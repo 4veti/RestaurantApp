@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using RestaurantApp.ClientApi.ExceptionHandlers;
 using RestaurantApp.Infrastructure;
 using RestaurantApp.Services;
 using RestaurantApp.Services.Contracts;
@@ -22,6 +23,9 @@ namespace RestaurantApp.Api
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
             builder.Services.AddScoped<IRepositoryManager, RepositoryManager>();
 
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+            builder.Services.AddProblemDetails();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -31,6 +35,8 @@ namespace RestaurantApp.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseExceptionHandler();
 
             app.MapControllers();
 
