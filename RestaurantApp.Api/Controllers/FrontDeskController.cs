@@ -268,5 +268,62 @@ namespace RestaurantApp.ClientApi.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpPost("DrinkType")]
+        public async Task<IActionResult> AddDrinkType([FromBody] DrinkTypeDto dto)
+        {
+            if (dto is null)
+            {
+                return BadRequest();
+            }
+
+            string insertResult = await _serviceManager.DrinkTypeService.AddAsync(dto);
+
+            if (string.IsNullOrEmpty(insertResult) == false)
+            {
+                return BadRequest(insertResult);
+            }
+
+            return Created();
+        }
+
+        [HttpPut("DrinkType")]
+        public async Task<IActionResult> UpdateDrinkType([FromBody] DrinkTypeDto dto)
+        {
+            if (dto is null)
+            {
+                return BadRequest();
+            }
+
+            string? updateResult = await _serviceManager.DrinkTypeService.UpdateAsync(dto);
+
+            if (updateResult is null)
+            {
+                return NotFound();
+            }
+            else if (string.IsNullOrEmpty(updateResult) == false)
+            {
+                return BadRequest(updateResult);
+            }
+
+            return Ok();
+        }
+
+        [HttpDelete("DrinkType")]
+        public async Task<IActionResult> DeleteDrinkType(int drinkTypeId)
+        {
+            string? deleteResult = await _serviceManager.DrinkTypeService.DeleteByIdAsync(drinkTypeId);
+
+            if (deleteResult is null)
+            {
+                return NotFound();
+            }
+            else if (string.IsNullOrEmpty(deleteResult) == false)
+            {
+                return BadRequest(deleteResult);
+            }
+
+            return NoContent();
+        }
     }
 }

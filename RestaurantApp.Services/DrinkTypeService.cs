@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RestaurantApp.Domain;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Domain.Entities;
 using RestaurantApp.Services.Contracts;
-using System.IO;
+using static RestaurantApp.Domain.Constants;
 
 namespace RestaurantApp.Services;
 
@@ -15,8 +16,13 @@ internal class DrinkTypeService : IDrinkTypeService
         _repositoryManager = repositoryManager;
     }
 
-    public async Task AddAsync(DrinkTypeDto dto)
+    public async Task<string> AddAsync(DrinkTypeDto dto)
     {
+        if (dto.Name.Length < MinDrinkTypeNameLength || dto.Name.Length > MaxDrinkTypeNameLength)
+        {
+            return string.Format(ErrorMessages.InvalidNameLength, MinDrinkTypeNameLength, MaxDrinkTypeNameLength);
+        }
+
         DrinkType addDrinkType = new DrinkType()
         {
             Name = dto.Name,
@@ -25,22 +31,39 @@ internal class DrinkTypeService : IDrinkTypeService
         };
 
         await _repositoryManager.DrinkTypeRepository.InsertAsync(addDrinkType);
-        await _repositoryManager.UnitOfWork.SaveChangesAsync();
-    }
+        bool successfulInsert = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
 
-    public async Task<bool> DeleteByIdAsync(int id)
-    {
-        DrinkType? deleteDrinkType = await _repositoryManager.DrinkTypeRepository.GetByIdAsync(id);
-
-        if (deleteDrinkType is not null)
+        if (successfulInsert == false)
         {
-            _repositoryManager.DrinkTypeRepository.Remove(deleteDrinkType);
-            bool isDeleted = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
-
-            return isDeleted;
+            return string.Format(ErrorMessages.FailedToInsert, typeof(DrinkType));
         }
 
-        return false;
+        return string.Empty;
+    }
+
+    public async Task<string?> DeleteByIdAsync(int id)
+    {
+        if (id < 1)
+        {
+            return ErrorMessages.IdMustBeAboveZero;
+        }
+
+        DrinkType? deleteDrinkType = await _repositoryManager.DrinkTypeRepository.GetByIdAsync(id);
+
+        if (deleteDrinkType is null)
+        {
+            return null;
+        }
+
+        _repositoryManager.DrinkTypeRepository.Remove(deleteDrinkType);
+        bool isDeleted = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
+
+        if (isDeleted == false)
+        {
+            return string.Format(ErrorMessages.FailedToDelete, typeof(DrinkType));
+        }
+
+        return string.Empty;
     }
 
     public async Task<IEnumerable<DrinkTypeDto>> GetAllAsync()
@@ -72,13 +95,18 @@ internal class DrinkTypeService : IDrinkTypeService
         return drinkTypeDto;
     }
 
-    public async Task<bool> UpdateAsync(int id, DrinkTypeDto dto)
+    public async Task<string?> UpdateAsync(DrinkTypeDto dto)
     {
-        DrinkType? originalDrinkType = await _repositoryManager.DrinkTypeRepository.GetByIdAsync(id);
+        if (dto.Name.Length < MinDrinkTypeNameLength || dto.Name.Length > MaxDrinkTypeNameLength)
+        {
+            return string.Format(ErrorMessages.InvalidNameLength, MinDrinkTypeNameLength, MaxDrinkTypeNameLength);
+        }
+
+        DrinkType? originalDrinkType = await _repositoryManager.DrinkTypeRepository.GetByIdAsync(dto.Id);
 
         if (originalDrinkType is null)
         {
-            return false;
+            return null;
         }
 
         originalDrinkType.Name = dto.Name;
@@ -87,6 +115,11 @@ internal class DrinkTypeService : IDrinkTypeService
         _repositoryManager.DrinkTypeRepository.Update(originalDrinkType);
         bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
 
-        return successfulUpdate;
+        if (successfulUpdate == false)
+        {
+            return string.Format(ErrorMessages.FailedToUpdate, typeof(DrinkType));
+        }
+
+        return string.Empty;
     }
 }
