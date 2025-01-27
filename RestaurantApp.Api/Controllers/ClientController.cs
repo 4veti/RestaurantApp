@@ -44,5 +44,13 @@ namespace RestaurantApp.ClientApi.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpGet("Menu")]
+        public async Task<IActionResult> GetMenu()
+        {
+            MenuDto menu = await _serviceManager.OrderService.GetMenuAsync();
+
+            return Ok(menu);
+        }
     }
 }

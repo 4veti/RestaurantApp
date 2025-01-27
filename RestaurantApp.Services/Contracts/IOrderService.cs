@@ -5,6 +5,7 @@ namespace RestaurantApp.Services.Contracts;
 public interface IOrderService
 {
     Task<IEnumerable<OrderDto>> GetAllByParamsAsync(OrderQueryParams queryParams);
+    Task<MenuDto> GetMenuAsync();
     Task<OrderDto?> GetByIdAsync(int orderId);
     Task<string> AddAsync(OrderDto foodDto);
     Task<bool> UpdateAsync(int orderId, OrderDto foodDto);

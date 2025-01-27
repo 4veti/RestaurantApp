@@ -184,6 +184,59 @@ internal class OrderService : IOrderService
         return successfulUpdate;
     }
 
+    public async Task<MenuDto> GetMenuAsync()
+    {
+        List<FoodDto> foods = await _repositoryManager.FoodRepository
+            .GetAllAsync()
+            .Select(f => new FoodDto()
+            {
+                Name = f.Name,
+                NetGrams = f.NetGrams,
+                Price = f.Price,
+                FoodTypeId = f.FoodTypeId,
+                FoodTypeName = f.FoodType.Name
+            }).ToListAsync();
+
+        List<DrinkDto> drinks = await _repositoryManager.DrinkRepository
+            .GetAllAsync()
+            .Select(d => new DrinkDto()
+            {
+                Name = d.Name,
+                Price = d.Price,
+                DrinkTypeId = d.DrinkTypeId,
+                DrinkType = d.DrinkType.Name,
+                Millilitres = d.Millilitres,
+                IsAlcoholic = d.IsAlcoholic,
+                AlcoholPercentage = d.AlcoholPercentage,
+            }).ToListAsync();
+
+        List<FoodTypeDto> foodTypes = await _repositoryManager.FoodTypeRepository
+            .GetAllAsync()
+            .Select(ft => new FoodTypeDto()
+            {
+                Id = ft.Id,
+                Name = ft.Name
+            }).ToListAsync();
+
+        List<DrinkTypeDto> drinkTypes = await _repositoryManager.DrinkTypeRepository
+            .GetAllAsync()
+            .Select(dt => new DrinkTypeDto()
+            {
+                Id = dt.Id,
+                Name = dt.Name
+            }).ToListAsync();
+
+        MenuDto menu = new MenuDto()
+        {
+            Foods = foods,
+            Drinks = drinks,
+            FoodTypes = foodTypes,
+            DrinkTypes = drinkTypes
+        };
+
+        return menu;
+    }
+
     private async Task<List<string>> ValidateOrder(OrderDto dto)
     {
         List<string> errors = new List<string>();
