@@ -190,6 +190,7 @@ internal class OrderService : IOrderService
             .GetAllAsync()
             .Select(f => new FoodDto()
             {
+                Id = f.Id,
                 Name = f.Name,
                 NetGrams = f.NetGrams,
                 Price = f.Price,
@@ -201,6 +202,7 @@ internal class OrderService : IOrderService
             .GetAllAsync()
             .Select(d => new DrinkDto()
             {
+                Id = d.Id,
                 Name = d.Name,
                 Price = d.Price,
                 DrinkTypeId = d.DrinkTypeId,
