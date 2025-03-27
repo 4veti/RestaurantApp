@@ -8,34 +8,43 @@
       "sslPort": 44388
     }
   },
-  "profiles": {
-    "http": {
-        "commandName": "Project",
-        "dotnetRunMessages": true,
-        "launchBrowser": false,
-        "launchUrl": "Kitchen/Test",
-        "applicationUrl": "http://localhost:5252",
-        "environmentVariables": {
-            "ASPNETCORE_ENVIRONMENT": "Development"
+    "profiles": {
+        "http": {
+            "commandName": "Project",
+            "dotnetRunMessages": true,
+            "launchBrowser": false,
+            "launchUrl": "Kitchen/Test",
+            "applicationUrl": "http://localhost:5252",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        },
+        "https": {
+            "commandName": "Project",
+            "dotnetRunMessages": true,
+            "launchBrowser": false,
+            "launchUrl": "Kitchen/Test",
+            "applicationUrl": "https://localhost:7144",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        },
+        "IIS Express": {
+            "commandName": "IISExpress",
+            "launchBrowser": true,
+            "launchUrl": "Kitchen/Test",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        },
+        "RestaurantApp": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "launchUrl": "swagger",
+            "applicationUrl": "https://localhost:5001/;http://localhost:5000/",
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
         }
-    },
-    "https": {
-        "commandName": "Project",
-        "dotnetRunMessages": true,
-        "launchBrowser": false,
-        "launchUrl": "Kitchen/Test",
-        "applicationUrl": "https://localhost:7144",
-        "environmentVariables": {
-            "ASPNETCORE_ENVIRONMENT": "Development"
-        }
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "Kitchen/Test",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
     }
-  }
 }

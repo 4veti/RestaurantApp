@@ -26,6 +26,8 @@ namespace RestaurantApp.Api
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
 
+            builder.Services.AddSwaggerGen();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -39,6 +41,16 @@ namespace RestaurantApp.Api
             app.UseExceptionHandler();
 
             app.MapControllers();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+                //app.UseSwaggerUI(c =>
+                //{
+                //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyAPIV1");
+                //});
+            }
 
             await app.RunAsync();
         }
