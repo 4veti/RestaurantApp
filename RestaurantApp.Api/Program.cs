@@ -42,7 +42,7 @@ namespace RestaurantApp.Api
 
             app.MapControllers();
 
-            if (app.Environment.IsDevelopment())
+            //if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();

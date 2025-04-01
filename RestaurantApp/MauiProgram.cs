@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using RestaurantApp.Services;
+using RestaurantApp.ViewModels;
 
 namespace RestaurantApp
 {
@@ -18,6 +20,10 @@ namespace RestaurantApp
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+
+            builder.Services.AddSingleton<RestaurantService>();
+            builder.Services.AddSingleton<MainViewModel>();
+            builder.Services.AddSingleton<MainPage>();
 
             return builder.Build();
         }
