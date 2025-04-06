@@ -27,6 +27,21 @@ public partial class DrinksViewModel : ObservableObject
     public bool IsNotBusy => !IsBusy;
 
     [RelayCommand]
+    private async Task AddDrinkToOrderAsync(DrinkDto drinkDto)
+    {
+        DrinkDto? targetDrinkDto = _service.ClientOrder.Drinks.FirstOrDefault(x => x.Id == drinkDto.Id);
+
+        if (targetDrinkDto is not null)
+        {
+            targetDrinkDto.Count++;
+        }
+        else
+        {
+            _service.ClientOrder.Drinks.Add(drinkDto);
+        }
+    }
+
+    [RelayCommand]
     private async Task GetDrinkItemsAsync()
     {
         if (IsBusy)

@@ -8,13 +8,13 @@
              Title="Храни">
 
     <Grid>
-        <Grid ColumnDefinitions="*,*"
+        <Grid ColumnDefinitions="*,Auto,*"
                       ColumnSpacing="5"
                       RowDefinitions="*,Auto"
                       RowSpacing="0">
 
             <CollectionView BackgroundColor="Transparent"
-                                    Grid.ColumnSpan="2"
+                                Grid.Column="1" MinimumWidthRequest="500"
                                 ItemsSource="{Binding FoodList}"
                                 SelectionMode="None">
 
@@ -22,8 +22,14 @@
                     <DataTemplate x:DataType="model:FoodDto">
                         <Grid Padding="10">
                             <Frame HeightRequest="125">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:FoodsViewModel}}, x:DataType=viewmodel:FoodsViewModel, Path=AddFoodToOrderCommand}" />
+                                </Frame.GestureRecognizers>
+
                                 <VerticalStackLayout>
-                                    <Label Text="{Binding Name}"/>
+                                    <Label FontSize="22" Text="{Binding Name}"/>
                                     <Label Text="{Binding NetGrams,StringFormat='{0}гр'}"/>
                                     <Label Text="{Binding FoodTypeName}"/>
                                     <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>

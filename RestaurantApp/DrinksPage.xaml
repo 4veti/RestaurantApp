@@ -17,11 +17,15 @@
                             Grid.Column="1" MinimumWidthRequest="450"
                             ItemsSource="{Binding DrinksList}"
                             SelectionMode="None">
-
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:DrinkDto">
                         <Grid Padding="10">
                             <Frame >
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DrinksViewModel}}, x:DataType=viewmodel:DrinksViewModel, Path=AddDrinkToOrderAsync}" />
+                                </Frame.GestureRecognizers>
                                 <VerticalStackLayout>
                                     <Label FontSize="22" Text="{Binding Name}"/>
                                     <Label Text="{Binding Millilitres, StringFormat='{0}мл'}"/>

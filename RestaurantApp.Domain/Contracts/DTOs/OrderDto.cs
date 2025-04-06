@@ -19,6 +19,6 @@ public class OrderDto
 
     public bool IsServed { get; set; } = false;
 
-    public IEnumerable<FoodDto> Foods { get; set; } = new List<FoodDto>();
-    public IEnumerable<DrinkDto> Drinks { get; set; } = new List<DrinkDto>();
+    public ICollection<FoodDto> Foods { get; set; } = new List<FoodDto>();
+    public ICollection<DrinkDto> Drinks { get; set; } = new List<DrinkDto>();
 }

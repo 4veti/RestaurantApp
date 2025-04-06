@@ -12,7 +12,10 @@ public class RestaurantService
     {
         _httpClient = new HttpClient();
         _menu = new MenuDto();
+        ClientOrder = new OrderDto();
     }
+    
+    public OrderDto ClientOrder { get; set; }
 
     public async Task<List<FoodDto>> GetFoodItemsAsync()
     {
