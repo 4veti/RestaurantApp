@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Services;
+using RestaurantApp.Views;
 
 namespace RestaurantApp.ViewModels;
 
@@ -20,6 +21,7 @@ public partial class FoodsViewModel : ObservableObject
     public FoodsViewModel(RestaurantService service)
     {
         _service = service;
+        GetFoodItemsAsync();
     }
 
     public ObservableCollection<FoodDto> FoodList { get; } = new ();
@@ -70,5 +72,11 @@ public partial class FoodsViewModel : ObservableObject
         {
             IsBusy = false;
         }
+    }
+
+    [RelayCommand]
+    private async Task GoToMyOrderPageAsync()
+    {
+        await Shell.Current.GoToAsync(nameof(MyOrderPage), true);
     }
 }

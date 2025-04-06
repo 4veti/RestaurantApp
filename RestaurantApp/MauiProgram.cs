@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using RestaurantApp.Services;
 using RestaurantApp.ViewModels;
+using RestaurantApp.Views;
 
 namespace RestaurantApp
 {
@@ -25,9 +26,11 @@ namespace RestaurantApp
 
             builder.Services.AddSingleton<FoodsViewModel>();
             builder.Services.AddSingleton<DrinksViewModel>();
+            builder.Services.AddTransient<MyOrderViewModel>();
 
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<DrinksPage>();
+            builder.Services.AddTransient<MyOrderPage>();
 
             return builder.Build();
         }

@@ -6,24 +6,22 @@ namespace RestaurantApp.Services;
 public class RestaurantService
 {
     private HttpClient _httpClient;
-    private MenuDto? _menu;
+    private MenuDto _menu;
 
     public RestaurantService()
     {
-        _httpClient = new HttpClient();
-        _menu = new MenuDto();
-        ClientOrder = new OrderDto();
+        _httpClient = new HttpClient();                 // 
+        ClientOrder = new OrderDto();                   //
+        LoadMenu();                                     // Load once on start, and then after completing an order set a boolean flag that an order has been completed. Next time the menu is requested, get from API if flag is true.
     }
-    
+
     public OrderDto ClientOrder { get; set; }
 
     public async Task<List<FoodDto>> GetFoodItemsAsync()
     {
-        await LoadMenu(); //Maybe don't load every time
-
-        if (_menu is null)
+        if (_menu.Foods.Any())
         {
-            return new List<FoodDto>();
+            LoadMenu();
         }
 
         return _menu.Foods.ToList();
@@ -31,24 +29,34 @@ public class RestaurantService
 
     public async Task<List<DrinkDto>> GetDrinkItemsAsync()
     {
-        await LoadMenu(); //Maybe don't load every time
-
-        if (_menu is null)
+        if (_menu.Foods.Any())
         {
-            return new List<DrinkDto>();
+            LoadMenu();
         }
 
         return _menu.Drinks.ToList();
     }
 
-    private async Task LoadMenu()
+    private void LoadMenu()
     {
-        string url = "http://localhost:5000/Client/Menu";
-        var response = await _httpClient.GetAsync(url);
-
-        if (response?.IsSuccessStatusCode ?? false)
+        try
         {
-            _menu = await response.Content.ReadFromJsonAsync<MenuDto>();
+            string url = "http://localhost:5000/Client/Menu";
+            var response = _httpClient.GetAsync(url).Result;
+
+            if (response?.IsSuccessStatusCode ?? false)
+            {
+                _menu = response.Content.ReadFromJsonAsync<MenuDto>()?.Result ?? new MenuDto();
+            }
+
+            if (_menu is null)
+            {
+                _menu = new MenuDto();
+            }
+        }
+        catch (Exception)
+        {
+            _menu = new MenuDto();
         }
     }
 }

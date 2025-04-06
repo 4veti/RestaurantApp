@@ -26,5 +26,5 @@ public class DrinkDto
     [Range(MinAlcoholPercentage, MaxAlcoholPercentage)]
     public double? AlcoholPercentage { get; set; }
 
-    public int Count { get; set; }
+    public int Count { get; set; } = 1;
 }

@@ -1,4 +1,6 @@
-﻿namespace RestaurantApp
+﻿using RestaurantApp.Views;
+
+namespace RestaurantApp
 {
     public partial class AppShell : Shell
     {
@@ -6,7 +8,7 @@
         {
             InitializeComponent();
 
-           // Routing.RegisterRoute
+           Routing.RegisterRoute(nameof(MyOrderPage), typeof(MyOrderPage));
         }
     }
 }

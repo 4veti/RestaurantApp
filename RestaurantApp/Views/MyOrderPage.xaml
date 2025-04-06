@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:RestaurantApp.ViewModels"
+             xmlns:model="clr-namespace:RestaurantApp.Domain.Contracts.DTOs;assembly=RestaurantApp.Domain"
+             x:DataType="viewmodel:MyOrderViewModel"
+             x:Class="RestaurantApp.Views.MyOrderPage"
+             Title="Детайли на поръчката">
+
+    <Grid>
+        <Grid ColumnDefinitions="*,Auto,*"
+                  ColumnSpacing="5"
+                  RowDefinitions="*,Auto"
+                  RowSpacing="0">
+
+            <Button Grid.Column="2" Grid.Row="0"
+                    CornerRadius="30"
+                    WidthRequest="120" HeightRequest="50" FontSize="18"
+                    Command="{Binding GoBackCommand}"
+                    Text="Назад"/>
+
+
+            <CollectionView BackgroundColor="Transparent"
+                            Grid.Column="1" MinimumWidthRequest="450"
+                            ItemsSource="{Binding MyDrinks}"
+                            SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:DrinkDto">
+                        <Grid Padding="10">
+                            <Frame >
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DrinksViewModel}}, x:DataType=viewmodel:DrinksViewModel, Path=AddFoodToOrderCommand}" />
+                                </Frame.GestureRecognizers>
+                                
+                                <Grid Padding="10" ColumnSpacing="20"
+                                      HorizontalOptions="StartAndExpand"
+                                      ColumnDefinitions="Auto, *">
+                                    
+                                    <VerticalStackLayout Grid.Column="1" HorizontalOptions="StartAndExpand">
+                                        <Label FontSize="22" Text="{Binding Name}"/>
+                                        <Label Text="{Binding Millilitres, StringFormat='{0}мл'}"/>
+                                        <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
+                                        <Label IsVisible="{Binding IsAlcoholic}" Text="{Binding AlcoholPercentage, StringFormat='Алк. {0:F2}%'}"/>
+                                    </VerticalStackLayout>
+
+                                    <Label Grid.Column="0" VerticalTextAlignment="Center" FontSize="30" Text="{Binding Count, StringFormat='Брой: {0}'}" />
+                                </Grid>
+                            </Frame>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </Grid>
+</ContentPage>

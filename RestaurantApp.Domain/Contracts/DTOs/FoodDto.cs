@@ -21,5 +21,5 @@ public class FoodDto
 
     public string? FoodTypeName { get; set; }
 
-    public int Count { get; set; }
+    public int Count { get; set; } = 1;
 }

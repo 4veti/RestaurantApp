@@ -4,14 +4,14 @@
              xmlns:viewmodel="clr-namespace:RestaurantApp.ViewModels"
              xmlns:model="clr-namespace:RestaurantApp.Domain.Contracts.DTOs;assembly=RestaurantApp.Domain"
              x:DataType="viewmodel:FoodsViewModel"
-             x:Class="RestaurantApp.MainPage"
+             x:Class="RestaurantApp.Views.MainPage"
              Title="Храни">
 
     <Grid>
         <Grid ColumnDefinitions="*,Auto,*"
                       ColumnSpacing="5"
                       RowDefinitions="*,Auto"
-                      RowSpacing="0">
+                      RowSpacing="20">
 
             <CollectionView BackgroundColor="Transparent"
                                 Grid.Column="1" MinimumWidthRequest="500"
@@ -21,7 +21,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:FoodDto">
                         <Grid Padding="10">
-                            <Frame HeightRequest="125">
+                            <Frame>
                                 <Frame.GestureRecognizers>
                                     <TapGestureRecognizer
                                         CommandParameter="{Binding .}"
@@ -40,18 +40,24 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Button Text="Зареди ястия"
+            <Button Text="Зареди ястия" Margin="20"
                     Command="{Binding GetFoodItemsCommand}"
                     IsEnabled="{Binding IsNotBusy}"
-                    Grid.Row="1"
-                    Margin="8"/>
+                    Grid.Row="1"/>
+
+
+            <Button Grid.Column="2" Grid.Row="2" Margin="20"
+                    CornerRadius="40" Command="{Binding GoToMyOrderPageCommand}"
+                    WidthRequest="180" HeightRequest="80" FontSize="18"
+                    BackgroundColor="BlueViolet" Text="Виж поръчката"/>
 
             <ActivityIndicator IsVisible="{Binding IsBusy}"
                                IsRunning="{Binding IsBusy}"
                                HorizontalOptions="FillAndExpand"
                                VerticalOptions="CenterAndExpand"
                                Grid.RowSpan="2"
-                               Grid.ColumnSpan="2"/>
+                               Grid.ColumnSpan="3"/>
+
         </Grid>
 
         <Frame x:Name="fWelcomeScreenShade" BackgroundColor="DarkOliveGreen" Opacity="0.69"

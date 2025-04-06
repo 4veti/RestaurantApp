@@ -20,6 +20,7 @@ public partial class DrinksViewModel : ObservableObject
     public DrinksViewModel(RestaurantService service)
     {
         _service = service;
+        GetDrinkItemsAsync();
     }
 
     public ObservableCollection<DrinkDto> DrinksList { get; } = new ();

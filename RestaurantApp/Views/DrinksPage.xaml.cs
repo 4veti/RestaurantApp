@@ -1,6 +1,6 @@
 using RestaurantApp.ViewModels;
 
-namespace RestaurantApp;
+namespace RestaurantApp.Views;
 
 public partial class DrinksPage : ContentPage
 {
