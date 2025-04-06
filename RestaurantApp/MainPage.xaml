@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:RestaurantApp.ViewModels"
              xmlns:model="clr-namespace:RestaurantApp.Domain.Contracts.DTOs;assembly=RestaurantApp.Domain"
-             x:DataType="viewmodel:MainViewModel"
-             x:Class="RestaurantApp.MainPage">
+             x:DataType="viewmodel:FoodsViewModel"
+             x:Class="RestaurantApp.MainPage"
+             Title="Храни">
 
     <Grid>
         <Grid ColumnDefinitions="*,*"
@@ -23,9 +24,9 @@
                             <Frame HeightRequest="125">
                                 <VerticalStackLayout>
                                     <Label Text="{Binding Name}"/>
-                                    <Label Text="{Binding NetGrams}"/>
+                                    <Label Text="{Binding NetGrams,StringFormat='{0}гр'}"/>
                                     <Label Text="{Binding FoodTypeName}"/>
-                                    <Label Text="{Binding Price, StringFormat='{0:C2}'}"/>
+                                    <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
                                 </VerticalStackLayout>
                             </Frame>
                         </Grid>
@@ -46,16 +47,6 @@
                                Grid.RowSpan="2"
                                Grid.ColumnSpan="2"/>
         </Grid>
-        <!--<VerticalStackLayout Spacing="20" Margin="200,0,200,10">
-            <Entry Text="Filter Placeholder"
-                   HorizontalTextAlignment="Center"
-                   Margin="150,10,150,10"
-                   FontSize="24"/>
-            -->
-        <!--<ScrollView Margin="20" MaximumHeightRequest="700">
-            </ScrollView>-->
-        <!--
-        </VerticalStackLayout>-->
 
         <Frame x:Name="fWelcomeScreenShade" BackgroundColor="DarkOliveGreen" Opacity="0.69"
                 VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"

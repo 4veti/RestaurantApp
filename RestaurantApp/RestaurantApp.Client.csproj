@@ -67,4 +67,10 @@
 	  <ProjectReference Include="..\RestaurantApp.Domain\RestaurantApp.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <MauiXaml Update="DrinksPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>

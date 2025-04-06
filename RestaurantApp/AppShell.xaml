@@ -7,9 +7,18 @@
     Shell.FlyoutBehavior="Disabled"
     Title="RestaurantApp">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
+    <TabBar x:Name="tbMainTab">
+        <Tab Title="Ястия">
+            <ShellContent            
+                Title="Home"
+                ContentTemplate="{DataTemplate local:MainPage}"
+                Route="MainPage" />
+        </Tab>
+        <Tab Title="Напитки">
+            <ShellContent            
+                Title="Second Home"
+                ContentTemplate="{DataTemplate local:DrinksPage}"
+                Route="MainPage" />
+        </Tab>
+    </TabBar>
 </Shell>

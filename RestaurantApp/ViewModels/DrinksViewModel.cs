@@ -7,7 +7,7 @@ using RestaurantApp.Services;
 
 namespace RestaurantApp.ViewModels;
 
-public partial class MainViewModel : ObservableObject
+public partial class DrinksViewModel : ObservableObject
 {
     private readonly RestaurantService _service;
 
@@ -17,17 +17,17 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private bool isBusy;
 
-    public MainViewModel(RestaurantService service)
+    public DrinksViewModel(RestaurantService service)
     {
         _service = service;
     }
 
-    public ObservableCollection<FoodDto> FoodList { get; } = new ();
+    public ObservableCollection<DrinkDto> DrinksList { get; } = new ();
 
     public bool IsNotBusy => !IsBusy;
 
     [RelayCommand]
-    private async Task GetFoodItemsAsync()
+    private async Task GetDrinkItemsAsync()
     {
         if (IsBusy)
             return;
@@ -36,20 +36,20 @@ public partial class MainViewModel : ObservableObject
         {
             IsBusy = true;
 
-            List<FoodDto> foodItems = await _service.GetFoodItemsAsync();
+            List<DrinkDto> DrinkItems = await _service.GetDrinkItemsAsync();
 
-            if (FoodList.Any())
-                FoodList.Clear();
+            if (DrinksList.Any())
+                DrinksList.Clear();
 
-            foreach (FoodDto foodItem in foodItems)
+            foreach (DrinkDto drinkItem in DrinkItems)
             {
-                FoodList.Add(foodItem);
+                DrinksList.Add(drinkItem);
             }
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            await Shell.Current.DisplayAlert("Грешка!", "Неуспешно зареждане на ястията.", "Добре");
+            await Shell.Current.DisplayAlert("Грешка!", "Неуспешно зареждане на напитките.", "Добре");
         }
         finally
         {

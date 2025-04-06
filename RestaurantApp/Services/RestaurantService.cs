@@ -16,7 +16,7 @@ public class RestaurantService
 
     public async Task<List<FoodDto>> GetFoodItemsAsync()
     {
-        await LoadMenu();
+        await LoadMenu(); //Maybe don't load every time
 
         if (_menu is null)
         {
@@ -24,6 +24,18 @@ public class RestaurantService
         }
 
         return _menu.Foods.ToList();
+    }
+
+    public async Task<List<DrinkDto>> GetDrinkItemsAsync()
+    {
+        await LoadMenu(); //Maybe don't load every time
+
+        if (_menu is null)
+        {
+            return new List<DrinkDto>();
+        }
+
+        return _menu.Drinks.ToList();
     }
 
     private async Task LoadMenu()

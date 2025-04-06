@@ -4,7 +4,7 @@ namespace RestaurantApp
 {
     public partial class MainPage : ContentPage
     {
-        public MainPage(MainViewModel viewModel)
+        public MainPage(FoodsViewModel viewModel)
         {
             InitializeComponent();
            BindingContext = viewModel;
