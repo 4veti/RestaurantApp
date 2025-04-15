@@ -73,10 +73,4 @@ public partial class FoodsViewModel : ObservableObject
             IsBusy = false;
         }
     }
-
-    [RelayCommand]
-    private async Task GoToMyOrderPageAsync()
-    {
-        await Shell.Current.GoToAsync(nameof(MyOrderPage), true);
-    }
 }

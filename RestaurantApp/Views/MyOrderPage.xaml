@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:RestaurantApp.ViewModels"
-             xmlns:model="clr-namespace:RestaurantApp.Domain.Contracts.DTOs;assembly=RestaurantApp.Domain"
+             xmlns:model="clr-namespace:RestaurantApp.Models"
              x:DataType="viewmodel:MyOrderViewModel"
              x:Class="RestaurantApp.Views.MyOrderPage"
              Title="Детайли на поръчката">
@@ -10,42 +10,90 @@
     <Grid>
         <Grid ColumnDefinitions="*,Auto,*"
                   ColumnSpacing="5"
-                  RowDefinitions="*,Auto"
+                  RowDefinitions="Auto,Auto,*"
                   RowSpacing="0">
 
-            <Button Grid.Column="2" Grid.Row="0"
-                    CornerRadius="30"
-                    WidthRequest="120" HeightRequest="50" FontSize="18"
-                    Command="{Binding GoBackCommand}"
-                    Text="Назад"/>
 
+            <CollectionView BackgroundColor="Transparent" x:Name="foodsCollection"
+                            Grid.Column="1" Grid.Row="0"
+                            MinimumWidthRequest="450"
+                            ItemsSource="{Binding MyFoods}"
+                            SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:FoodItemModel">
+                        <Grid Padding="10">
+                            <Frame>
+                                <HorizontalStackLayout x:Name="foodsGrid"
+                                                       Padding="10" 
+                                                       HorizontalOptions="EndAndExpand">
+
+                                    <VerticalStackLayout>
+
+                                        <Button ImageSource="plussign.png"
+                                                HeightRequest="10"
+                                                CommandParameter="{Binding Id}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=IncreaseFoodItemCountCommand}"/>
+
+                                        <Button ImageSource="minussign.png"
+                                                HeightRequest="10"
+                                                CommandParameter="{Binding Id}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=DecreaseFoodItemCountCommand}"/>
+                                    </VerticalStackLayout>
+
+                                    <Label VerticalTextAlignment="Center"
+                                           Margin="20,0,20,0"
+                                           FontSize="30"
+                                           Text="{Binding Count, Mode=TwoWay}" />
+
+                                    <VerticalStackLayout>
+                                        <Label FontSize="22" Text="{Binding Name}"/>
+                                        <Label Text="{Binding NetGrams,StringFormat='{0}гр'}"/>
+                                        <Label Text="{Binding FoodTypeName}"/>
+                                        <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                            </Frame>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
             <CollectionView BackgroundColor="Transparent"
-                            Grid.Column="1" MinimumWidthRequest="450"
+                            Grid.Column="1" Grid.Row="1" MinimumWidthRequest="450"
                             ItemsSource="{Binding MyDrinks}"
                             SelectionMode="None">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:DrinkDto">
+                    <DataTemplate x:DataType="model:DrinkItemModel">
                         <Grid Padding="10">
                             <Frame >
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        CommandParameter="{Binding .}"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DrinksViewModel}}, x:DataType=viewmodel:DrinksViewModel, Path=AddFoodToOrderCommand}" />
-                                </Frame.GestureRecognizers>
-                                
                                 <Grid Padding="10" ColumnSpacing="20"
-                                      HorizontalOptions="StartAndExpand"
-                                      ColumnDefinitions="Auto, *">
-                                    
-                                    <VerticalStackLayout Grid.Column="1" HorizontalOptions="StartAndExpand">
+                                      HorizontalOptions="CenterAndExpand"
+                                      ColumnDefinitions="0.5*, 0.3*, 0.2*">
+
+                                    <VerticalStackLayout Grid.Column="0"
+                                                         HorizontalOptions="StartAndExpand">
                                         <Label FontSize="22" Text="{Binding Name}"/>
                                         <Label Text="{Binding Millilitres, StringFormat='{0}мл'}"/>
                                         <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
                                         <Label IsVisible="{Binding IsAlcoholic}" Text="{Binding AlcoholPercentage, StringFormat='Алк. {0:F2}%'}"/>
                                     </VerticalStackLayout>
 
-                                    <Label Grid.Column="0" VerticalTextAlignment="Center" FontSize="30" Text="{Binding Count, StringFormat='Брой: {0}'}" />
+                                    <Label Grid.Column="1"
+                                           VerticalTextAlignment="Center"
+                                           FontSize="30"
+                                           Text="{Binding Count, StringFormat='Брой: {0}'}" />
+
+                                    <VerticalStackLayout Grid.Column="2">
+                                        <Button ImageSource="plussign.png"
+                                                HeightRequest="10"
+                                                CommandParameter="{Binding Id}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=IncreaseFoodItemCountCommand}"/>
+
+                                        <Button ImageSource="minussign.png"
+                                                HeightRequest="10"
+                                                CommandParameter="{Binding Id}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=DecreaseFoodItemCountCommand}"/>
+                                    </VerticalStackLayout>
                                 </Grid>
                             </Frame>
                         </Grid>

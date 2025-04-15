@@ -19,7 +19,7 @@ public class RestaurantService
 
     public async Task<List<FoodDto>> GetFoodItemsAsync()
     {
-        if (_menu.Foods.Any())
+        if (!_menu.Foods.Any())
         {
             LoadMenu();
         }
@@ -29,12 +29,34 @@ public class RestaurantService
 
     public async Task<List<DrinkDto>> GetDrinkItemsAsync()
     {
-        if (_menu.Foods.Any())
+        if (!_menu.Foods.Any())
         {
             LoadMenu();
         }
 
         return _menu.Drinks.ToList();
+    }
+
+    public void SetFoodItemCount(int foodId, int count)
+    {
+        FoodDto foodDto = ClientOrder.Foods.First(x => x.Id == foodId);
+        foodDto.Count = count;
+
+        if (foodDto.Count < 1)
+        {
+            ClientOrder.Foods.Remove(foodDto);
+        }
+    }
+
+    public void SetDrinkItemCount(int drinkItem, int count)
+    {
+        DrinkDto drinkDto = ClientOrder.Drinks.First(x => x.Id == drinkItem);
+        drinkDto.Count = count;
+
+        if (drinkDto.Count < 1)
+        {
+            ClientOrder.Drinks.Remove(drinkDto);
+        }
     }
 
     private void LoadMenu()
