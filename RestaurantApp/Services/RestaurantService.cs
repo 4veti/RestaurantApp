@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net.Http;
+using System.Net.Http.Json;
 using RestaurantApp.Domain.Contracts.DTOs;
 
 namespace RestaurantApp.Services;
@@ -40,22 +41,51 @@ public class RestaurantService
     public void SetFoodItemCount(int foodId, int count)
     {
         FoodDto foodDto = ClientOrder.Foods.First(x => x.Id == foodId);
-        foodDto.Count = count;
 
-        if (foodDto.Count < 1)
+        if (count < 1)
         {
             ClientOrder.Foods.Remove(foodDto);
+        }
+        else
+        {
+            foodDto.Count = count;
         }
     }
 
     public void SetDrinkItemCount(int drinkItem, int count)
     {
         DrinkDto drinkDto = ClientOrder.Drinks.First(x => x.Id == drinkItem);
-        drinkDto.Count = count;
 
-        if (drinkDto.Count < 1)
+        if (count < 1)
         {
             ClientOrder.Drinks.Remove(drinkDto);
+        }
+        else
+        {
+            drinkDto.Count = count;
+        }
+    }
+
+    public void PlaceOrder()
+    {
+        try
+        {
+            string url = "http://localhost:5000/Client/Order";
+
+            var response = _httpClient.PostAsync(url, JsonContent.Create(ClientOrder)).Result;
+
+            if (response?.IsSuccessStatusCode ?? false)
+            {
+
+            }
+            else
+            {
+                ClientOrder = new OrderDto();
+            }
+        }
+        catch (Exception)
+        {
+            _menu = new MenuDto();
         }
     }
 

@@ -28,7 +28,6 @@
                                                        HorizontalOptions="EndAndExpand">
 
                                     <VerticalStackLayout>
-
                                         <Button ImageSource="plussign.png"
                                                 HeightRequest="10"
                                                 CommandParameter="{Binding Id}"
@@ -43,7 +42,7 @@
                                     <Label VerticalTextAlignment="Center"
                                            Margin="20,0,20,0"
                                            FontSize="30"
-                                           Text="{Binding Count, Mode=TwoWay}" />
+                                           Text="{Binding Count, StringFormat='Брой: {0}'}" />
 
                                     <VerticalStackLayout>
                                         <Label FontSize="22" Text="{Binding Name}"/>
@@ -66,35 +65,34 @@
                     <DataTemplate x:DataType="model:DrinkItemModel">
                         <Grid Padding="10">
                             <Frame >
-                                <Grid Padding="10" ColumnSpacing="20"
-                                      HorizontalOptions="CenterAndExpand"
-                                      ColumnDefinitions="0.5*, 0.3*, 0.2*">
+                                <HorizontalStackLayout x:Name="foodsGrid"
+                                                        Padding="10" 
+                                                        HorizontalOptions="EndAndExpand">
 
-                                    <VerticalStackLayout Grid.Column="0"
-                                                         HorizontalOptions="StartAndExpand">
+                                    <VerticalStackLayout>
+                                        <Button ImageSource="plussign.png"
+                                                HeightRequest="10"
+                                                CommandParameter="{Binding Id}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=IncreaseDrinkItemCountCommand}"/>
+
+                                        <Button ImageSource="minussign.png"
+                                                HeightRequest="10"
+                                                CommandParameter="{Binding Id}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=DecreaseDrinkItemCountCommand}"/>
+                                    </VerticalStackLayout>
+
+                                    <Label VerticalTextAlignment="Center"
+                                           Margin="20,0,20,0"
+                                           FontSize="30"
+                                           Text="{Binding Count, StringFormat='Брой: {0}'}" />
+
+                                    <VerticalStackLayout>
                                         <Label FontSize="22" Text="{Binding Name}"/>
                                         <Label Text="{Binding Millilitres, StringFormat='{0}мл'}"/>
                                         <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
                                         <Label IsVisible="{Binding IsAlcoholic}" Text="{Binding AlcoholPercentage, StringFormat='Алк. {0:F2}%'}"/>
                                     </VerticalStackLayout>
-
-                                    <Label Grid.Column="1"
-                                           VerticalTextAlignment="Center"
-                                           FontSize="30"
-                                           Text="{Binding Count, StringFormat='Брой: {0}'}" />
-
-                                    <VerticalStackLayout Grid.Column="2">
-                                        <Button ImageSource="plussign.png"
-                                                HeightRequest="10"
-                                                CommandParameter="{Binding Id}"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=IncreaseFoodItemCountCommand}"/>
-
-                                        <Button ImageSource="minussign.png"
-                                                HeightRequest="10"
-                                                CommandParameter="{Binding Id}"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=DecreaseFoodItemCountCommand}"/>
-                                    </VerticalStackLayout>
-                                </Grid>
+                                </HorizontalStackLayout>
                             </Frame>
                         </Grid>
                     </DataTemplate>
