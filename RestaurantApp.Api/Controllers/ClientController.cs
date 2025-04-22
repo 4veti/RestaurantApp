@@ -30,7 +30,7 @@ namespace RestaurantApp.ClientApi.Controllers
 
             string addResult = await _serviceManager.OrderService.AddAsync(dto);
 
-            if (string.IsNullOrEmpty(addResult))
+            if (!string.IsNullOrEmpty(addResult))
             {
                 return BadRequest(addResult);
             }

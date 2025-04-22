@@ -87,4 +87,16 @@ public partial class MyOrderViewModel : ObservableObject
 
         _service.SetDrinkItemCount(drinkId, drinkModel.Count);
     }
+
+    [RelayCommand]
+    private async Task PlaceOrder()
+    {
+        if (MyFoods.Any() || MyDrinks.Any())
+        {
+            await _service.PlaceOrder();
+            return;
+        }
+
+        await Shell.Current.DisplayAlert("Грешка!", "Трябва да имате поне един избран елемент, за да направите поръчка.", "Добре");
+    }
 }

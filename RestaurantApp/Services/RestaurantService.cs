@@ -1,5 +1,8 @@
-﻿using System.Net.Http;
+﻿using System.Diagnostics;
+using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using RestaurantApp.Domain.Contracts.DTOs;
 
 namespace RestaurantApp.Services;
@@ -66,26 +69,33 @@ public class RestaurantService
         }
     }
 
-    public void PlaceOrder()
+    public async Task PlaceOrder() // Return operation success to clear order items from xaml
     {
         try
         {
-            string url = "http://localhost:5000/Client/Order";
+            DateTime now = DateTime.Now;
+            ClientOrder.OrderName = $"{now.Hour}{now.Minute}";
 
-            var response = _httpClient.PostAsync(url, JsonContent.Create(ClientOrder)).Result;
+            string url = "https://localhost:5001/Client/Order";
+
+            var response = await _httpClient.PostAsync(url, JsonContent.Create(ClientOrder));
+            response.EnsureSuccessStatusCode();
+            string result = await response.Content.ReadAsStringAsync();
 
             if (response?.IsSuccessStatusCode ?? false)
             {
-
+                ClientOrder = new OrderDto();
             }
             else
             {
-                ClientOrder = new OrderDto();
+                Debug.WriteLine("Response to place order not successful " + response?.StatusCode);
+                await Shell.Current.DisplayAlert("Грешка!", "Неуспешно зареждане на ястията.", "Добре");
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            _menu = new MenuDto();
+            Debug.WriteLine(ex.Message);
+            await Shell.Current.DisplayAlert("Грешка!", $"Неуспешно извършване на поръчка. {ex.Message}", "Добре");
         }
     }
 

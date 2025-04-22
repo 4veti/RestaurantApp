@@ -10,7 +10,7 @@
     <Grid>
         <Grid ColumnDefinitions="*,Auto,*"
                   ColumnSpacing="5"
-                  RowDefinitions="Auto,Auto,*"
+                  RowDefinitions="Auto,Auto,Auto"
                   RowSpacing="0">
 
 
@@ -98,6 +98,13 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            <HorizontalStackLayout HorizontalOptions="CenterAndExpand"
+                                   Grid.Row="2">
+                <Button Text="Поръчай!"
+                        BackgroundColor="ForestGreen"
+                        FontSize="Medium"
+                        Command="{Binding PlaceOrderCommand}"/>
+            </HorizontalStackLayout>
         </Grid>
     </Grid>
 </ContentPage>

@@ -251,24 +251,34 @@ internal class OrderService : IOrderService
             }
 
             bool falseVariable = false;
-            List<int> invalidFoodIDs = await _repositoryManager.FoodRepository
-                .GetAllAsync()
-                .Select(f => f.Id)
-                .Where(f => dto.Foods.Select(x => x.Id).Contains(f) == falseVariable)
-                .ToListAsync();
+            List<int>? invalidFoodIDs = null;
 
-            if (invalidFoodIDs.Any())
+            if (dto.Foods.Any())
+            {
+                await _repositoryManager.FoodRepository
+                    .GetAllAsync()
+                    .Select(f => f.Id)
+                    .Where(f => dto.Foods.Select(x => x.Id).Contains(f) == falseVariable)
+                    .ToListAsync();
+            }
+
+            if (invalidFoodIDs?.Any() ?? false)
             {
                 errors.Add(string.Format(ErrorMessages.InvalidFoodIDs, string.Join(", ", invalidFoodIDs)));
             }
 
-            List<int> invalidDrinkIDs = await _repositoryManager.DrinkRepository
+            List<int>? invalidDrinkIDs = null;
+
+            if (dto.Drinks.Any())
+            {
+                await _repositoryManager.DrinkRepository
                 .GetAllAsync()
                 .Select(d => d.Id)
                 .Where(d => dto.Foods.Select(x => x.Id).Contains(d) == falseVariable)
                 .ToListAsync();
+            }
 
-            if (invalidDrinkIDs.Any())
+            if (invalidDrinkIDs?.Any() ?? false)
             {
                 errors.Add(string.Format(ErrorMessages.InvalidDrinkIDs, string.Join(", ", invalidDrinkIDs)));
             }
