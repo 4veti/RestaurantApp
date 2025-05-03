@@ -255,7 +255,7 @@ internal class OrderService : IOrderService
 
             if (dto.Foods.Any())
             {
-                await _repositoryManager.FoodRepository
+                invalidFoodIDs = await _repositoryManager.FoodRepository
                     .GetAllAsync()
                     .Select(f => f.Id)
                     .Where(f => dto.Foods.Select(x => x.Id).Contains(f) == falseVariable)
@@ -271,7 +271,7 @@ internal class OrderService : IOrderService
 
             if (dto.Drinks.Any())
             {
-                await _repositoryManager.DrinkRepository
+                invalidDrinkIDs = await _repositoryManager.DrinkRepository
                 .GetAllAsync()
                 .Select(d => d.Id)
                 .Where(d => dto.Foods.Select(x => x.Id).Contains(d) == falseVariable)
