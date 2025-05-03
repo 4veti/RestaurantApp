@@ -250,16 +250,19 @@ internal class OrderService : IOrderService
                 errors.Add(string.Format(ErrorMessages.InvalidNameLength, OrderNameMinLength, OrderNameMaxLength));
             }
 
-            bool falseVariable = false;
             List<int>? invalidFoodIDs = null;
 
             if (dto.Foods.Any())
             {
-                invalidFoodIDs = await _repositoryManager.FoodRepository
+                List<int> validFoodIDs = await _repositoryManager.FoodRepository
                     .GetAllAsync()
                     .Select(f => f.Id)
-                    .Where(f => dto.Foods.Select(x => x.Id).Contains(f) == falseVariable)
                     .ToListAsync();
+
+                invalidFoodIDs = dto.Drinks
+                    .Select(f => f.Id)
+                    .Where(f => !validFoodIDs.Contains(f))
+                    .ToList();
             }
 
             if (invalidFoodIDs?.Any() ?? false)
@@ -271,11 +274,15 @@ internal class OrderService : IOrderService
 
             if (dto.Drinks.Any())
             {
-                invalidDrinkIDs = await _repositoryManager.DrinkRepository
+                List<int> validDrinkIDs = await _repositoryManager.DrinkRepository
                 .GetAllAsync()
                 .Select(d => d.Id)
-                .Where(d => dto.Foods.Select(x => x.Id).Contains(d) == falseVariable)
                 .ToListAsync();
+
+                invalidDrinkIDs = dto.Drinks
+                    .Select(d => d.Id)
+                    .Where(d => !validDrinkIDs.Contains(d))
+                    .ToList();
             }
 
             if (invalidDrinkIDs?.Any() ?? false)
