@@ -6,22 +6,4 @@
     xmlns:local="clr-namespace:RestaurantApp.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="RestaurantApp">
-
-    <TabBar x:Name="tbMainTab">
-        <Tab Title="Ястия">
-            <ShellContent
-                ContentTemplate="{DataTemplate local:MainPage}"
-                Route="MainPage" />
-        </Tab>
-        <Tab Title="Напитки">
-            <ShellContent
-                ContentTemplate="{DataTemplate local:DrinksPage}"
-                Route="DrinksPage" />
-        </Tab>
-        <Tab Title="Данни за поръчка">
-            <ShellContent
-                ContentTemplate="{DataTemplate local:MyOrderPage}"
-                Route="MyOrderPage" />
-        </Tab>
-    </TabBar>
 </Shell>

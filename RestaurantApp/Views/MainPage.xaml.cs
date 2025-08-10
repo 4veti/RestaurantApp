@@ -17,4 +17,10 @@ public partial class MainPage : ContentPage
         fWelcomeScreenShade.IsEnabled = false;
         fWelcomeScreenShade.IsVisible = false;
     }
+
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        (BindingContext as FoodsViewModel)?.GetFoodItemsAsync();
+        base.OnNavigatedTo(args);
+    }
 }

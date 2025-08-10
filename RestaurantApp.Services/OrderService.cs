@@ -259,7 +259,7 @@ internal class OrderService : IOrderService
                     .Select(f => f.Id)
                     .ToListAsync();
 
-                invalidFoodIDs = dto.Drinks
+                invalidFoodIDs = dto.Foods
                     .Select(f => f.Id)
                     .Where(f => !validFoodIDs.Contains(f))
                     .ToList();

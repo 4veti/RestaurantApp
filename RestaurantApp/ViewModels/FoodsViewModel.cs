@@ -35,7 +35,10 @@ public partial class FoodsViewModel : ObservableObject
 
         if (targetFoodDto is not null)
         {
-            targetFoodDto.Count++;
+            if (targetFoodDto.Count < 15)
+            {
+                targetFoodDto.Count++;
+            }
         }
         else
         {
@@ -44,9 +47,12 @@ public partial class FoodsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task GetFoodItemsAsync()
+    public async Task GetFoodItemsAsync()
     {
         if (IsBusy)
+            return;
+
+        if (!_service.ReloadFoods)
             return;
 
         try
@@ -71,6 +77,7 @@ public partial class FoodsViewModel : ObservableObject
         finally
         {
             IsBusy = false;
+            _service.ReloadFoods = false;
         }
     }
 }

@@ -93,7 +93,14 @@ public partial class MyOrderViewModel : ObservableObject
     {
         if (MyFoods.Any() || MyDrinks.Any())
         {
-            await _service.PlaceOrder();
+            bool orderSuccess = await _service.PlaceOrder();
+
+            if (orderSuccess)
+            {
+                MyFoods.Clear();
+                MyDrinks.Clear();
+            }
+
             return;
         }
 

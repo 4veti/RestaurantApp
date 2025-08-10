@@ -1,8 +1,5 @@
 ﻿using System.Diagnostics;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using RestaurantApp.Domain.Contracts.DTOs;
 
 namespace RestaurantApp.Services;
@@ -11,19 +8,22 @@ public class RestaurantService
 {
     private HttpClient _httpClient;
     private MenuDto _menu;
+    private bool completedOrder;
 
     public RestaurantService()
     {
-        _httpClient = new HttpClient();                 // 
-        ClientOrder = new OrderDto();                   //
-        LoadMenu();                                     // Load once on start, and then after completing an order set a boolean flag that an order has been completed. Next time the menu is requested, get from API if flag is true.
+        _httpClient = new HttpClient();
+        ClientOrder = new OrderDto();
+        LoadMenu();
     }
 
     public OrderDto ClientOrder { get; set; }
+    public bool ReloadDrinks { get; set; } = true;
+    public bool ReloadFoods { get; set; } = true;
 
     public async Task<List<FoodDto>> GetFoodItemsAsync()
     {
-        if (!_menu.Foods.Any())
+        if (!_menu.Foods.Any() || completedOrder)
         {
             LoadMenu();
         }
@@ -33,7 +33,7 @@ public class RestaurantService
 
     public async Task<List<DrinkDto>> GetDrinkItemsAsync()
     {
-        if (!_menu.Foods.Any())
+        if (!_menu.Drinks.Any() || completedOrder)
         {
             LoadMenu();
         }
@@ -69,12 +69,12 @@ public class RestaurantService
         }
     }
 
-    public async Task PlaceOrder() // Return operation success to clear order items from xaml
+    public async Task<bool> PlaceOrder()
     {
         try
         {
             DateTime now = DateTime.Now;
-            ClientOrder.OrderName = $"{now.Hour}{now.Minute}";
+            ClientOrder.OrderName = $"{now.Hour}{now.Minute}{now.Second}";
 
             string url = "https://localhost:5001/Client/Order";
 
@@ -85,17 +85,25 @@ public class RestaurantService
             if (response?.IsSuccessStatusCode ?? false)
             {
                 ClientOrder = new OrderDto();
+                completedOrder = true;
+                ReloadDrinks = true;
+                ReloadFoods = true;
+
+                LoadMenu();
+                return true;
             }
             else
             {
                 Debug.WriteLine("Response to place order not successful " + response?.StatusCode);
-                await Shell.Current.DisplayAlert("Грешка!", "Неуспешно зареждане на ястията.", "Добре");
+                await Shell.Current.DisplayAlert("Грешка!", "Неуспешно извършване на поръчка.", "Добре");
+                return false;
             }
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             await Shell.Current.DisplayAlert("Грешка!", $"Неуспешно извършване на поръчка. {ex.Message}", "Добре");
+            return false;
         }
     }
 
@@ -119,6 +127,10 @@ public class RestaurantService
         catch (Exception)
         {
             _menu = new MenuDto();
+        }
+        finally
+        {
+            completedOrder = false;
         }
     }
 }
