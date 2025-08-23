@@ -76,11 +76,10 @@ public class RestaurantService
             DateTime now = DateTime.Now;
             ClientOrder.OrderName = $"{now.Hour}{now.Minute}{now.Second}";
 
-            string url = "https://localhost:5001/Client/Order";
+            string url = "http://localhost:5000/Client/Order";
 
             var response = await _httpClient.PostAsync(url, JsonContent.Create(ClientOrder));
             response.EnsureSuccessStatusCode();
-            string result = await response.Content.ReadAsStringAsync();
 
             if (response?.IsSuccessStatusCode ?? false)
             {
@@ -107,12 +106,95 @@ public class RestaurantService
         }
     }
 
+    public async Task<bool?> AnyNewOrders(int lastOrderId)
+    {
+        try
+        {
+            string url = $"http://localhost:5000/Kitchen/AnyOrders?lastOrderId={lastOrderId}";
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            if ((response?.IsSuccessStatusCode ?? false) == false)
+            {
+                return null;
+            }
+
+            bool anyNewOrders = await response.Content.ReadFromJsonAsync<bool>();
+            return anyNewOrders;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return null;
+        }
+    }
+
+    public async Task<List<OrderDto>> GetNewOrders(int lastOrderId)
+    {
+        try
+        {
+            string url = $"http://localhost:5000/Kitchen/Orders?lastOrderId={lastOrderId}";
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            List<OrderDto> orders = new();
+
+            if (response?.IsSuccessStatusCode ?? false)
+            {
+                orders = await response.Content.ReadFromJsonAsync<List<OrderDto>>() ?? new();
+            }
+
+            return orders;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            await Shell.Current.DisplayAlert("Грешка!", $"Неуспешно зареждане на поръчки. {ex.Message}", "Добре");
+            return new();
+        }
+    }
+
+    public async Task<bool> MarkOrderAsServed(int orderId)
+    {
+        try
+        {
+            string url = "http://localhost:5000/Kitchen/OrderServed";
+
+            HttpResponseMessage? response = await _httpClient.PostAsync(url, JsonContent.Create(orderId));
+            response?.EnsureSuccessStatusCode();
+
+            for (int i = 0; i < 2; i++)
+            {
+                if (response?.IsSuccessStatusCode ?? false)
+                {
+                    return true;
+                }
+
+                Thread.Sleep(1500);
+
+                response = await _httpClient.PostAsync(url, JsonContent.Create(orderId));
+                response?.EnsureSuccessStatusCode();
+            }
+
+            Debug.WriteLine("Response to mark order as served not successful " + response?.StatusCode);
+            await Shell.Current.DisplayAlert("Грешка!", "Неуспешно маркиране на поръчка като готова.", "Добре");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            await Shell.Current.DisplayAlert("Грешка!", $"Неуспешно маркиране на поръчка като готова: {ex.Message}", "Добре");
+            return false;
+        }
+    }
+
     private void LoadMenu()
     {
         try
         {
             string url = "http://localhost:5000/Client/Menu";
             var response = _httpClient.GetAsync(url).Result;
+            response.EnsureSuccessStatusCode();
 
             if (response?.IsSuccessStatusCode ?? false)
             {

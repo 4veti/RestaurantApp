@@ -98,19 +98,34 @@ internal class OrderService : IOrderService
 
     public async Task<IEnumerable<OrderDto>> GetAllByParamsAsync(OrderQueryParams queryParams)
     {
-        List<OrderDto> orders = await _repositoryManager.OrderRepository
-            .GetAllAsync(true)
-            .Select(o => new OrderDto()
+        IQueryable<Order> query = BuildOrderQueryExpressionTree(queryParams);
+
+        List<OrderDto> orders = await query.Select(o => new OrderDto()
+        {
+            Id = o.Id,
+            Created = o.Created,
+            Completed = o.Completed,
+            OrderName = o.OrderName,
+            IsPaid = o.IsPaid,
+            IsServed = o.IsServed,
+            Foods = o.FoodsOrders.Select(f => new FoodDto()
             {
-                Created = o.Created,
-                Completed = o.Completed,
-                OrderName = o.OrderName,
-                IsPaid = o.IsPaid,
-                IsServed = o.IsServed
-            })
-            .ToListAsync();
+                Name = f.Food.Name,
+                Count = f.Count
+            }).ToList()
+        })
+        .ToListAsync();
 
         return orders;
+    }
+
+    public async Task<bool> GetAllCountByParamsAsync(OrderQueryParams queryParams)
+    {
+        IQueryable<Order> query = BuildOrderQueryExpressionTree(queryParams);
+
+        bool anyOrders = await query.AnyAsync();
+
+        return anyOrders;
     }
 
     public async Task<OrderDto?> GetByIdAsync(int orderId)
@@ -133,11 +148,11 @@ internal class OrderService : IOrderService
         return orderDto;
     }
 
-    public async Task<bool> MarkCompletedAsync(int orderId)
+    public async Task<bool> MarkServedAsync(int orderId)
     {
         Order? order = await _repositoryManager.OrderRepository.GetByIdAsync(orderId);
 
-        if (order is null)
+        if (order is null || order.IsPaid == false)
         {
             return false;
         }
@@ -297,5 +312,23 @@ internal class OrderService : IOrderService
             errors.Add(ErrorMessages.UnexpectedValidationError);
             return errors;
         }
+    }
+
+    private IQueryable<Order> BuildOrderQueryExpressionTree(OrderQueryParams queryParams)
+    {
+        IQueryable<Order> query = _repositoryManager.OrderRepository
+            .GetAll(asNoTracking: true);
+
+        if (queryParams.LastOrderId > 0)
+        {
+            query = query.Where(o => o.Id > queryParams.LastOrderId);
+        }
+
+        if (queryParams.IsPaid is not null)
+        {
+            query = query.Where(o => o.IsPaid);
+        }
+
+        return query;
     }
 }

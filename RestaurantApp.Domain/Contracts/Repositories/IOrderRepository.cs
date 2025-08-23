@@ -4,7 +4,7 @@ using RestaurantApp.Domain.Entities;
 
 public interface IOrderRepository
 {
-    IQueryable<Order> GetAllAsync(bool asNoTracking = false);
+    IQueryable<Order> GetAll(bool asNoTracking = false);
     Task<Order?> GetByIdAsync(int id);
     Task InsertAsync(Order order);
     void Update(Order order);

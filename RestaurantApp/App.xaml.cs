@@ -8,10 +8,11 @@ public partial class App : Application
 {
     public App(FoodsViewModel foodsViewModel,
             DrinksViewModel drinksViewModel,
-            MyOrderViewModel myOrderViewModel)
+            MyOrderViewModel myOrderViewModel,
+            KitchenOrdersPageViewModel kitchenOrdersPageViewModel)
     {
         InitializeComponent();
 
-        MainPage = new AppShell(foodsViewModel, drinksViewModel, myOrderViewModel);
+        MainPage = new AppShell(foodsViewModel, drinksViewModel, myOrderViewModel, kitchenOrdersPageViewModel);
     }
 }

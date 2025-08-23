@@ -13,7 +13,7 @@ public sealed class OrderRepository : IOrderRepository
         _context = context;
     }
 
-    public IQueryable<Order> GetAllAsync(bool asNoTracking = false)
+    public IQueryable<Order> GetAll(bool asNoTracking = false)
     {
         IQueryable<Order> orders = _context.Set<Order>();
 

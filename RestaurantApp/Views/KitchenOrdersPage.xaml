@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:RestaurantApp.ViewModels"
+             xmlns:model="clr-namespace:RestaurantApp.Domain.Contracts.DTOs;assembly=RestaurantApp.Domain"
+             x:DataType="viewmodel:KitchenOrdersPageViewModel"
+             x:Class="RestaurantApp.Views.KitchenOrdersPage"
+             Title="Поръчки">
+
+    <Grid>
+        <ScrollView>
+            <Grid ColumnDefinitions="*,Auto,*"
+                  ColumnSpacing="5"
+                  RowDefinitions="Auto,Auto,Auto"
+                  RowSpacing="0">
+                <!--<HorizontalStackLayout HorizontalOptions="CenterAndExpand"
+                                       Grid.Row="0">
+                    <Button Text="Зареди поръчки"
+                            BackgroundColor="ForestGreen"
+                            FontSize="Medium"
+                            Command="{Binding GetNewOrdersCommand}"/>
+                </HorizontalStackLayout>-->
+                <Frame Grid.Column="1" Grid.Row="1"
+                        Margin="0,0,30,0">
+                    <CollectionView BackgroundColor="Transparent" x:Name="ActiveOrders"
+                                Grid.Column="1" Grid.Row="1"
+                                MinimumWidthRequest="450"
+                                ItemsSource="{Binding ActiveOrders}"
+                                SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:OrderDto">
+                                <!--<Grid Padding="10">-->
+                                <Frame Padding="10">
+                                    <VerticalStackLayout x:Name="orderStatsInfo"
+                                                     Padding="10" 
+                                                     HorizontalOptions="CenterAndExpand">
+                                        <Grid ColumnDefinitions="0.5*,0.5*">
+                                            <Label Grid.Column="0" HorizontalTextAlignment="Start" Text="{Binding OrderName}"/>
+                                            <Label Grid.Column="1" HorizontalTextAlignment="End" Text="0"/>
+                                        </Grid>
+
+                                        <CollectionView BackgroundColor="Transparent"
+                                                        ItemsSource="{Binding Foods}"
+                                                        SelectionMode="None">
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate x:DataType="model:FoodDto">
+                                                    <!--<Label Text="{Binding Name}" />-->
+                                                    <Label>
+                                                        <Label.Text>
+                                                            <MultiBinding StringFormat="{}{0} (x{1})">
+                                                                <Binding Path="Name"/>
+                                                                <Binding Path="Count"/>
+                                                            </MultiBinding>
+                                                        </Label.Text>
+                                                    </Label>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+
+                                        <Button HeightRequest="10"
+                                                Text="Сервирано!"
+                                                BackgroundColor="ForestGreen"
+                                                TextColor="White"
+                                                CommandParameter="{Binding .}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:KitchenOrdersPageViewModel}}, x:DataType=viewmodel:KitchenOrdersPageViewModel, Path=MarkAsServedCommand}"/>
+                                    </VerticalStackLayout>
+                                </Frame>
+                                <!--</Grid>-->
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Frame>
+                
+                <Frame Grid.Column="1" Grid.Row="2"
+                       Margin="0,30,0,0">
+
+                    <CollectionView BackgroundColor="Transparent" x:Name="PendingOrders"
+                                Grid.Column="1" Grid.Row="2"
+                                MinimumWidthRequest="450"
+                                Margin="0,30,0,0"
+                                ItemsSource="{Binding PendingOrders}"
+                                SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:OrderDto">
+                                <!--<Grid Padding="10">-->
+                                <Frame Padding="10">
+                                    <VerticalStackLayout x:Name="orderStatsInfo"
+                                                     Padding="10" 
+                                                     HorizontalOptions="CenterAndExpand">
+                                        <Grid ColumnDefinitions="0.5*,0.5*">
+                                            <Label Grid.Column="0" HorizontalTextAlignment="Start" Text="{Binding OrderName}"/>
+                                            <Label Grid.Column="1" HorizontalTextAlignment="End" Text="0"/>
+                                        </Grid>
+
+                                        <CollectionView BackgroundColor="Transparent"
+                                                    ItemsSource="{Binding Foods}"
+                                                    SelectionMode="Single">
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate x:DataType="model:FoodDto">
+                                                    <Label>
+                                                        <Label.Text>
+                                                            <MultiBinding StringFormat="{}{0} (x{1})">
+                                                                <Binding Path="Name"/>
+                                                                <Binding Path="Count"/>
+                                                            </MultiBinding>
+                                                        </Label.Text>
+                                                    </Label>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+
+                                        <Button HeightRequest="10"
+                                            Text="Започни"
+                                            BackgroundColor="DarkSlateBlue"
+                                            TextColor="White"
+                                            CommandParameter="{Binding .}"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:KitchenOrdersPageViewModel}}, x:DataType=viewmodel:KitchenOrdersPageViewModel, Path=MarkAsActiveCommand}"/>
+                                    </VerticalStackLayout>
+                                </Frame>
+                                <!--</Grid>-->
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Frame>
+            </Grid>
+        </ScrollView>
+    </Grid>
+</ContentPage>

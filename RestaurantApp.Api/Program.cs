@@ -14,7 +14,7 @@ namespace RestaurantApp.Api
 
             // Add services to the container.
 
-            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
+            string connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString") ?? string.Empty;
 
             builder.Services.AddDbContext<RestaurantAppDbContext>(options =>
                 options.UseSqlServer(connectionString));

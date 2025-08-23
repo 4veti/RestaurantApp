@@ -26,10 +26,12 @@ namespace RestaurantApp
 
             builder.Services.AddSingleton<FoodsViewModel>();
             builder.Services.AddSingleton<DrinksViewModel>();
+            builder.Services.AddSingleton<KitchenOrdersPageViewModel>();
             builder.Services.AddTransient<MyOrderViewModel>();
 
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<DrinksPage>();
+            builder.Services.AddSingleton<KitchenOrdersPage>();
             builder.Services.AddTransient<MyOrderPage>();
 
             return builder.Build();

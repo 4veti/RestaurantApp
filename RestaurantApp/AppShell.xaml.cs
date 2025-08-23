@@ -9,17 +9,55 @@ namespace RestaurantApp
     {
         public AppShell(FoodsViewModel foodsViewModel,
             DrinksViewModel drinksViewModel,
-            MyOrderViewModel myOrderViewModel)
+            MyOrderViewModel myOrderViewModel,
+            KitchenOrdersPageViewModel kitchenOrdersPageViewModel)
         {
             string content = File.ReadAllText("D:\\VisualStudio\\Thesis\\RestaurantApp\\Resources\\Raw\\appsettings.txt");
             ApplicationSettings settings = JsonSerializer.Deserialize<ApplicationSettings>(content) ?? new ApplicationSettings() { RunMode = RunMode.Client };
 
-            if (settings.RunMode == RunMode.Client)
+            if (settings.RunMode == RunMode.Kitchen)
+            {
+                CreateKitchenInterface(kitchenOrdersPageViewModel);
+            }
+            else if (settings.RunMode == RunMode.FrontDesk)
+            {
+
+            }
+            else
             {
                 CreateClientOrderInterface(foodsViewModel, drinksViewModel, myOrderViewModel);
             }
 
             InitializeComponent();
+        }
+
+        private void CreateKitchenInterface(KitchenOrdersPageViewModel viewModel)
+        {
+            var mainTab = new TabBar
+            {
+                Title = "Поръчки кухня",
+                Route = "KitchenOrdersTab"
+            };
+            // Create tab for dishes
+            var ordersTab = new Tab
+            {
+                Title = "Поръчки",
+                Route = "KitchenOrdersPage"
+            };
+            ordersTab.Items.Add(new ShellContent
+            {
+                Title = "Основна страница поръчки",
+                Route = "DishesTabRoute",
+                Content = new KitchenOrdersPage(viewModel)
+            });
+            // Add tabs to MainTab item
+            mainTab.Items.Add(ordersTab);
+
+
+            // Add MainTab item to shell
+            Items.Add(mainTab);
+
+            Routing.RegisterRoute(nameof(KitchenOrdersPage), typeof(KitchenOrdersPage));
         }
 
         private void CreateClientOrderInterface(FoodsViewModel foodsViewModel,
