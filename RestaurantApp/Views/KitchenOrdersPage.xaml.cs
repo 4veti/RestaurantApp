@@ -1,36 +1,39 @@
 using System.Runtime.CompilerServices;
+using RestaurantApp.Client.Models;
 using RestaurantApp.ViewModels;
 
 namespace RestaurantApp.Views;
 
 public partial class KitchenOrdersPage : ContentPage
 {
-	private IDispatcherTimer _timer;
+    private IDispatcherTimer _getOrdersTimer;
     private KitchenOrdersPageViewModel _viewModel;
 
-	public KitchenOrdersPage(KitchenOrdersPageViewModel viewModel)
-	{
-		BindingContext = viewModel;
+    public KitchenOrdersPage(KitchenOrdersPageViewModel viewModel)
+    {
+        BindingContext = viewModel;
         _viewModel = viewModel;
-		InitializeComponent();
+        InitializeComponent();
 
-        _timer = Dispatcher.CreateTimer();
-        _timer.Interval = TimeSpan.FromSeconds(10);
-        _timer.Tick += OrdersTimerTickLogic;
-        _timer.Start();
+        _getOrdersTimer = Dispatcher.CreateTimer();
+        _getOrdersTimer.Interval = TimeSpan.FromSeconds(10);
+        _getOrdersTimer.Tick += OrdersTimerTickLogic;
+        _getOrdersTimer.Start();
+
+        _viewModel.UpdateElapsedTimes();
     }
 
     protected override void OnAppearing()
     {
-        if (_timer == null)
+        if (_getOrdersTimer == null)
         {
-            _timer = Dispatcher.CreateTimer();
-            _timer.Interval = TimeSpan.FromSeconds(10);
-            _timer.Tick += OrdersTimerTickLogic;
+            _getOrdersTimer = Dispatcher.CreateTimer();
+            _getOrdersTimer.Interval = TimeSpan.FromSeconds(10);
+            _getOrdersTimer.Tick += OrdersTimerTickLogic;
         }
-        else if (_timer.IsRunning == false)
+        else if (_getOrdersTimer.IsRunning == false)
         {
-            _timer.Start();
+            _getOrdersTimer.Start();
         }
 
         base.OnAppearing();
@@ -38,7 +41,7 @@ public partial class KitchenOrdersPage : ContentPage
 
     protected override void OnDisappearing()
     {
-        _timer?.Stop();
+        _getOrdersTimer?.Stop();
         base.OnDisappearing();
     }
 
@@ -48,9 +51,21 @@ public partial class KitchenOrdersPage : ContentPage
 
         if (anyNewOrders is null || anyNewOrders == false)
         {
+            _viewModel.UpdateElapsedTimes();
             return;
         }
 
         await _viewModel.GetNewOrders();
+        FramePendingOrders.IsVisible = true;
+    }
+
+    private void ButtonMarkOrderAsActive_Clicked(object sender, EventArgs e)
+    {
+        if (_viewModel.PendingOrders.Any())
+        {
+            return;
+        }
+
+        FramePendingOrders.IsVisible = false;
     }
 }

@@ -2,7 +2,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RestaurantApp.Domain.Contracts.DTOs;
+using RestaurantApp.Client.Models;
 using RestaurantApp.Services;
+using Microsoft.Maui.Animations;
 
 namespace RestaurantApp.ViewModels;
 
@@ -16,8 +18,8 @@ public partial class KitchenOrdersPageViewModel : ObservableObject
         _service = service;
     }
 
-    public ObservableCollection<OrderDto> ActiveOrders { get; set; } = new();
-    public ObservableCollection<OrderDto> PendingOrders { get; set; } = new();
+    public ObservableCollection<ExtendedOrderDto> ActiveOrders { get; set; } = new();
+    public ObservableCollection<ExtendedOrderDto> PendingOrders { get; set; } = new();
 
     public async Task GetNewOrders()
     {
@@ -30,10 +32,19 @@ public partial class KitchenOrdersPageViewModel : ObservableObject
 
         foreach (OrderDto order in newOrders)
         {
-            PendingOrders.Add(order);
+            PendingOrders.Add(new ExtendedOrderDto(order));
         }
 
         _lastOrderId = PendingOrders.Max(o => o.Id);
+    }
+
+    public void UpdateElapsedTimes()
+    {
+        for (int i = 0; i < PendingOrders.Count(); i++)
+        {
+            PendingOrders[i].ElapsedMinutes = (int)(DateTime.Now - PendingOrders[i].Created).TotalMinutes;
+            PendingOrders[i] = PendingOrders[i];
+        }
     }
 
     public async Task<bool?> AnyNewOrders()
@@ -44,7 +55,7 @@ public partial class KitchenOrdersPageViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task MarkAsServed(OrderDto orderToMark)
+    private async Task MarkAsServed(ExtendedOrderDto orderToMark)
     {
         bool success = await _service.MarkOrderAsServed(orderToMark.Id);
 
@@ -55,7 +66,7 @@ public partial class KitchenOrdersPageViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void MarkAsActive(OrderDto orderToMark)
+    private void MarkAsActive(ExtendedOrderDto orderToMark)
     {
         PendingOrders.Remove(orderToMark);
         ActiveOrders.Add(orderToMark);
