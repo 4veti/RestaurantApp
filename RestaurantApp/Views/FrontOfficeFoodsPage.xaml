@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RestaurantApp.Views.FrontOfficeFoodsPage"
+             xmlns:viewmodel="clr-namespace:RestaurantApp.ViewModels"
+             xmlns:model="clr-namespace:RestaurantApp.Domain.Contracts.DTOs;assembly=RestaurantApp.Domain"
+             x:DataType="viewmodel:FrontOfficeViewModel"
+             Title="FrontOfficeFoodsPage">
+
+    <Grid>
+        <Grid ColumnDefinitions="*,Auto,*"
+                  ColumnSpacing="5"
+                  RowDefinitions="*,Auto"
+                  RowSpacing="20">
+            <CollectionView x:Name="foodsCollection"
+                            BackgroundColor="Transparent"
+                            Grid.Column="1" MinimumWidthRequest="500"
+                            ItemsSource="{Binding FoodList}"
+                            SelectionMode="Single">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:FoodDto">
+                        <Grid Padding="10">
+                            <Frame>
+                                <VerticalStackLayout>
+                                    <Label FontSize="22" Text="{Binding Name}"/>
+                                    <Label Text="{Binding NetGrams,StringFormat='{0}гр'}"/>
+                                    <Label Text="{Binding FoodTypeName}"/>
+                                    <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <ActivityIndicator IsVisible="{Binding IsFoodsBusy}"
+                           IsRunning="{Binding IsFoodsBusy}"
+                           Grid.RowSpan="2"
+                           Grid.ColumnSpan="3"/>
+
+        </Grid>
+
+        <Grid x:Name="gridFoodForm"
+              IsVisible="False"
+              ColumnDefinitions="*,*,*"
+              RowDefinitions="*,*">
+            <Frame BackgroundColor="AliceBlue"
+                   Grid.Column="1"
+                   Grid.Row="0">
+                <VerticalStackLayout>
+                    <Label Text="Име:" Margin="0, 0, 0, 5"/>
+                    <Entry x:Name="formFoodName" Margin="0, 0, 0, 10" Placeholder="..." BackgroundColor="White" Keyboard="Text"/>
+                    <Label Text="Грамаж:" Margin="0, 0, 0, 5"/>
+                    <Entry x:Name="formFoodGrams" Margin="0, 0, 0, 10" Placeholder="000" BackgroundColor="White" Keyboard="Numeric"/>
+                    <Label Text="Цена:" Margin="0, 0, 0, 5"/>
+                    <Entry x:Name="formFoodPrice" Margin="0, 0, 0, 10" Placeholder="0,00" BackgroundColor="White" Keyboard="Numeric"/>
+                    <Label Text="Тип:" Margin="0, 0, 0, 5"/>
+                    <Picker x:Name="formFoodTypePicker"
+                            Margin="0, 0, 0, 10"
+                            BackgroundColor="White"
+                            ItemsSource="{Binding FoodTypesList}"
+                            ItemDisplayBinding="{Binding Name}"/>
+                    <Button Text="Запази"
+                            Clicked="SaveButton_Clicked"
+                            MaximumWidthRequest="200"
+                            BackgroundColor="ForestGreen" />
+                </VerticalStackLayout>
+            </Frame>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -149,6 +149,14 @@ namespace RestaurantApp.ClientApi.Controllers
             return NoContent();
         }
 
+        [HttpGet("FoodType")]
+        public async Task<IActionResult> GetFoodTypes()
+        {
+            IEnumerable<FoodTypeDto> foodTypes = await _serviceManager.FoodTypeService.GetAllAsync();
+
+            return Ok(foodTypes);
+        }
+
         [HttpPost("FoodType")]
         public async Task<IActionResult> AddFoodType([FromBody] FoodTypeDto dto)
         {

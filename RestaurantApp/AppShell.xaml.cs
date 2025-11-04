@@ -10,7 +10,8 @@ namespace RestaurantApp
         public AppShell(FoodsViewModel foodsViewModel,
             DrinksViewModel drinksViewModel,
             MyOrderViewModel myOrderViewModel,
-            KitchenOrdersPageViewModel kitchenOrdersPageViewModel)
+            KitchenOrdersPageViewModel kitchenOrdersPageViewModel,
+            FrontOfficeViewModel frontOfficeViewModel)
         {
             string content = File.ReadAllText("D:\\VisualStudio\\Thesis\\RestaurantApp\\Resources\\Raw\\appsettings.txt");
             ApplicationSettings settings = JsonSerializer.Deserialize<ApplicationSettings>(content) ?? new ApplicationSettings() { RunMode = RunMode.Client };
@@ -21,7 +22,7 @@ namespace RestaurantApp
             }
             else if (settings.RunMode == RunMode.FrontDesk)
             {
-
+                CreateFrontOfficeInterface(frontOfficeViewModel);
             }
             else
             {
@@ -127,6 +128,72 @@ namespace RestaurantApp
             Items.Add(mainTab);
 
             Routing.RegisterRoute(nameof(MyOrderPage), typeof(MyOrderPage));
+        }
+
+        private void CreateFrontOfficeInterface(FrontOfficeViewModel frontOfficeViewModel)
+        {
+            var tabBar = new TabBar
+            {
+                Title = "FrontOfficeTabBar",
+                Route = "FrontOFficeTabBar"
+            };
+
+            // Create tab for Orders
+            var ordersTab = new Tab
+            {
+                Title = "Активни поръчки",
+                Route = "ActiveOrders"
+            };
+            // Add the Orders tab
+            ordersTab.Items.Add(new ShellContent
+            {
+                Title = "Страница на активните поръчки",
+                Route = "ActiveOrdersPage",
+                Content = new FrontOfficeOrdersPage(frontOfficeViewModel)
+            });
+            // Add tabs to MainTab item
+            tabBar.Items.Add(ordersTab);
+
+
+            // Create tab for Drinks
+            var drinksTab = new Tab
+            {
+                Title = "Напитки",
+                Route = "DrinksTabRoute"
+            };
+            // Add the drinks tab
+            drinksTab.Items.Add(new ShellContent
+            {
+                Title = "Напитки",
+                Route = "DrinksPage",
+                Content = new FrontOfficeDrinksPage(frontOfficeViewModel)
+            });
+            // Add tabs to MainTab item
+            tabBar.Items.Add(drinksTab);
+
+
+            // Create tab for Foods
+            var foodsTab = new Tab
+            {
+                Title = "Храни",
+                Route = "FoodsTabRoute"
+            };
+            // Add the Foods tab
+            foodsTab.Items.Add(new ShellContent
+            {
+                Title = "Храни",
+                Route = "FoodsPage",
+                Content = new FrontOfficeFoodsPage(frontOfficeViewModel)
+            });
+            // Add tabs to MainTab item
+            tabBar.Items.Add(foodsTab);
+
+
+
+            // Add MainTab item to shell
+            Items.Add(tabBar);
+
+            Routing.RegisterRoute(nameof(FrontOfficeOrdersPage), typeof(FrontOfficeOrdersPage));
         }
     }
 }

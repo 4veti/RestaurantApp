@@ -68,11 +68,12 @@ internal class FoodTypeService : IFoodTypeService
 
     public async Task<IEnumerable<FoodTypeDto>> GetAllAsync()
     {
-        List<FoodTypeDto> foodTypes = await _repositoryManager.DrinkTypeRepository
+        List<FoodTypeDto> foodTypes = await _repositoryManager.FoodTypeRepository
             .GetAllAsync(true)
             .Select(d => new FoodTypeDto()
             {
-                Name = d.Name
+                Id = d.Id,
+                Name = d.Name 
             })
             .ToListAsync();
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RestaurantApp.Views.FrontOfficeDrinksPage"
+             xmlns:viewmodel="clr-namespace:RestaurantApp.ViewModels"
+             xmlns:model="clr-namespace:RestaurantApp.Domain.Contracts.DTOs;assembly=RestaurantApp.Domain"
+             x:DataType="viewmodel:FrontOfficeViewModel"
+             Title="Управление на системата">
+
+    <Grid>
+        <Grid ColumnDefinitions="*,Auto,*"
+              ColumnSpacing="5"
+              RowDefinitions="*,Auto"
+              RowSpacing="0">
+
+            <CollectionView BackgroundColor="Transparent"
+                        Grid.Column="1" MinimumWidthRequest="450"
+                        ItemsSource="{Binding DrinksList}"
+                        SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:DrinkDto">
+                        <Grid Padding="10">
+                            <Frame>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                    CommandParameter="{Binding .}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DrinksViewModel}}, x:DataType=viewmodel:DrinksViewModel, Path=AddDrinkToOrderCommand}" />
+                                </Frame.GestureRecognizers>
+                                <VerticalStackLayout>
+                                    <Label FontSize="22" Text="{Binding Name}"/>
+                                    <Label Text="{Binding Millilitres, StringFormat='{0}мл'}"/>
+                                    <Label Text="{Binding DrinkType}"/>
+                                    <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
+                                    <Label IsVisible="{Binding IsAlcoholic}" Text="{Binding AlcoholPercentage, StringFormat='Алк. {0:F2}%'}"/>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Text="Зареди напитки"
+            Command="{Binding GetDrinkItemsCommand}"
+            IsEnabled="{Binding IsDrinksNotBusy}"
+            Grid.Row="1"
+            Margin="8"/>
+
+            <ActivityIndicator IsVisible="{Binding IsDrinksBusy}"
+                       IsRunning="{Binding IsDrinksBusy}"
+                       Grid.RowSpan="2"
+                       Grid.ColumnSpan="3"/>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -188,6 +188,28 @@ public class RestaurantService
         }
     }
 
+    public async Task<List<FoodTypeDto>> GetFoodTypes()
+    {
+        try
+        {
+            string url = $"http://localhost:5000/FrontDesk/FoodType";
+            var response = _httpClient.GetAsync(url).Result;
+            response.EnsureSuccessStatusCode();
+
+            if (response?.IsSuccessStatusCode ?? false)
+            {
+                return await response.Content.ReadFromJsonAsync<List<FoodTypeDto>>() ?? new();
+            }
+
+            return new();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return new();
+        }
+    }
+
     private void LoadMenu()
     {
         try
