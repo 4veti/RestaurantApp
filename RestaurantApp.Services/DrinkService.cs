@@ -130,7 +130,8 @@ internal class DrinkService : IDrinkService
             return null;
         }
 
-        List<string> validationResult = await ValidateDrinkDto(dto);
+        bool isNameChanged = dto.Name != originalDrink.Name;
+        List<string> validationResult = await ValidateDrinkDto(dto, isNameChanged);
 
         if (validationResult.Any())
         {
@@ -156,18 +157,21 @@ internal class DrinkService : IDrinkService
         return string.Empty;
     }
 
-    private async Task<List<string>> ValidateDrinkDto(DrinkDto dto)
+    private async Task<List<string>> ValidateDrinkDto(DrinkDto dto, bool isNameChanged = true)
     {
         List<string> result = new List<string>();
 
-        bool nameExists = await _repositoryManager.DrinkRepository
-            .GetAllAsync()
-            .Where(d => d.Name == dto.Name)
-            .AnyAsync();
-
-        if (nameExists)
+        if (isNameChanged)
         {
-            result.Add(string.Format(ErrorMessages.FoodNameAlreadyExists, dto.Name));
+            bool nameExists = await _repositoryManager.DrinkRepository
+                .GetAllAsync()
+                .Where(d => d.Name == dto.Name)
+                .AnyAsync();
+
+            if (nameExists)
+            {
+                result.Add(string.Format(ErrorMessages.FoodNameAlreadyExists, dto.Name));
+            }
         }
 
         bool isValidDrinkTypeId = dto.DrinkTypeId > 0 && await _repositoryManager.DrinkTypeRepository

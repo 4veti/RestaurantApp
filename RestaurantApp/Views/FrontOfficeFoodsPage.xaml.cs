@@ -1,4 +1,5 @@
 using RestaurantApp.Domain.Contracts.DTOs;
+using RestaurantApp.Domain.Entities;
 using RestaurantApp.ViewModels;
 
 namespace RestaurantApp.Views;
@@ -25,16 +26,9 @@ public partial class FrontOfficeFoodsPage : ContentPage
         ClearEditForm();
     }
 
-    private void ClearEditForm()
+    private void CancelButton_Clicked(object sender, EventArgs e)
     {
-        gridFoodForm.IsVisible = false;
-        gridFoodForm.IsEnabled = false;
-
-        formFoodName.Text = string.Empty;
-        formFoodGrams.Text = string.Empty;
-        formFoodName.Text = string.Empty;
-
-        foodsCollection.SelectedItem = null;
+        ClearEditForm();
     }
 
     private void HandleSelectionChanged(object? sender, SelectionChangedEventArgs e)
@@ -58,13 +52,19 @@ public partial class FrontOfficeFoodsPage : ContentPage
             gridFoodForm.IsVisible = true;
             gridFoodForm.IsEnabled = true;
 
-            formFoodName.Text = food.Name;
-            formFoodGrams.Text = food.NetGrams.ToString();
-            formFoodPrice.Text = food.Price.ToString();
+            _viewModel.SelectedFood = food;
             formFoodTypePicker.SelectedItem = _viewModel.FoodTypesList.First(f => f.Id == food.FoodTypeId);
         }
         catch (Exception ex)
         { }
 
+    }
+
+    private void ClearEditForm()
+    {
+        gridFoodForm.IsVisible = false;
+        gridFoodForm.IsEnabled = false;
+
+        foodsCollection.SelectedItem = null;
     }
 }

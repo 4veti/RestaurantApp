@@ -18,6 +18,12 @@ public partial class FrontOfficeViewModel : ObservableObject
 
     private bool isFoodTypesBusy;
 
+    [ObservableProperty]
+    private FoodDto selectedFood;
+
+    [ObservableProperty]
+    private FoodTypeDto selectedFoodType;
+
     private readonly RestaurantService _service;
 
     public FrontOfficeViewModel(RestaurantService service)
@@ -76,7 +82,7 @@ public partial class FrontOfficeViewModel : ObservableObject
         {
             IsFoodsBusy = true;
 
-            List<FoodDto> foodItems = await _service.GetFoodItemsAsync();
+            List<FoodDto> foodItems = await _service.GetFoodItemsAsync(true);
 
             if (FoodList.Any())
                 FoodList.Clear();
@@ -97,7 +103,6 @@ public partial class FrontOfficeViewModel : ObservableObject
         }
     }
 
-    //[RelayCommand]
     public async Task GetFoodTypes()
     {
         if (isFoodTypesBusy)
@@ -126,5 +131,15 @@ public partial class FrontOfficeViewModel : ObservableObject
         {
             isFoodTypesBusy = false;
         }
+    }
+
+    [RelayCommand]
+    public async Task UpdateFood()
+    {
+        SelectedFood.FoodTypeName = SelectedFoodType.Name;
+        SelectedFood.FoodTypeId = SelectedFoodType.Id;
+
+        await _service.UpdateFood(SelectedFood);
+        await GetFoodItemsAsync();
     }
 }

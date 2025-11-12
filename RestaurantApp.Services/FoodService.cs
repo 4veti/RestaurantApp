@@ -123,7 +123,8 @@ internal class FoodService : IFoodService
             return null;
         }
 
-        List<string> validationResult = await ValidateFoodDto(foodDto);
+        bool isNameChanged = foodDto.Name != originalFood.Name;
+        List<string> validationResult = await ValidateFoodDto(foodDto, isNameChanged);
 
         if (validationResult.Any())
         {
@@ -147,18 +148,21 @@ internal class FoodService : IFoodService
         return string.Empty;
     }
 
-    private async Task<List<string>> ValidateFoodDto(FoodDto dto)
+    private async Task<List<string>> ValidateFoodDto(FoodDto dto, bool isNameChanged = true)
     {
         List<string> result = new List<string>();
 
-        bool nameExists = await _repositoryManager.FoodRepository
-            .GetAllAsync()
-            .Where(f => f.Name == dto.Name)
-            .AnyAsync();
-
-        if (nameExists)
+        if (isNameChanged)
         {
-            result.Add(string.Format(ErrorMessages. FoodNameAlreadyExists, dto.Name));
+            bool nameExists = await _repositoryManager.FoodRepository
+                .GetAllAsync()
+                .Where(f => f.Name == dto.Name)
+                .AnyAsync();
+
+            if (nameExists)
+            {
+                result.Add(string.Format(ErrorMessages.FoodNameAlreadyExists, dto.Name));
+            }
         }
 
         bool isValidFoodTypeId = dto.FoodTypeId > 0 && await _repositoryManager.FoodTypeRepository

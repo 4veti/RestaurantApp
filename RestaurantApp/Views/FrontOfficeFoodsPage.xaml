@@ -50,21 +50,28 @@
                    Grid.Row="0">
                 <VerticalStackLayout>
                     <Label Text="Име:" Margin="0, 0, 0, 5"/>
-                    <Entry x:Name="formFoodName" Margin="0, 0, 0, 10" Placeholder="..." BackgroundColor="White" Keyboard="Text"/>
+                    <Entry x:Name="formFoodName" Margin="0, 0, 0, 10" Placeholder="..." Text="{Binding SelectedFood.Name}" BackgroundColor="White" Keyboard="Text"/>
                     <Label Text="Грамаж:" Margin="0, 0, 0, 5"/>
-                    <Entry x:Name="formFoodGrams" Margin="0, 0, 0, 10" Placeholder="000" BackgroundColor="White" Keyboard="Numeric"/>
+                    <Entry x:Name="formFoodGrams" Margin="0, 0, 0, 10" Placeholder="000" Text="{Binding SelectedFood.NetGrams}" BackgroundColor="White" Keyboard="Numeric"/>
                     <Label Text="Цена:" Margin="0, 0, 0, 5"/>
-                    <Entry x:Name="formFoodPrice" Margin="0, 0, 0, 10" Placeholder="0,00" BackgroundColor="White" Keyboard="Numeric"/>
+                    <Entry x:Name="formFoodPrice" Margin="0, 0, 0, 10" Placeholder="0.00" Text="{Binding SelectedFood.Price, Converter={StaticResource decimalConverter}}" BackgroundColor="White" Keyboard="Numeric"/> <!--, StringFormat='{}{0:N2}'-->
                     <Label Text="Тип:" Margin="0, 0, 0, 5"/>
                     <Picker x:Name="formFoodTypePicker"
                             Margin="0, 0, 0, 10"
                             BackgroundColor="White"
                             ItemsSource="{Binding FoodTypesList}"
+                            SelectedItem="{Binding SelectedFoodType}"
                             ItemDisplayBinding="{Binding Name}"/>
+                    <Button Text="Откажи"
+                            Clicked="CancelButton_Clicked"
+                            MaximumWidthRequest="200"
+                            BackgroundColor="Gray"/>
                     <Button Text="Запази"
                             Clicked="SaveButton_Clicked"
                             MaximumWidthRequest="200"
-                            BackgroundColor="ForestGreen" />
+                            BackgroundColor="ForestGreen"
+                            CommandParameter="{Binding SelectedFood}"
+                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:FrontOfficeViewModel}}, x:DataType=viewmodel:FrontOfficeViewModel, Path=UpdateFoodCommand}"/>
                 </VerticalStackLayout>
             </Frame>
         </Grid>

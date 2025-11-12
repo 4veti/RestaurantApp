@@ -21,9 +21,9 @@ public class RestaurantService
     public bool ReloadDrinks { get; set; } = true;
     public bool ReloadFoods { get; set; } = true;
 
-    public async Task<List<FoodDto>> GetFoodItemsAsync()
+    public async Task<List<FoodDto>> GetFoodItemsAsync(bool forceReload = false)
     {
-        if (!_menu.Foods.Any() || completedOrder)
+        if (!_menu.Foods.Any() || completedOrder || forceReload)
         {
             LoadMenu();
         }
@@ -81,27 +81,51 @@ public class RestaurantService
             var response = await _httpClient.PostAsync(url, JsonContent.Create(ClientOrder));
             response.EnsureSuccessStatusCode();
 
-            if (response?.IsSuccessStatusCode ?? false)
-            {
-                ClientOrder = new OrderDto();
-                completedOrder = true;
-                ReloadDrinks = true;
-                ReloadFoods = true;
-
-                LoadMenu();
-                return true;
-            }
-            else
+            if (!(response?.IsSuccessStatusCode ?? false))
             {
                 Debug.WriteLine("Response to place order not successful " + response?.StatusCode);
                 await Shell.Current.DisplayAlert("Грешка!", "Неуспешно извършване на поръчка.", "Добре");
                 return false;
             }
+
+            ClientOrder = new OrderDto();
+            completedOrder = true;
+            ReloadDrinks = true;
+            ReloadFoods = true;
+
+            LoadMenu();
+            return true;
         }
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
             await Shell.Current.DisplayAlert("Грешка!", $"Неуспешно извършване на поръчка. {ex.Message}", "Добре");
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateFood(FoodDto foodDto)
+    {
+        try
+        {
+            string url = "http://localhost:5000/FrontDesk/Food";
+
+            var response = await _httpClient.PutAsync(url, JsonContent.Create(foodDto));
+            response.EnsureSuccessStatusCode();
+
+            if (!(response?.IsSuccessStatusCode ?? false))
+            {
+                Debug.WriteLine("Response to update dish not successful " + response?.StatusCode);
+                await Shell.Current.DisplayAlert("Грешка!", "Неуспешна промяна на ястие.", "Добре");
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            await Shell.Current.DisplayAlert("Грешка!", $"Неуспешна промяна на ястие. {ex.Message}", "Добре");
             return false;
         }
     }
