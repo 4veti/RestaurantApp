@@ -214,6 +214,14 @@ namespace RestaurantApp.ClientApi.Controllers
             return NoContent();
         }
 
+        [HttpGet("DrinkType")]
+        public async Task<IActionResult> GetDrinkTypes()
+        {
+            IEnumerable<DrinkTypeDto> drinkTypes = await _serviceManager.DrinkTypeService.GetAllAsync();
+
+            return Ok(drinkTypes);
+        }
+
         [HttpPost("DrinkType")]
         public async Task<IActionResult> AddDrinkType([FromBody] DrinkTypeDto dto)
         {

@@ -13,19 +13,15 @@
               RowDefinitions="*,Auto"
               RowSpacing="0">
 
-            <CollectionView BackgroundColor="Transparent"
-                        Grid.Column="1" MinimumWidthRequest="450"
-                        ItemsSource="{Binding DrinksList}"
-                        SelectionMode="None">
+            <CollectionView x:Name="drinksCollection"
+                            BackgroundColor="Transparent"
+                            Grid.Column="1" MinimumWidthRequest="500"
+                            ItemsSource="{Binding DrinksList}"
+                            SelectionMode="Single">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:DrinkDto">
                         <Grid Padding="10">
                             <Frame>
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                    CommandParameter="{Binding .}"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:DrinksViewModel}}, x:DataType=viewmodel:DrinksViewModel, Path=AddDrinkToOrderCommand}" />
-                                </Frame.GestureRecognizers>
                                 <VerticalStackLayout>
                                     <Label FontSize="22" Text="{Binding Name}"/>
                                     <Label Text="{Binding Millilitres, StringFormat='{0}мл'}"/>
@@ -39,16 +35,60 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Button Text="Зареди напитки"
-            Command="{Binding GetDrinkItemsCommand}"
-            IsEnabled="{Binding IsDrinksNotBusy}"
-            Grid.Row="1"
-            Margin="8"/>
-
             <ActivityIndicator IsVisible="{Binding IsDrinksBusy}"
                        IsRunning="{Binding IsDrinksBusy}"
                        Grid.RowSpan="2"
                        Grid.ColumnSpan="3"/>
+        </Grid>
+
+
+        <Frame x:Name="backgroundDim"
+               BackgroundColor="Gray"
+               Opacity="0.8"
+               IsEnabled="False"
+               IsVisible="False">
+        </Frame>
+
+        <Grid x:Name="gridDrinkForm"
+              IsVisible="False"
+              ColumnDefinitions="*,*,*"
+              RowDefinitions="*,Auto,*,*,*">
+            <Frame BackgroundColor="AliceBlue"
+                   Grid.Column="1"
+                   Grid.Row="1">
+                <VerticalStackLayout>
+                    <Label Text="Име:" Margin="0, 0, 0, 5"/>
+                    <Entry x:Name="formDrinkName" Margin="0, 0, 0, 10" Placeholder="..." Text="{Binding SelectedDrink.Name}" BackgroundColor="White" Keyboard="Text"/>
+                    <Label Text="Милилитри:" Margin="0, 0, 0, 5"/>
+                    <Entry x:Name="formDrinkGrams" Margin="0, 0, 0, 10" Placeholder="000" Text="{Binding SelectedDrink.Millilitres, Converter={StaticResource integerConverter}}" BackgroundColor="White" Keyboard="Numeric"/>
+                    <Label Text="Цена:" Margin="0, 0, 0, 5"/>
+                    <Entry x:Name="formDrinkPrice" Margin="0, 0, 0, 10" Placeholder="0.00" Text="{Binding SelectedDrink.Price, Converter={StaticResource decimalConverter}}" BackgroundColor="White" Keyboard="Numeric"/>
+
+                    <Label Text="Тип:" Margin="0, 0, 0, 5"/>
+                    <Picker x:Name="formDrinkTypePicker"
+                            Margin="0, 0, 0, 10"
+                            BackgroundColor="White"
+                            ItemsSource="{Binding DrinkTypesList}"
+                            SelectedItem="{Binding SelectedDrinkType}"
+                            ItemDisplayBinding="{Binding Name}"/>
+                    <HorizontalStackLayout Margin="0,15,0,0"
+                                           HorizontalOptions="CenterAndExpand">
+                        <Button Text="Откажи"
+                                Clicked="CancelButton_Clicked"
+                                MaximumWidthRequest="250"
+                                MinimumWidthRequest="200"
+                                BackgroundColor="Gray"
+                                Margin="0, 0, 10, 0"/>
+                        <Button Text="Запази"
+                                Clicked="SaveButton_Clicked"
+                                MaximumWidthRequest="250"
+                                MinimumWidthRequest="200"
+                                BackgroundColor="ForestGreen"
+                                CommandParameter="{Binding SelectedDrink}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:FrontOfficeViewModel}}, x:DataType=viewmodel:FrontOfficeViewModel, Path=UpdateDrinkCommand}"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
         </Grid>
     </Grid>
 </ContentPage>

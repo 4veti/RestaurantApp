@@ -31,9 +31,9 @@ public class RestaurantService
         return _menu.Foods.ToList();
     }
 
-    public async Task<List<DrinkDto>> GetDrinkItemsAsync()
+    public async Task<List<DrinkDto>> GetDrinkItemsAsync(bool forceReload = false)
     {
-        if (!_menu.Drinks.Any() || completedOrder)
+        if (!_menu.Drinks.Any() || completedOrder || forceReload)
         {
             LoadMenu();
         }
@@ -126,6 +126,32 @@ public class RestaurantService
         {
             Debug.WriteLine(ex.Message);
             await Shell.Current.DisplayAlert("Грешка!", $"Неуспешна промяна на ястие. {ex.Message}", "Добре");
+            return false;
+        }
+    }
+
+    public async Task<bool> UpdateDrink(DrinkDto drinkDto)
+    {
+        try
+        {
+            string url = "http://localhost:5000/FrontDesk/Drink";
+
+            var response = await _httpClient.PutAsync(url, JsonContent.Create(drinkDto));
+            response.EnsureSuccessStatusCode();
+
+            if (!(response?.IsSuccessStatusCode ?? false))
+            {
+                Debug.WriteLine("Response to update drink not successful " + response?.StatusCode);
+                await Shell.Current.DisplayAlert("Грешка!", "Неуспешна промяна на напитка.", "Добре");
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            await Shell.Current.DisplayAlert("Грешка!", $"Неуспешна промяна на напитка. {ex.Message}", "Добре");
             return false;
         }
     }
@@ -223,6 +249,28 @@ public class RestaurantService
             if (response?.IsSuccessStatusCode ?? false)
             {
                 return await response.Content.ReadFromJsonAsync<List<FoodTypeDto>>() ?? new();
+            }
+
+            return new();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            return new();
+        }
+    }
+
+    public async Task<List<DrinkTypeDto>> GetDrinkTypes()
+    {
+        try
+        {
+            string url = $"http://localhost:5000/FrontDesk/DrinkType";
+            var response = _httpClient.GetAsync(url).Result;
+            response.EnsureSuccessStatusCode();
+
+            if (response?.IsSuccessStatusCode ?? false)
+            {
+                return await response.Content.ReadFromJsonAsync<List<DrinkTypeDto>>() ?? new();
             }
 
             return new();

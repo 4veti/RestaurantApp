@@ -18,11 +18,19 @@ public partial class FrontOfficeViewModel : ObservableObject
 
     private bool isFoodTypesBusy;
 
+    private bool isDrinkTypesBusy;
+
     [ObservableProperty]
     private FoodDto selectedFood;
 
     [ObservableProperty]
     private FoodTypeDto selectedFoodType;
+
+    [ObservableProperty]
+    private DrinkDto selectedDrink;
+
+    [ObservableProperty]
+    private DrinkTypeDto selectedDrinkType;
 
     private readonly RestaurantService _service;
 
@@ -32,6 +40,7 @@ public partial class FrontOfficeViewModel : ObservableObject
         GetDrinkItemsAsync().GetAwaiter().GetResult();
         GetFoodItemsAsync().GetAwaiter().GetResult();
         GetFoodTypes().GetAwaiter().GetResult();
+        GetDrinkTypesAsync().GetAwaiter().GetResult();
     }
     public bool IsFoodsNotBusy => !IsFoodsBusy;
     public bool IsDrinksNotBusy => !IsDrinksBusy;
@@ -39,6 +48,7 @@ public partial class FrontOfficeViewModel : ObservableObject
     public ObservableCollection<DrinkDto> DrinksList { get; } = new();
     public ObservableCollection<FoodDto> FoodList { get; } = new();
     public ObservableCollection<FoodTypeDto> FoodTypesList { get; } = new();
+    public ObservableCollection<DrinkTypeDto> DrinkTypesList { get; } = new();
 
     [RelayCommand]
     public async Task GetDrinkItemsAsync()
@@ -50,7 +60,7 @@ public partial class FrontOfficeViewModel : ObservableObject
         {
             IsDrinksBusy = true;
 
-            List<DrinkDto> DrinkItems = await _service.GetDrinkItemsAsync();
+            List<DrinkDto> DrinkItems = await _service.GetDrinkItemsAsync(true);
 
             if (DrinksList.Any())
                 DrinksList.Clear();
@@ -71,6 +81,35 @@ public partial class FrontOfficeViewModel : ObservableObject
         }
     }
 
+    public async Task GetDrinkTypesAsync()
+    {
+        if (isDrinkTypesBusy)
+            return;
+
+        try
+        {
+            isDrinkTypesBusy = true;
+
+            List<DrinkTypeDto> drinkTypes = await _service.GetDrinkTypes();
+
+            if (DrinkTypesList.Any())
+                DrinkTypesList.Clear();
+
+            foreach (DrinkTypeDto drinkType in drinkTypes)
+            {
+                DrinkTypesList.Add(drinkType);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            await Shell.Current.DisplayAlert("Грешка!", "Неуспешно зареждане на типовете напитки.", "Добре");
+        }
+        finally
+        {
+            isDrinkTypesBusy = false;
+        }
+    }
 
     [RelayCommand]
     public async Task GetFoodItemsAsync()
@@ -136,10 +175,36 @@ public partial class FrontOfficeViewModel : ObservableObject
     [RelayCommand]
     public async Task UpdateFood()
     {
-        SelectedFood.FoodTypeName = SelectedFoodType.Name;
-        SelectedFood.FoodTypeId = SelectedFoodType.Id;
+        FoodDto updatedFood = new FoodDto()
+        {
+            Id = SelectedFood.Id,
+            Name = SelectedFood.Name,
+            NetGrams = SelectedFood.NetGrams,
+            Price = SelectedFood.Price,
+            FoodTypeId = SelectedFoodType.Id,
+            FoodTypeName = SelectedFoodType.Name,
+        };
 
-        await _service.UpdateFood(SelectedFood);
+        await _service.UpdateFood(updatedFood);
         await GetFoodItemsAsync();
+    }
+
+    [RelayCommand]
+    public async Task UpdateDrink()
+    {
+        DrinkDto updatedDrink = new DrinkDto()
+        {
+            Id = SelectedDrink.Id,
+            Name = SelectedDrink.Name,
+            Millilitres = SelectedDrink.Millilitres,
+            Price = SelectedDrink.Price,
+            IsAlcoholic = SelectedDrink.IsAlcoholic,
+            AlcoholPercentage = SelectedDrink.AlcoholPercentage,
+            DrinkTypeId = SelectedDrinkType.Id,
+            DrinkType = SelectedDrinkType.Name
+        };
+
+        await _service.UpdateDrink(updatedDrink);
+        await GetDrinkItemsAsync();
     }
 }

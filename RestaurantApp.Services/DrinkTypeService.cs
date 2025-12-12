@@ -72,6 +72,7 @@ internal class DrinkTypeService : IDrinkTypeService
             .GetAllAsync(true)
             .Select(d => new DrinkTypeDto()
             {
+                Id = d.Id,
                 Name = d.Name
             })
             .ToListAsync();

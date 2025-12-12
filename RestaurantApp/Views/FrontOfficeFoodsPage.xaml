@@ -38,23 +38,29 @@
                            IsRunning="{Binding IsFoodsBusy}"
                            Grid.RowSpan="2"
                            Grid.ColumnSpan="3"/>
-
         </Grid>
+
+        <Frame x:Name="backgroundDim"
+               BackgroundColor="Gray"
+               Opacity="0.8"
+               IsEnabled="False"
+               IsVisible="False">
+        </Frame>
 
         <Grid x:Name="gridFoodForm"
               IsVisible="False"
               ColumnDefinitions="*,*,*"
-              RowDefinitions="*,*">
+              RowDefinitions="*,Auto,*,*,*">
             <Frame BackgroundColor="AliceBlue"
                    Grid.Column="1"
-                   Grid.Row="0">
+                   Grid.Row="1">
                 <VerticalStackLayout>
                     <Label Text="Име:" Margin="0, 0, 0, 5"/>
                     <Entry x:Name="formFoodName" Margin="0, 0, 0, 10" Placeholder="..." Text="{Binding SelectedFood.Name}" BackgroundColor="White" Keyboard="Text"/>
                     <Label Text="Грамаж:" Margin="0, 0, 0, 5"/>
-                    <Entry x:Name="formFoodGrams" Margin="0, 0, 0, 10" Placeholder="000" Text="{Binding SelectedFood.NetGrams}" BackgroundColor="White" Keyboard="Numeric"/>
+                    <Entry x:Name="formFoodGrams" Margin="0, 0, 0, 10" Placeholder="000" Text="{Binding SelectedFood.NetGrams, Converter={StaticResource integerConverter}}" BackgroundColor="White" Keyboard="Numeric"/>
                     <Label Text="Цена:" Margin="0, 0, 0, 5"/>
-                    <Entry x:Name="formFoodPrice" Margin="0, 0, 0, 10" Placeholder="0.00" Text="{Binding SelectedFood.Price, Converter={StaticResource decimalConverter}}" BackgroundColor="White" Keyboard="Numeric"/> <!--, StringFormat='{}{0:N2}'-->
+                    <Entry x:Name="formFoodPrice" Margin="0, 0, 0, 10" Placeholder="0.00" Text="{Binding SelectedFood.Price, Converter={StaticResource decimalConverter}}" BackgroundColor="White" Keyboard="Numeric"/>
                     <Label Text="Тип:" Margin="0, 0, 0, 5"/>
                     <Picker x:Name="formFoodTypePicker"
                             Margin="0, 0, 0, 10"
@@ -62,16 +68,22 @@
                             ItemsSource="{Binding FoodTypesList}"
                             SelectedItem="{Binding SelectedFoodType}"
                             ItemDisplayBinding="{Binding Name}"/>
-                    <Button Text="Откажи"
-                            Clicked="CancelButton_Clicked"
-                            MaximumWidthRequest="200"
-                            BackgroundColor="Gray"/>
-                    <Button Text="Запази"
-                            Clicked="SaveButton_Clicked"
-                            MaximumWidthRequest="200"
-                            BackgroundColor="ForestGreen"
-                            CommandParameter="{Binding SelectedFood}"
-                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:FrontOfficeViewModel}}, x:DataType=viewmodel:FrontOfficeViewModel, Path=UpdateFoodCommand}"/>
+                    <HorizontalStackLayout Margin="0,15,0,0"
+                                           HorizontalOptions="CenterAndExpand">
+                        <Button Text="Откажи"
+                                Clicked="CancelButton_Clicked"
+                                MaximumWidthRequest="250"
+                                MinimumWidthRequest="200"
+                                BackgroundColor="Gray"
+                                Margin="0, 0, 10, 0"/>
+                        <Button Text="Запази"
+                                Clicked="SaveButton_Clicked"
+                                MaximumWidthRequest="250"
+                                MinimumWidthRequest="200"
+                                BackgroundColor="ForestGreen"
+                                CommandParameter="{Binding SelectedFood}"
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:FrontOfficeViewModel}}, x:DataType=viewmodel:FrontOfficeViewModel, Path=UpdateFoodCommand}"/>
+                    </HorizontalStackLayout>
                 </VerticalStackLayout>
             </Frame>
         </Grid>

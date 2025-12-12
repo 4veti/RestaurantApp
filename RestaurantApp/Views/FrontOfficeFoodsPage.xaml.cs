@@ -1,5 +1,4 @@
 using RestaurantApp.Domain.Contracts.DTOs;
-using RestaurantApp.Domain.Entities;
 using RestaurantApp.ViewModels;
 
 namespace RestaurantApp.Views;
@@ -16,21 +15,6 @@ public partial class FrontOfficeFoodsPage : ContentPage
         BindingContext = frontOfficeViewModel;
 	}
 
-    protected override void OnNavigatedTo(NavigatedToEventArgs args)
-    {
-        base.OnNavigatedTo(args);
-    }
-
-    private void SaveButton_Clicked(object sender, EventArgs e)
-    {
-        ClearEditForm();
-    }
-
-    private void CancelButton_Clicked(object sender, EventArgs e)
-    {
-        ClearEditForm();
-    }
-
     private void HandleSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         try
@@ -38,7 +22,7 @@ public partial class FrontOfficeFoodsPage : ContentPage
             FoodDto? food = e.CurrentSelection.FirstOrDefault() as FoodDto;
             if (food != null)
             {
-                ShowFoodEditForm(food);
+                ShowFoodEditForm(new FoodDto() { Id = food.Id, Name = food.Name, NetGrams = food.NetGrams, Price = food.Price, FoodTypeId = food.FoodTypeId });
             }
         }
         catch (Exception ex)
@@ -52,12 +36,14 @@ public partial class FrontOfficeFoodsPage : ContentPage
             gridFoodForm.IsVisible = true;
             gridFoodForm.IsEnabled = true;
 
+            backgroundDim.IsEnabled = true;
+            backgroundDim.IsVisible = true;
+
             _viewModel.SelectedFood = food;
             formFoodTypePicker.SelectedItem = _viewModel.FoodTypesList.First(f => f.Id == food.FoodTypeId);
         }
         catch (Exception ex)
         { }
-
     }
 
     private void ClearEditForm()
@@ -65,6 +51,19 @@ public partial class FrontOfficeFoodsPage : ContentPage
         gridFoodForm.IsVisible = false;
         gridFoodForm.IsEnabled = false;
 
+        backgroundDim.IsEnabled = false;
+        backgroundDim.IsVisible = false;
+
         foodsCollection.SelectedItem = null;
+    }
+
+    private void SaveButton_Clicked(object sender, EventArgs e)
+    {
+        ClearEditForm();
+    }
+
+    private void CancelButton_Clicked(object sender, EventArgs e)
+    {
+        ClearEditForm();
     }
 }
