@@ -278,5 +278,16 @@ namespace RestaurantApp.ClientApi.Controllers
 
             return NoContent();
         }
+
+        [HttpPut("OrderPaid")]
+        public async Task<IActionResult> MarkOrderAsPaid([FromBody] int orderId)
+        {
+            if (await _serviceManager.OrderService.MarkPaidAsync(orderId) == false)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
     }
 }

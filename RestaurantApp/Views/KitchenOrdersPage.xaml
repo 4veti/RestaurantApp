@@ -4,10 +4,10 @@
              xmlns:viewmodel="clr-namespace:RestaurantApp.ViewModels"
              xmlns:model="clr-namespace:RestaurantApp.Client.Models;assembly=RestaurantApp.Client"
              xmlns:domainModel="clr-namespace:RestaurantApp.Domain.Contracts.DTOs;assembly=RestaurantApp.Domain"
-             xmlns:converters="clr-namespace:RestaurantApp.Converters;assembly=RestaurantApp.Client"
              x:DataType="viewmodel:KitchenOrdersPageViewModel"
              x:Class="RestaurantApp.Views.KitchenOrdersPage"
              Title="Поръчки">
+             <!--xmlns:converters="clr-namespace:RestaurantApp.Converters;assembly=RestaurantApp.Client"-->
 
     <Grid>
         <ScrollView>

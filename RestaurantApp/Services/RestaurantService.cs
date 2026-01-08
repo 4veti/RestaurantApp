@@ -238,6 +238,40 @@ public class RestaurantService
         }
     }
 
+    public async Task<bool> MarkOrderAsPaid(int orderId)
+    {
+        try
+        {
+            string url = "http://localhost:5000/FrontDesk/OrderPaid";
+
+            HttpResponseMessage? response = await _httpClient.PutAsync(url, JsonContent.Create(orderId));
+            response?.EnsureSuccessStatusCode();
+
+            for (int i = 0; i < 2; i++)
+            {
+                if (response?.IsSuccessStatusCode ?? false)
+                {
+                    return true;
+                }
+
+                Thread.Sleep(1500);
+
+                response = await _httpClient.PostAsync(url, JsonContent.Create(orderId));
+                response?.EnsureSuccessStatusCode();
+            }
+
+            Debug.WriteLine("Response to mark order as paid not successful " + response?.StatusCode);
+            await Shell.Current.DisplayAlert("Грешка!", "Неуспешно маркиране на поръчка като платена.", "Добре");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            await Shell.Current.DisplayAlert("Грешка!", $"Неуспешно маркиране на поръчка като платена: {ex.Message}", "Добре");
+            return false;
+        }
+    }
+
     public async Task<List<FoodTypeDto>> GetFoodTypes()
     {
         try

@@ -1,12 +1,65 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:RestaurantApp.ViewModels"
+             xmlns:model="clr-namespace:RestaurantApp.Domain.Contracts.DTOs;assembly=RestaurantApp.Domain"
+             x:DataType="viewmodel:FrontOfficeViewModel"
              x:Class="RestaurantApp.Views.FrontOfficeOrdersPage"
              Title="FrontOfficeOrdersPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to the Front Office Orders Page!!!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+
+    <Grid>
+        <ScrollView>
+            <Grid ColumnDefinitions="*,Auto,*"
+                  ColumnSpacing="5"
+                  RowDefinitions="Auto,Auto"
+                  RowSpacing="0">
+                <Frame Grid.Column="1" Grid.Row="1"
+                       Margin="0,0,30,0">
+                    <CollectionView BackgroundColor="Transparent" x:Name="ActiveOrders"
+                                    Grid.Column="1" Grid.Row="1"
+                                    MinimumWidthRequest="450"
+                                    ItemsSource="{Binding Orders}"
+                                    SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:OrderDto">
+                                <Frame Padding="10">
+                                    <VerticalStackLayout x:Name="orderStatsInfo"
+                                                         Padding="10" >
+                                        <Grid ColumnDefinitions="0.5*,0.5*">
+                                            <Label Grid.Column="0" HorizontalTextAlignment="Start" Text="{Binding OrderName}"/>
+                                            <Label Grid.Column="1" HorizontalTextAlignment="End" Text="0"/>
+                                        </Grid>
+
+                                        <CollectionView BackgroundColor="Transparent"
+                                                        ItemsSource="{Binding Foods}"
+                                                        SelectionMode="None">
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate x:DataType="model:FoodDto">
+                                                    <Label>
+                                                        <Label.Text>
+                                                            <MultiBinding StringFormat="{}{0} (x{1})">
+                                                                <Binding Path="Name"/>
+                                                                <Binding Path="Count"/>
+                                                            </MultiBinding>
+                                                        </Label.Text>
+                                                    </Label>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+
+                                        <Button HeightRequest="10"
+                                                Text="Платено!"
+                                                BackgroundColor="ForestGreen"
+                                                TextColor="White"
+                                                CommandParameter="{Binding .}"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:FrontOfficeViewModel}}, x:DataType=viewmodel:FrontOfficeViewModel, Path=MarkAsPaidCommand}"/>
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Frame>
+            </Grid>
+        </ScrollView>
+    </Grid>
 </ContentPage>

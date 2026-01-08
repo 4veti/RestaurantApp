@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using CommunityToolkit.Mvvm.ComponentModel;
-using RestaurantApp.Domain.Contracts.DTOs;
+﻿using RestaurantApp.Domain.Contracts.DTOs;
 
 namespace RestaurantApp.Client.Models;
 

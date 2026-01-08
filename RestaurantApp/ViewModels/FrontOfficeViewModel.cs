@@ -10,6 +10,8 @@ namespace RestaurantApp.ViewModels;
 
 public partial class FrontOfficeViewModel : ObservableObject
 {
+    private int _lastOrderId = 0;
+
     [ObservableProperty]
     private bool isFoodsBusy;
 
@@ -49,6 +51,8 @@ public partial class FrontOfficeViewModel : ObservableObject
     public ObservableCollection<FoodDto> FoodList { get; } = new();
     public ObservableCollection<FoodTypeDto> FoodTypesList { get; } = new();
     public ObservableCollection<DrinkTypeDto> DrinkTypesList { get; } = new();
+
+    public ObservableCollection<OrderDto> Orders { get; set; } = new();
 
     [RelayCommand]
     public async Task GetDrinkItemsAsync()
@@ -206,5 +210,40 @@ public partial class FrontOfficeViewModel : ObservableObject
 
         await _service.UpdateDrink(updatedDrink);
         await GetDrinkItemsAsync();
+    }
+
+    public async Task<bool?> AnyNewOrders()
+    {
+        bool? anyNewOrders = await _service.AnyNewOrders(_lastOrderId);
+
+        return anyNewOrders;
+    }
+
+    public async Task GetNewOrders()
+    {
+        List<OrderDto> newOrders = await _service.GetNewOrders(_lastOrderId);
+
+        if (!newOrders.Any())
+        {
+            return;
+        }
+
+        foreach (OrderDto order in newOrders)
+        {
+            Orders.Add(order);
+        }
+
+        _lastOrderId = Orders.Max(o => o.Id);
+    }
+
+    [RelayCommand]
+    private async Task MarkAsPaid(OrderDto orderToMark)
+    {
+        bool success = await _service.MarkOrderAsPaid(orderToMark.Id);
+
+        if (success)
+        {
+            Orders.Remove(orderToMark);
+        }
     }
 }
