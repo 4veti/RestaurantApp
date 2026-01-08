@@ -11,7 +11,7 @@ namespace RestaurantApp.ViewModels;
 public partial class KitchenOrdersPageViewModel : ObservableObject
 {
     private readonly RestaurantService _service;
-    private int _lastOrderId = 1;
+    private int _lastOrderId = 0;
 
     public KitchenOrdersPageViewModel(RestaurantService service)
     {

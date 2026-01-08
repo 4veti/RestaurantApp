@@ -4,4 +4,5 @@ public class OrderQueryParams
 {
     public int LastOrderId { get; set; }
     public bool? IsPaid { get; set; }
+    public bool? OnlyNotServed { get; set; }
 }

@@ -22,7 +22,8 @@ namespace RestaurantApp.Api.Controllers
             OrderQueryParams queryParams = new OrderQueryParams()
             {
                 LastOrderId = lastOrderId,
-                IsPaid = true
+                IsPaid = true,
+                OnlyNotServed = true
             };
 
             bool anyOrders = await _serviceManager.OrderService.GetAllCountByParamsAsync(queryParams);

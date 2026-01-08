@@ -329,6 +329,11 @@ internal class OrderService : IOrderService
             query = query.Where(o => o.IsPaid);
         }
 
+        if (queryParams.OnlyNotServed ?? false)
+        {
+            query = query.Where(o => !o.IsServed);
+        }
+
         return query;
     }
 }
