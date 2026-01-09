@@ -204,6 +204,31 @@ public class RestaurantService
         }
     }
 
+    public async Task<List<OrderDto>> GetNewOrdersForFrontDesk(int lastOrderId)
+    {
+        try
+        {
+            string url = $"http://localhost:5000/FrontDesk/Orders?lastOrderId={lastOrderId}";
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            List<OrderDto> orders = new();
+
+            if (response?.IsSuccessStatusCode ?? false)
+            {
+                orders = await response.Content.ReadFromJsonAsync<List<OrderDto>>() ?? new();
+            }
+
+            return orders;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+            await Shell.Current.DisplayAlert("Грешка!", $"Неуспешно зареждане на поръчки. {ex.Message}", "Добре");
+            return new();
+        }
+    }
+
     public async Task<bool> MarkOrderAsServed(int orderId)
     {
         try

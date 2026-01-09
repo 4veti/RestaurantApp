@@ -51,8 +51,9 @@ public partial class FrontOfficeViewModel : ObservableObject
     public ObservableCollection<FoodDto> FoodList { get; } = new();
     public ObservableCollection<FoodTypeDto> FoodTypesList { get; } = new();
     public ObservableCollection<DrinkTypeDto> DrinkTypesList { get; } = new();
+    public ObservableCollection<OrderDto> ActiveFrontDeskOrders { get; set; } = new();
+    public ObservableCollection<OrderDto> PaidOrders { get; set; } = new();
 
-    public ObservableCollection<OrderDto> Orders { get; set; } = new();
 
     [RelayCommand]
     public async Task GetDrinkItemsAsync()
@@ -221,7 +222,7 @@ public partial class FrontOfficeViewModel : ObservableObject
 
     public async Task GetNewOrders()
     {
-        List<OrderDto> newOrders = await _service.GetNewOrders(_lastOrderId);
+        List<OrderDto> newOrders = await _service.GetNewOrdersForFrontDesk(_lastOrderId);
 
         if (!newOrders.Any())
         {
@@ -230,10 +231,20 @@ public partial class FrontOfficeViewModel : ObservableObject
 
         foreach (OrderDto order in newOrders)
         {
-            Orders.Add(order);
-        }
+            if (order.IsPaid)
+            {
+                PaidOrders.Add(order);
+            }
+            else
+            {
+                ActiveFrontDeskOrders.Add(order);
+            }
 
-        _lastOrderId = Orders.Max(o => o.Id);
+            if (order.Id > _lastOrderId)
+            {
+                _lastOrderId = order.Id;
+            }
+        }
     }
 
     [RelayCommand]
@@ -243,7 +254,8 @@ public partial class FrontOfficeViewModel : ObservableObject
 
         if (success)
         {
-            Orders.Remove(orderToMark);
+            ActiveFrontDeskOrders.Remove(orderToMark);
+            PaidOrders.Add(orderToMark);
         }
     }
 }

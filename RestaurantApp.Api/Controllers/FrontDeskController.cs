@@ -289,5 +289,19 @@ namespace RestaurantApp.ClientApi.Controllers
 
             return Ok();
         }
+
+        [HttpGet("Orders")]
+        public async Task<IActionResult> GeNewOrders([FromQuery] int lastOrderId, [FromQuery] bool? isPaid)
+        {
+            OrderQueryParams queryParams = new OrderQueryParams()
+            {
+                LastOrderId = lastOrderId,
+                IsPaid = isPaid
+            };
+
+            IEnumerable<OrderDto> orders = await _serviceManager.OrderService.GetAllByParamsAsync(queryParams);
+
+            return Ok(orders);
+        }
     }
 }
