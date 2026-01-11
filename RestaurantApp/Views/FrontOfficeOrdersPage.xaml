@@ -11,98 +11,92 @@
         <ScrollView>
             <Grid ColumnDefinitions="*,Auto,*"
                   ColumnSpacing="5"
-                  RowDefinitions="Auto,Auto"
                   RowSpacing="0">
-                <Frame Grid.Column="1" Grid.Row="0"
-                       Margin="0,0,30,0">
-                    <CollectionView BackgroundColor="Transparent" x:Name="ActiveFrontDeskOrders"
-                                    Grid.Column="1" Grid.Row="1"
-                                    MinimumWidthRequest="450"
-                                    ItemsSource="{Binding ActiveFrontDeskOrders}"
-                                    SelectionMode="None">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="model:OrderDto">
-                                <Frame Padding="10"
-                                       BackgroundColor="LightSeaGreen">
-                                    <VerticalStackLayout x:Name="orderStatsInfo"
-                                                         Padding="10" >
-                                        <Grid ColumnDefinitions="0.5*,0.5*">
-                                            <Label Grid.Column="0" HorizontalTextAlignment="Start" Text="{Binding OrderName}"/>
-                                            <Label Grid.Column="1" HorizontalTextAlignment="End" Text="0"/>
-                                        </Grid>
+                <VerticalStackLayout Grid.Column="1" >
+                    <Label Text="Активни поръчи:" FontSize="Medium"/>
+                    <Frame Margin="0,0,0,30">
+                        <CollectionView BackgroundColor="Transparent" x:Name="ActiveFrontDeskOrders"
+                                        Grid.Column="1" Grid.Row="1"
+                                        MinimumWidthRequest="450"
+                                        ItemsSource="{Binding ActiveFrontDeskOrders}"
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:OrderDto">
+                                    <Frame Padding="10"
+                                           BackgroundColor="LightSeaGreen">
+                                        <VerticalStackLayout x:Name="orderStatsInfo"
+                                                             Padding="10" >
+                                            <Label Margin="0,-10,0,10" HorizontalTextAlignment="Start" FontAttributes="Bold" Text="{Binding OrderName, StringFormat='Поръчка: {0}'}"/>
 
-                                        <CollectionView BackgroundColor="Transparent"
+                                            <CollectionView BackgroundColor="Transparent"
                                                         ItemsSource="{Binding Foods}"
                                                         SelectionMode="None">
-                                            <CollectionView.ItemTemplate>
-                                                <DataTemplate x:DataType="model:FoodDto">
-                                                    <Label>
-                                                        <Label.Text>
-                                                            <MultiBinding StringFormat="{}{0} (x{1})">
-                                                                <Binding Path="Name"/>
-                                                                <Binding Path="Count"/>
-                                                            </MultiBinding>
-                                                        </Label.Text>
-                                                    </Label>
-                                                </DataTemplate>
-                                            </CollectionView.ItemTemplate>
-                                        </CollectionView>
+                                                <CollectionView.ItemTemplate>
+                                                    <DataTemplate x:DataType="model:FoodDto">
+                                                        <Label>
+                                                            <Label.Text>
+                                                                <MultiBinding StringFormat="{} -{0} (x{1})">
+                                                                    <Binding Path="Name"/>
+                                                                    <Binding Path="Count"/>
+                                                                </MultiBinding>
+                                                            </Label.Text>
+                                                        </Label>
+                                                    </DataTemplate>
+                                                </CollectionView.ItemTemplate>
+                                            </CollectionView>
 
-                                        <Button HeightRequest="10"
+                                            <Button HeightRequest="10"
                                                 Text="Платено!"
                                                 BackgroundColor="ForestGreen"
                                                 TextColor="White"
                                                 CommandParameter="{Binding .}"
                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:FrontOfficeViewModel}}, x:DataType=viewmodel:FrontOfficeViewModel, Path=MarkAsPaidCommand}"/>
-                                    </VerticalStackLayout>
-                                </Frame>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Frame>
+                                        </VerticalStackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Frame>
 
-                <Frame Grid.Column="1"
-                       Grid.Row="1"
-                       Margin="0,0,30,0">
-                    <CollectionView BackgroundColor="Transparent"
-                                    x:Name="ActiveOrders"
-                                    Grid.Column="1" Grid.Row="1"
-                                    MinimumWidthRequest="450"
-                                    ItemsSource="{Binding PaidOrders}"
-                                    SelectionMode="None">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="model:OrderDto">
-                                <Frame Padding="10"
-                                       BackgroundColor="CornflowerBlue">
-                                    <VerticalStackLayout x:Name="orderStatsInfo"
-                                                         Padding="10" >
-                                        <Grid ColumnDefinitions="0.5*,0.5*">
-                                            <Label Grid.Column="0" HorizontalTextAlignment="Start" Text="{Binding OrderName}"/>
-                                            <Label Grid.Column="1" HorizontalTextAlignment="End" Text="0"/>
-                                        </Grid>
+                    <Label Text="Платени поръчи:" FontSize="Medium"/>
+                    <Frame Margin="0,0,0,0">
+                        <CollectionView BackgroundColor="Transparent"
+                                        x:Name="ActiveOrders"
+                                        Grid.Column="1" Grid.Row="1"
+                                        MinimumWidthRequest="450"
+                                        ItemsSource="{Binding PaidOrders}"
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:OrderDto">
+                                    <Frame Padding="10"
+                                           BackgroundColor="CornflowerBlue">
+                                        <VerticalStackLayout x:Name="orderStatsInfo"
+                                                             Padding="10" >
+                                            <Label Margin="0,-10,0,10" HorizontalTextAlignment="Start" FontAttributes="Bold" Text="{Binding OrderName, StringFormat='Поръчка: {0}'}"/>
 
-                                        <CollectionView BackgroundColor="Transparent"
+                                            <CollectionView BackgroundColor="Transparent"
                                                         ItemsSource="{Binding Foods}"
                                                         SelectionMode="None">
-                                            <CollectionView.ItemTemplate>
-                                                <DataTemplate x:DataType="model:FoodDto">
-                                                    <Label>
-                                                        <Label.Text>
-                                                            <MultiBinding StringFormat="{}{0} (x{1})">
-                                                                <Binding Path="Name"/>
-                                                                <Binding Path="Count"/>
-                                                            </MultiBinding>
-                                                        </Label.Text>
-                                                    </Label>
-                                                </DataTemplate>
-                                            </CollectionView.ItemTemplate>
-                                        </CollectionView>
-                                    </VerticalStackLayout>
-                                </Frame>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </Frame>
+                                                <CollectionView.ItemTemplate>
+                                                    <DataTemplate x:DataType="model:FoodDto">
+                                                        <Label FontAttributes="Italic">
+                                                            <Label.Text>
+                                                                <MultiBinding StringFormat="{} - {0} (x{1})">
+                                                                    <Binding Path="Name"/>
+                                                                    <Binding Path="Count"/>
+                                                                </MultiBinding>
+                                                            </Label.Text>
+                                                        </Label>
+                                                    </DataTemplate>
+                                                </CollectionView.ItemTemplate>
+                                            </CollectionView>
+                                        </VerticalStackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Frame>
+                </VerticalStackLayout>
             </Grid>
         </ScrollView>
     </Grid>

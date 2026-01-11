@@ -21,14 +21,6 @@ public partial class FrontOfficeOrdersPage : ContentPage
 
     private async void OrdersTimerTickLogic(object? sender, EventArgs e)
     {
-        bool? anyNewOrders = await _viewModel.AnyNewOrders();
-
-        if (anyNewOrders is null || anyNewOrders == false)
-        {
-            return;
-        }
-
         await _viewModel.GetNewOrders();
-        //FramePendingOrders.IsVisible = true;
     }
 }

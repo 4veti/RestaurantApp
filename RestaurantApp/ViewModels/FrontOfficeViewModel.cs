@@ -213,13 +213,6 @@ public partial class FrontOfficeViewModel : ObservableObject
         await GetDrinkItemsAsync();
     }
 
-    public async Task<bool?> AnyNewOrders()
-    {
-        bool? anyNewOrders = await _service.AnyNewOrders(_lastOrderId);
-
-        return anyNewOrders;
-    }
-
     public async Task GetNewOrders()
     {
         List<OrderDto> newOrders = await _service.GetNewOrdersForFrontDesk(_lastOrderId);
