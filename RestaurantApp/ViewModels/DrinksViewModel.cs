@@ -3,6 +3,7 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using RestaurantApp.Domain.Contracts.DTOs;
+using RestaurantApp.Models;
 using RestaurantApp.Services;
 
 namespace RestaurantApp.ViewModels;
@@ -20,10 +21,11 @@ public partial class DrinksViewModel : ObservableObject
     public DrinksViewModel(RestaurantService service)
     {
         _service = service;
-        GetDrinkItemsAsync();
     }
 
     public ObservableCollection<DrinkDto> DrinksList { get; } = new ();
+    public ObservableCollection<FoodItemModel> MyFoods { get; } = new();
+    public ObservableCollection<DrinkItemModel> MyDrinks { get; } = new();
 
     public bool IsNotBusy => !IsBusy;
 
@@ -37,10 +39,12 @@ public partial class DrinksViewModel : ObservableObject
             if (targetDrinkDto.Count < 15)
             {
                 targetDrinkDto.Count++;
+                MyDrinks.First(f => f.Id == drinkDto.Id).Count++;
             }
         }
         else
         {
+            MyDrinks.Add(new DrinkItemModel(drinkDto));
             _service.ClientOrder.Drinks.Add(drinkDto);
         }
     }
@@ -77,6 +81,22 @@ public partial class DrinksViewModel : ObservableObject
         {
             IsBusy = false;
             _service.ReloadDrinks = false;
+        }
+    }
+
+    public void LoadOrderItems()
+    {
+        MyFoods.Clear();
+        MyDrinks.Clear();
+
+        foreach (FoodDto food in _service.ClientOrder.Foods)
+        {
+            MyFoods.Add(new FoodItemModel(food));
+        }
+
+        foreach (DrinkDto drink in _service.ClientOrder.Drinks)
+        {
+            MyDrinks.Add(new DrinkItemModel(drink));
         }
     }
 }

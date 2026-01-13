@@ -8,102 +8,105 @@
              Title="Детайли на поръчката">
 
     <Grid>
-        <Grid ColumnDefinitions="*,Auto,*"
+        <ScrollView>
+            <Grid ColumnDefinitions="*,Auto,*"
                   ColumnSpacing="5"
                   RowDefinitions="Auto,Auto,Auto"
                   RowSpacing="0">
+                <CollectionView BackgroundColor="Transparent" x:Name="foodsCollection"
+                                Grid.Column="1" Grid.Row="0"
+                                MinimumWidthRequest="450"
+                                ItemsSource="{Binding MyFoods}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:FoodItemModel">
+                            <Grid Padding="10">
+                                <Frame>
+                                    <HorizontalStackLayout x:Name="foodsGrid"
+                                                            Padding="10" 
+                                                            HorizontalOptions="EndAndExpand">
 
-            <CollectionView BackgroundColor="Transparent" x:Name="foodsCollection"
-                            Grid.Column="1" Grid.Row="0"
-                            MinimumWidthRequest="450"
-                            ItemsSource="{Binding MyFoods}"
-                            SelectionMode="None">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:FoodItemModel">
-                        <Grid Padding="10">
-                            <Frame>
-                                <HorizontalStackLayout x:Name="foodsGrid"
-                                                       Padding="10" 
-                                                       HorizontalOptions="EndAndExpand">
+                                        <VerticalStackLayout>
+                                            <Button ImageSource="plussign.png"
+                                                    HeightRequest="10"
+                                                    CommandParameter="{Binding Id}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=IncreaseFoodItemCountCommand}"/>
 
-                                    <VerticalStackLayout>
-                                        <Button ImageSource="plussign.png"
-                                                HeightRequest="10"
-                                                CommandParameter="{Binding Id}"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=IncreaseFoodItemCountCommand}"/>
+                                            <Button ImageSource="minussign.png"
+                                                    HeightRequest="10"
+                                                    CommandParameter="{Binding Id}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=DecreaseFoodItemCountCommand}"/>
+                                        </VerticalStackLayout>
 
-                                        <Button ImageSource="minussign.png"
-                                                HeightRequest="10"
-                                                CommandParameter="{Binding Id}"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=DecreaseFoodItemCountCommand}"/>
-                                    </VerticalStackLayout>
+                                        <Label VerticalTextAlignment="Center"
+                                                Margin="20,0,20,0"
+                                                FontSize="30"
+                                                Text="{Binding Count, StringFormat='Брой: {0}'}" />
 
-                                    <Label VerticalTextAlignment="Center"
-                                           Margin="20,0,20,0"
-                                           FontSize="30"
-                                           Text="{Binding Count, StringFormat='Брой: {0}'}" />
+                                        <VerticalStackLayout>
+                                            <Label FontSize="22" Text="{Binding Name}"/>
+                                            <Label Text="{Binding NetGrams,StringFormat='{0}гр'}"/>
+                                            <Label Text="{Binding FoodTypeName}"/>
+                                            <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
+                                        </VerticalStackLayout>
+                                    </HorizontalStackLayout>
+                                </Frame>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
-                                    <VerticalStackLayout>
-                                        <Label FontSize="22" Text="{Binding Name}"/>
-                                        <Label Text="{Binding NetGrams,StringFormat='{0}гр'}"/>
-                                        <Label Text="{Binding FoodTypeName}"/>
-                                        <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
-                                    </VerticalStackLayout>
-                                </HorizontalStackLayout>
-                            </Frame>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                <CollectionView BackgroundColor="Transparent"
+                                Grid.Column="1" Grid.Row="1" MinimumWidthRequest="450"
+                                ItemsSource="{Binding MyDrinks}"
+                                SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:DrinkItemModel">
+                            <Grid Padding="10">
+                                <Frame >
+                                    <HorizontalStackLayout x:Name="foodsGrid"
+                                                            Padding="10" 
+                                                            HorizontalOptions="EndAndExpand">
 
-            <CollectionView BackgroundColor="Transparent"
-                            Grid.Column="1" Grid.Row="1" MinimumWidthRequest="450"
-                            ItemsSource="{Binding MyDrinks}"
-                            SelectionMode="None">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:DrinkItemModel">
-                        <Grid Padding="10">
-                            <Frame >
-                                <HorizontalStackLayout x:Name="foodsGrid"
-                                                        Padding="10" 
-                                                        HorizontalOptions="EndAndExpand">
+                                        <VerticalStackLayout>
+                                            <Button ImageSource="plussign.png"
+                                                    HeightRequest="10"
+                                                    CommandParameter="{Binding Id}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=IncreaseDrinkItemCountCommand}"/>
 
-                                    <VerticalStackLayout>
-                                        <Button ImageSource="plussign.png"
-                                                HeightRequest="10"
-                                                CommandParameter="{Binding Id}"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=IncreaseDrinkItemCountCommand}"/>
+                                            <Button ImageSource="minussign.png"
+                                                    HeightRequest="10"
+                                                    CommandParameter="{Binding Id}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=DecreaseDrinkItemCountCommand}"/>
+                                        </VerticalStackLayout>
 
-                                        <Button ImageSource="minussign.png"
-                                                HeightRequest="10"
-                                                CommandParameter="{Binding Id}"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MyOrderViewModel}}, x:DataType=viewmodel:MyOrderViewModel, Path=DecreaseDrinkItemCountCommand}"/>
-                                    </VerticalStackLayout>
+                                        <Label VerticalTextAlignment="Center"
+                                                Margin="20,0,20,0"
+                                                FontSize="30"
+                                                Text="{Binding Count, StringFormat='Брой: {0}'}" />
 
-                                    <Label VerticalTextAlignment="Center"
-                                           Margin="20,0,20,0"
-                                           FontSize="30"
-                                           Text="{Binding Count, StringFormat='Брой: {0}'}" />
+                                        <VerticalStackLayout>
+                                            <Label FontSize="22" Text="{Binding Name}"/>
+                                            <Label Text="{Binding Millilitres, StringFormat='{0}мл'}"/>
+                                            <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
+                                            <Label IsVisible="{Binding IsAlcoholic}" Text="{Binding AlcoholPercentage, StringFormat='Алк. {0:F2}%'}"/>
+                                        </VerticalStackLayout>
+                                    </HorizontalStackLayout>
+                                </Frame>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
 
-                                    <VerticalStackLayout>
-                                        <Label FontSize="22" Text="{Binding Name}"/>
-                                        <Label Text="{Binding Millilitres, StringFormat='{0}мл'}"/>
-                                        <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
-                                        <Label IsVisible="{Binding IsAlcoholic}" Text="{Binding AlcoholPercentage, StringFormat='Алк. {0:F2}%'}"/>
-                                    </VerticalStackLayout>
-                                </HorizontalStackLayout>
-                            </Frame>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-            <HorizontalStackLayout HorizontalOptions="CenterAndExpand"
+                <HorizontalStackLayout HorizontalOptions="CenterAndExpand"
                                    Grid.Row="2">
-                <Button Text="Поръчай!"
+                    <Button Text="Поръчай!"
                         BackgroundColor="ForestGreen"
                         FontSize="Medium"
+                            Margin="0,0,0,20"
                         Command="{Binding PlaceOrderCommand}"/>
-            </HorizontalStackLayout>
-        </Grid>
+                </HorizontalStackLayout>
+            </Grid>
+        </ScrollView>
     </Grid>
 </ContentPage>

@@ -13,6 +13,7 @@ public partial class DrinksPage : ContentPage
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
 	{
         (BindingContext as DrinksViewModel)?.GetDrinkItemsAsync();
+        (BindingContext as DrinksViewModel)?.LoadOrderItems();
         base.OnNavigatedTo(args);
     }
 }

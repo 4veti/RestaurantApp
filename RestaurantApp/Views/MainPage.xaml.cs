@@ -21,6 +21,7 @@ public partial class MainPage : ContentPage
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
     {
         (BindingContext as FoodsViewModel)?.GetFoodItemsAsync();
+        (BindingContext as FoodsViewModel)?.LoadOrderItems();
         base.OnNavigatedTo(args);
     }
 }

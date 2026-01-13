@@ -14,7 +14,6 @@ public partial class MyOrderViewModel : ObservableObject
     public MyOrderViewModel(RestaurantService service)
     {
         _service = service;
-        LoadOrderItems();
     }
 
     public ObservableCollection<FoodItemModel> MyFoods { get; } = new();
