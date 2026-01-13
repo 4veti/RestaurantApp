@@ -46,6 +46,7 @@
                                             </CollectionView>
 
                                             <Button HeightRequest="10"
+                                                    Margin="0,10,0,0"
                                                 Text="Платено!"
                                                 BackgroundColor="ForestGreen"
                                                 TextColor="White"

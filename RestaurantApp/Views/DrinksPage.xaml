@@ -16,7 +16,7 @@
             <CollectionView BackgroundColor="Transparent"
                             Grid.Column="1" MinimumWidthRequest="450"
                             ItemsSource="{Binding DrinksList}"
-                            SelectionMode="None">
+                            SelectionMode="Single">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:DrinkDto">
                         <Grid Padding="10">

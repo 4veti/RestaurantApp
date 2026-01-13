@@ -16,7 +16,7 @@
             <CollectionView BackgroundColor="Transparent"
                                 Grid.Column="1" MinimumWidthRequest="500"
                                 ItemsSource="{Binding FoodList}"
-                                SelectionMode="None">
+                                SelectionMode="Single">
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:FoodDto">
@@ -55,8 +55,8 @@
         </Grid>
 
         <Frame x:Name="fWelcomeScreenShade" BackgroundColor="DarkOliveGreen" Opacity="0.69"
-                VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                BorderColor="Transparent"/>
+               VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+               BorderColor="Transparent"/>
         <Grid x:Name="gWelcomeScreen" 
               ColumnDefinitions="0.2*,Auto,0.2*" RowDefinitions="0.2*,0.6*,0.2*">
             <VerticalStackLayout Grid.Column="1" Grid.Row="1" Spacing="20">

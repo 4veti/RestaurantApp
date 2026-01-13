@@ -61,6 +61,7 @@ public partial class KitchenOrdersPage : ContentPage
 
     private void ButtonMarkOrderAsActive_Clicked(object sender, EventArgs e)
     {
+        FrameActiveOrders.IsVisible = true;
         if (_viewModel.PendingOrders.Any())
         {
             return;

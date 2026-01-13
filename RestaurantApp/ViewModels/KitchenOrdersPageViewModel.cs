@@ -45,6 +45,12 @@ public partial class KitchenOrdersPageViewModel : ObservableObject
             PendingOrders[i].ElapsedMinutes = (int)(DateTime.Now - PendingOrders[i].Created).TotalMinutes;
             PendingOrders[i] = PendingOrders[i];
         }
+
+        for (int i = 0; i < ActiveOrders.Count(); i++)
+        {
+            ActiveOrders[i].ElapsedMinutes = (int)(DateTime.Now - ActiveOrders[i].Created).TotalMinutes;
+            ActiveOrders[i] = ActiveOrders[i];
+        }
     }
 
     public async Task<bool?> AnyNewOrders()
