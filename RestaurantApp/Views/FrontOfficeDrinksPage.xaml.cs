@@ -38,11 +38,23 @@ public partial class FrontOfficeDrinksPage : ContentPage
 
             backgroundDim.IsEnabled = true;
             backgroundDim.IsVisible = true;
-
             _viewModel.SelectedDrink = drink;
-            formDrinkTypePicker.SelectedItem = _viewModel.DrinkTypesList.First(f => f.Id == drink.DrinkTypeId);
+
+            if (drink.Id > 0)
+            {
+                formDrinkTypePicker.SelectedItem = _viewModel.DrinkTypesList.First(f => f.Id == drink.DrinkTypeId);
+            }
+            else
+            {
+                DrinkTypeDto? selectedDrinkType = formDrinkTypePicker.SelectedItem as DrinkTypeDto;
+
+                if (selectedDrinkType != null)
+                {
+                    drink.DrinkTypeId = selectedDrinkType.Id;
+                }
+            }
         }
-        catch (Exception ex)
+        catch (Exception)
         { }
     }
 
@@ -57,6 +69,11 @@ public partial class FrontOfficeDrinksPage : ContentPage
         drinksCollection.SelectedItem = null;
     }
 
+    private void AddDrinkButton_Clicked(object sender, EventArgs eventArgs)
+    {
+        ShowDrinkEditForm(new DrinkDto());
+    }
+
     private void SaveButton_Clicked(object sender, EventArgs e)
     {
         ClearEditForm();
@@ -65,5 +82,15 @@ public partial class FrontOfficeDrinksPage : ContentPage
     private void CancelButton_Clicked(object sender, EventArgs e)
     {
         ClearEditForm();
+    }
+
+    private void formDrinkTypePicker_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        DrinkTypeDto? selectedDrinkType = formDrinkTypePicker.SelectedItem as DrinkTypeDto;
+
+        if (selectedDrinkType != null)
+        {
+            _viewModel.SelectedDrink.DrinkTypeId = selectedDrinkType.Id;
+        }
     }
 }

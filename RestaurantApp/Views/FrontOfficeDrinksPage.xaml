@@ -7,39 +7,55 @@
              x:DataType="viewmodel:FrontOfficeViewModel"
              Title="Управление на системата">
 
-    <Grid>
-        <Grid ColumnDefinitions="*,Auto,*"
+    <Grid
+        Background="Beige">
+            <Grid ColumnDefinitions="*,Auto,*"
               ColumnSpacing="5"
-              RowDefinitions="*,Auto"
+              RowDefinitions="Auto,*,0.05*"
               RowSpacing="0">
 
-            <CollectionView x:Name="drinksCollection"
-                            BackgroundColor="Transparent"
-                            Grid.Column="1" MinimumWidthRequest="500"
-                            ItemsSource="{Binding DrinksList}"
-                            SelectionMode="Single">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:DrinkDto">
-                        <Grid Padding="10">
-                            <Frame>
-                                <VerticalStackLayout>
-                                    <Label FontSize="22" Text="{Binding Name}"/>
-                                    <Label Text="{Binding Millilitres, StringFormat='{0}мл'}"/>
-                                    <Label Text="{Binding DrinkType}"/>
-                                    <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
-                                    <Label IsVisible="{Binding IsAlcoholic}" Text="{Binding AlcoholPercentage, StringFormat='Алк. {0:F2}%'}"/>
-                                </VerticalStackLayout>
-                            </Frame>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            <Button Text="Добави напитка"
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    Margin="5,5,5,10"
+                    Clicked="AddDrinkButton_Clicked"/>
+
+            <Frame Grid.Column="1"
+                   Grid.Row="1"
+                   CornerRadius="30"
+                   BackgroundColor="CornflowerBlue">
+                <ScrollView>
+                    <CollectionView x:Name="drinksCollection"
+                                BackgroundColor="Transparent"
+                                MinimumWidthRequest="500"
+                                ItemsSource="{Binding DrinksList}"
+                                SelectionMode="Single">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="model:DrinkDto">
+                                <Grid Padding="10">
+                                    <Frame>
+                                        <VerticalStackLayout>
+                                            <Label FontSize="22" Text="{Binding Name}"/>
+                                            <Label Text="{Binding Millilitres, StringFormat='{0}мл'}"/>
+                                            <Label Text="{Binding DrinkType}"/>
+                                            <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
+                                            <Label IsVisible="{Binding IsAlcoholic}" Text="{Binding AlcoholPercentage, StringFormat='Алк. {0:F2}%'}"/>
+                                        </VerticalStackLayout>
+                                    </Frame>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+
+            </Frame>
 
             <ActivityIndicator IsVisible="{Binding IsDrinksBusy}"
                        IsRunning="{Binding IsDrinksBusy}"
                        Grid.RowSpan="2"
                        Grid.ColumnSpan="3"/>
-        </Grid>
+
+            </Grid>
 
 
         <Frame x:Name="backgroundDim"
@@ -68,6 +84,7 @@
                     <Picker x:Name="formDrinkTypePicker"
                             Margin="0, 0, 0, 10"
                             BackgroundColor="White"
+                            SelectedIndexChanged="formDrinkTypePicker_SelectedIndexChanged"
                             ItemsSource="{Binding DrinkTypesList}"
                             SelectedItem="{Binding SelectedDrinkType}"
                             ItemDisplayBinding="{Binding Name}"/>

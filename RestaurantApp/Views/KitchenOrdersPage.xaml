@@ -19,7 +19,7 @@
                        Grid.Row="1"
                        Margin="0,30,0,0">
                     <VerticalStackLayout>
-                        <Label Text="Започнати:"
+                        <Label Text="{Binding ActiveOrders.Count, StringFormat='Започнати: {0}'}"
                                FontSize="Medium"
                                HorizontalTextAlignment="Start" />
                         
@@ -76,7 +76,7 @@
                        Margin="0,30,0,0"
                        IsVisible="False">
                     <VerticalStackLayout>
-                        <Label Text="Чакащи:"
+                        <Label Text="{Binding PendingOrders.Count, StringFormat='Чакащи: {0}'}"
                                FontSize="Medium"
                                HorizontalTextAlignment="Start" />
 

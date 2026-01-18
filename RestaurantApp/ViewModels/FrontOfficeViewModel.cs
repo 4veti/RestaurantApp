@@ -197,20 +197,22 @@ public partial class FrontOfficeViewModel : ObservableObject
     [RelayCommand]
     public async Task UpdateDrink()
     {
-        DrinkDto updatedDrink = new DrinkDto()
-        {
-            Id = SelectedDrink.Id,
-            Name = SelectedDrink.Name,
-            Millilitres = SelectedDrink.Millilitres,
-            Price = SelectedDrink.Price,
-            IsAlcoholic = SelectedDrink.IsAlcoholic,
-            AlcoholPercentage = SelectedDrink.AlcoholPercentage,
-            DrinkTypeId = SelectedDrinkType.Id,
-            DrinkType = SelectedDrinkType.Name
-        };
+        bool success = false;
 
-        await _service.UpdateDrink(updatedDrink);
-        await GetDrinkItemsAsync();
+        if (SelectedDrink.Id > 0)
+        {
+            
+            success = await _service.UpdateDrink(SelectedDrink);
+        }
+        else
+        {
+            success = await _service.AddDrink(SelectedDrink);
+        }
+
+        if (success)
+        {
+            await GetDrinkItemsAsync();
+        }
     }
 
     public async Task GetNewOrders()

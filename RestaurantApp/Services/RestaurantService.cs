@@ -137,7 +137,6 @@ public class RestaurantService
             string url = "http://localhost:5000/FrontDesk/Drink";
 
             var response = await _httpClient.PutAsync(url, JsonContent.Create(drinkDto));
-            response.EnsureSuccessStatusCode();
 
             if (!(response?.IsSuccessStatusCode ?? false))
             {
@@ -151,7 +150,30 @@ public class RestaurantService
         catch (Exception ex)
         {
             Debug.WriteLine(ex.Message);
-            await Shell.Current.DisplayAlert("Грешка!", $"Неуспешна промяна на напитка. {ex.Message}", "Добре");
+            return false;
+        }
+    }
+
+    public async Task<bool> AddDrink(DrinkDto drinkDto)
+    {
+        try
+        {
+            string url = "http://localhost:5000/FrontDesk/Drink";
+
+            var response = await _httpClient.PostAsync(url, JsonContent.Create(drinkDto));
+
+            if (!(response?.IsSuccessStatusCode ?? false))
+            {
+                Debug.WriteLine("Response to create drink not successful " + response?.StatusCode);
+                await Shell.Current.DisplayAlert("Грешка!", "Неуспешно добавяне на напитка.", "Добре");
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
             return false;
         }
     }

@@ -88,6 +88,7 @@
                                         <VerticalStackLayout>
                                             <Label FontSize="22" Text="{Binding Name}"/>
                                             <Label Text="{Binding Millilitres, StringFormat='{0}мл'}"/>
+                                            <Label Text="{Binding DrinkType}"/>
                                             <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
                                             <Label IsVisible="{Binding IsAlcoholic}" Text="{Binding AlcoholPercentage, StringFormat='Алк. {0:F2}%'}"/>
                                         </VerticalStackLayout>
