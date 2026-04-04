@@ -13,7 +13,9 @@ namespace RestaurantApp
             KitchenOrdersPageViewModel kitchenOrdersPageViewModel,
             FrontOfficeViewModel frontOfficeViewModel)
         {
-            string content = File.ReadAllText("D:\\VisualStudio\\Thesis\\RestaurantApp\\Resources\\Raw\\appsettings.txt");
+            string baseDirPath = AppContext.BaseDirectory;
+
+            string content = File.ReadAllText(baseDirPath + "..\\..\\..\\..\\..\\Resources\\Raw\\appsettings.txt");
             ApplicationSettings settings = JsonSerializer.Deserialize<ApplicationSettings>(content) ?? new ApplicationSettings() { RunMode = RunMode.Client };
 
             if (settings.RunMode == RunMode.Kitchen)

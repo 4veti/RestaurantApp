@@ -19,7 +19,7 @@ public class RestaurantService
 
     public OrderDto ClientOrder { get; set; }
     public bool ReloadDrinks { get; set; } = true;
-    public bool ReloadFoods { get; set; } = true;
+    public bool ReloadMenu { get; set; } = true;
 
     public async Task<List<FoodDto>> GetFoodItemsAsync(bool forceReload = false)
     {
@@ -91,7 +91,7 @@ public class RestaurantService
             ClientOrder = new OrderDto();
             completedOrder = true;
             ReloadDrinks = true;
-            ReloadFoods = true;
+            ReloadMenu = true;
 
             LoadMenu();
             return true;

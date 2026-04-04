@@ -24,6 +24,7 @@ public partial class FoodsViewModel : ObservableObject
     }
 
     public ObservableCollection<FoodDto> FoodList { get; } = new ();
+    public ObservableCollection<DrinkDto> DrinksList { get; } = new ();
     public ObservableCollection<FoodItemModel> MyFoods { get; } = new();
     public ObservableCollection<DrinkItemModel> MyDrinks { get; } = new();
 
@@ -50,37 +51,144 @@ public partial class FoodsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public async Task GetFoodItemsAsync()
+    private async Task AddDrinkToOrderAsync(DrinkDto drinkDto)
+    {
+        DrinkDto? targetDrinkDto = _service.ClientOrder.Drinks.FirstOrDefault(x => x.Id == drinkDto.Id);
+
+        if (targetDrinkDto is not null)
+        {
+            if (targetDrinkDto.Count < 15)
+            {
+                targetDrinkDto.Count++;
+                MyDrinks.First(f => f.Id == drinkDto.Id).Count++;
+            }
+        }
+        else
+        {
+            MyDrinks.Add(new DrinkItemModel(drinkDto));
+            _service.ClientOrder.Drinks.Add(drinkDto);
+        }
+    }
+
+    [RelayCommand]
+    public async Task GetMenutemsAsync()
     {
         if (IsBusy)
             return;
 
-        if (!_service.ReloadFoods)
+        if (!_service.ReloadMenu)
             return;
 
         try
         {
             IsBusy = true;
 
-            List<FoodDto> foodItems = await _service.GetFoodItemsAsync();
-
             if (FoodList.Any())
                 FoodList.Clear();
 
+            if (DrinksList.Any())
+                DrinksList.Clear();
+
+            List<FoodDto> foodItems = await _service.GetFoodItemsAsync();
             foreach (FoodDto foodItem in foodItems)
             {
                 FoodList.Add(foodItem);
             }
+
+            List<DrinkDto> drinkItems = await _service.GetDrinkItemsAsync();
+            foreach (DrinkDto drinkItem in drinkItems)
+            {
+                DrinksList.Add(drinkItem);
+            }
+
+            //LoadMenuStructureAndItems(foodItems, drinkItems);
+
+            _service.ReloadMenu = !foodItems.Any() && !drinkItems.Any();
         }
         catch (Exception ex)
         {
+            _service.ReloadMenu = true;
             Debug.WriteLine(ex.Message);
-            await Shell.Current.DisplayAlert("Грешка!", "Неуспешно зареждане на ястията.", "Добре");
+            await Shell.Current.DisplayAlert("Грешка!", "Неуспешно зареждане на менюто.", "Добре");
         }
         finally
         {
             IsBusy = false;
-            _service.ReloadFoods = false;
+        }
+    }
+
+    private void LoadMenuStructureAndItems(List<FoodDto> foods, List<DrinkDto> drinks)
+    {
+        Dictionary<int, List<FoodDto>> foodsGrouped = foods
+            .GroupBy(f => f.Id)
+            .OrderBy(x => x.Key)
+            .ToDictionary(f => f.Key, f => f.ToList());
+
+        Dictionary<int, List<DrinkDto>> drinksGrouped = drinks
+            .GroupBy(d => d.Id)
+            .OrderBy(x => x.Key)
+            .ToDictionary(d => d.Key, d => d.ToList());
+
+        Frame mainFrame = new();
+        ScrollView mainScrollView = new();
+        mainFrame.Content = mainScrollView;
+
+        foreach (List<FoodDto> currentFoodsGroup in foodsGrouped.Values)
+        {
+            var collectionView = new CollectionView();
+
+            collectionView.ItemTemplate = new DataTemplate(() =>
+            {
+                var nameLabel = new Label { FontSize = 22 };
+                nameLabel.SetBinding(Label.TextProperty, "Name");
+
+                var gramsLabel = new Label();
+                gramsLabel.SetBinding(Label.TextProperty,
+                    new Binding("NetGrams", stringFormat: "{0}gr"));
+
+                var typeLabel = new Label();
+                typeLabel.SetBinding(Label.TextProperty, "FoodTypeName");
+
+                var priceLabel = new Label();
+                priceLabel.SetBinding(Label.TextProperty,
+                    new Binding("Price", stringFormat: "Price: {0:C2}"));
+
+                var stack = new VerticalStackLayout
+                {
+                    Children =
+                    {
+                        nameLabel,
+                        gramsLabel,
+                        typeLabel,
+                        priceLabel
+                    }
+                };
+
+                var frame = new Frame
+                {
+                    Content = stack
+                };
+
+                var tapGesture = new TapGestureRecognizer
+                {
+                    Command = AddFoodToOrderCommand
+                };
+
+                // 🔑 Pass the FoodDto itself
+                tapGesture.SetBinding(
+                    TapGestureRecognizer.CommandParameterProperty,
+                    new Binding("."));
+
+                frame.GestureRecognizers.Add(tapGesture);
+
+                return new Grid
+                {
+                    Padding = 10,
+                    Children = { frame }
+                };
+            });
+
+            collectionView.ItemsSource = currentFoodsGroup;
         }
     }
 

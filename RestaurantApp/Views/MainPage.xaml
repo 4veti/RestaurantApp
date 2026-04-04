@@ -6,45 +6,33 @@
              xmlns:clientModel="clr-namespace:RestaurantApp.Models;assembly=RestaurantApp.Client"
              x:DataType="viewmodel:FoodsViewModel"
              x:Class="RestaurantApp.Views.MainPage"
-             Title="Храни">
+             Title="Храни"
+             BackgroundColor="AliceBlue">
 
     <Grid>
-        <Grid ColumnDefinitions="0.1*,0.6*,0.3*"
-                      ColumnSpacing="5"
-                      RowDefinitions="*,Auto"
-                      RowSpacing="20">
+        <Grid x:Name="mainGrid"
+            ColumnDefinitions="0.1*,0.6*,0.3*"
+            ColumnSpacing="0"
+            RowDefinitions="*,Auto"
+            RowSpacing="20">
 
-            <CollectionView BackgroundColor="Transparent"
-                                Grid.Column="1" MinimumWidthRequest="500"
-                                ItemsSource="{Binding FoodList}"
-                                SelectionMode="Single">
+            <VerticalStackLayout Grid.Column="0"
+                                 x:Name="menuStackLayout"
+                                 BackgroundColor="AliceBlue"
+                                 Margin="0, 1, 0, 0"/>
 
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:FoodDto">
-                        <Grid Padding="0,0,0,20">
-                            <Frame>
-                                <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        CommandParameter="{Binding .}"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:FoodsViewModel}}, x:DataType=viewmodel:FoodsViewModel, Path=AddFoodToOrderCommand}" />
-                                </Frame.GestureRecognizers>
-
-                                <VerticalStackLayout>
-                                    <Label FontSize="22" Text="{Binding Name}"/>
-                                    <Label Text="{Binding NetGrams,StringFormat='{0}гр'}"/>
-                                    <Label Text="{Binding FoodTypeName}"/>
-                                    <Label Text="{Binding Price, StringFormat='Цена: {0:C2}'}"/>
-                                </VerticalStackLayout>
-                            </Frame>
-                        </Grid>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            <Frame x:Name="mainFrame" 
+                   Grid.Column="1"
+                   VerticalOptions="StartAndExpand"
+                   BorderColor="Transparent"
+                   BackgroundColor="AliceBlue">
+                <ScrollView x:Name="mainScrollView" Scrolled="OnScrollViewScrolled"/>
+            </Frame>
 
             <VerticalStackLayout Grid.Column="2">
                 <CollectionView BackgroundColor="Transparent"
                                 x:Name="foodsCollection"
-                                Grid.Column="1" Grid.Row="0"
+                                Grid.Column="2" Grid.Row="0"
                                 ItemsSource="{Binding MyFoods}"
                                 SelectionMode="None">
                     <CollectionView.ItemTemplate>
@@ -91,11 +79,6 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </VerticalStackLayout>
-            
-            <Button Text="Зареди ястия" Margin="20"
-                    Command="{Binding GetFoodItemsCommand}"
-                    IsEnabled="{Binding IsNotBusy}"
-                    Grid.Row="1"/>
 
             <ActivityIndicator IsVisible="{Binding IsBusy}"
                                IsRunning="{Binding IsBusy}"
