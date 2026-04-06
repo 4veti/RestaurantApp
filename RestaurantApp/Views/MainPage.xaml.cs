@@ -10,7 +10,7 @@ public partial class MainPage : ContentPage
     private List<(string, double, VisualElement, VisualElement)> _categorySections = new();
     private StackLayout _mainStackLayout;
 
-    private int MenuButtonFontSize = 16;
+    private int MenuButtonFontSize = 14;
 
     public MainPage(FoodsViewModel viewModel)
     {
@@ -82,7 +82,7 @@ public partial class MainPage : ContentPage
             _lastSelectedMenuFrame.BorderColor = Colors.Black;
             _lastSelectedMenuFrame.Margin = new Thickness(0, -1);
             lastMenuLabel.FontSize = MenuButtonFontSize;
-            lastMenuLabel.FontAttributes = FontAttributes.Italic;
+            lastMenuLabel.FontAttributes = FontAttributes.None;
 
             _lastSelectedMenuFrame = currentMenuFrame;
         }
@@ -166,7 +166,7 @@ public partial class MainPage : ContentPage
                 CornerRadius = 0,
                 VerticalOptions = LayoutOptions.Center,
                 BorderColor = Colors.Black,
-                Content = new Label() { Text = currentFoodsGroup.First().FoodTypeName },
+                Content = new Label() { Text = currentFoodsGroup.First().FoodTypeName, FontSize = MenuButtonFontSize },
             };
 
             Label sectionLabel = new Label()
@@ -264,7 +264,7 @@ public partial class MainPage : ContentPage
                 CornerRadius = 0,
                 VerticalOptions = LayoutOptions.Center,
                 BorderColor = Colors.Black,
-                Content = new Label() { Text = currentDrinksGroup.First().DrinkType }
+                Content = new Label() { Text = currentDrinksGroup.First().DrinkType, FontSize = MenuButtonFontSize }
             };
 
             Label sectionLabel = new Label()

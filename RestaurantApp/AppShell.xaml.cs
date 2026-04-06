@@ -8,7 +8,6 @@ namespace RestaurantApp
     public partial class AppShell : Shell
     {
         public AppShell(FoodsViewModel foodsViewModel,
-            DrinksViewModel drinksViewModel,
             MyOrderViewModel myOrderViewModel,
             KitchenOrdersPageViewModel kitchenOrdersPageViewModel,
             FrontOfficeViewModel frontOfficeViewModel)
@@ -28,7 +27,7 @@ namespace RestaurantApp
             }
             else
             {
-                CreateClientOrderInterface(foodsViewModel, drinksViewModel, myOrderViewModel);
+                CreateClientOrderInterface(foodsViewModel, myOrderViewModel);
             }
 
             InitializeComponent();
@@ -64,7 +63,6 @@ namespace RestaurantApp
         }
 
         private void CreateClientOrderInterface(FoodsViewModel foodsViewModel,
-            DrinksViewModel drinksViewModel,
             MyOrderViewModel myOrderViewModel)
         {
             var mainTab = new TabBar
@@ -89,25 +87,6 @@ namespace RestaurantApp
             // Add tabs to MainTab item
             mainTab.Items.Add(dishesTab);
 
-
-            // Create tab for drinks
-            var drinksTab = new Tab
-            {
-                Title = "Напитки",
-                Route = "DrinksTabRoute"
-            };
-            // Add the drinks tab
-            drinksTab.Items.Add(new ShellContent
-            {
-                Title = "Напитки",
-                Route = "DrinksPage",
-                Content = new DrinksPage(drinksViewModel)
-            });
-            // Add tabs to MainTab item
-            mainTab.Items.Add(drinksTab);
-
-
-
             // Create tab for orders
             var ordersTab = new Tab
             {
@@ -123,8 +102,6 @@ namespace RestaurantApp
             });
             // Add tabs to MainTab item
             mainTab.Items.Add(ordersTab);
-
-
 
             // Add MainTab item to shell
             Items.Add(mainTab);

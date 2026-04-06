@@ -40,13 +40,13 @@ public partial class KitchenOrdersPageViewModel : ObservableObject
 
     public void UpdateElapsedTimes()
     {
-        for (int i = 0; i < PendingOrders.Count(); i++)
+        for (int i = 0; i < PendingOrders.Count; i++)
         {
             PendingOrders[i].ElapsedMinutes = (int)(DateTime.Now - PendingOrders[i].Created).TotalMinutes;
             PendingOrders[i] = PendingOrders[i];
         }
 
-        for (int i = 0; i < ActiveOrders.Count(); i++)
+        for (int i = 0; i < ActiveOrders.Count; i++)
         {
             ActiveOrders[i].ElapsedMinutes = (int)(DateTime.Now - ActiveOrders[i].Created).TotalMinutes;
             ActiveOrders[i] = ActiveOrders[i];

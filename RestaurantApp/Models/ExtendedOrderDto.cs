@@ -4,8 +4,6 @@ namespace RestaurantApp.Client.Models;
 
 public class ExtendedOrderDto
 {
-    private int _elapsedMinutes;
-
     public ExtendedOrderDto()
     {
         
