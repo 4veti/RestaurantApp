@@ -111,7 +111,6 @@ public class RestaurantService
             string url = "http://localhost:5000/FrontDesk/Food";
 
             var response = await _httpClient.PutAsync(url, JsonContent.Create(foodDto));
-            response.EnsureSuccessStatusCode();
 
             if (!(response?.IsSuccessStatusCode ?? false))
             {
@@ -126,6 +125,30 @@ public class RestaurantService
         {
             Debug.WriteLine(ex.Message);
             await Shell.Current.DisplayAlert("Грешка!", $"Неуспешна промяна на ястие. {ex.Message}", "Добре");
+            return false;
+        }
+    }
+
+    public async Task<bool> AddFood(FoodDto foodDto)
+    {
+        try
+        {
+            string url = "http://localhost:5000/FrontDesk/Food";
+
+            var response = await _httpClient.PostAsync(url, JsonContent.Create(foodDto));
+
+            if (!(response?.IsSuccessStatusCode ?? false))
+            {
+                Debug.WriteLine("Response to create food not successful " + response?.StatusCode);
+                await Shell.Current.DisplayAlert("Грешка!", "Неуспешно добавяне на ястие.", "Добре");
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
             return false;
         }
     }

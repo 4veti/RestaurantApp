@@ -7,12 +7,11 @@
              x:DataType="viewmodel:FrontOfficeViewModel"
              Title="Управление на системата">
 
-    <Grid
-        Background="Beige">
-            <Grid ColumnDefinitions="*,Auto,*"
-              ColumnSpacing="5"
-              RowDefinitions="Auto,*,0.05*"
-              RowSpacing="0">
+    <Grid Background="Beige">
+        <Grid ColumnDefinitions="*,Auto,*"
+          ColumnSpacing="5"
+          RowDefinitions="Auto,*,0.05*"
+          RowSpacing="0">
 
             <Button Text="Добави напитка"
                     Grid.Column="1"
@@ -47,7 +46,6 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </ScrollView>
-
             </Frame>
 
             <ActivityIndicator IsVisible="{Binding IsDrinksBusy}"
@@ -55,8 +53,7 @@
                        Grid.RowSpan="2"
                        Grid.ColumnSpan="3"/>
 
-            </Grid>
-
+        </Grid>
 
         <Frame x:Name="backgroundDim"
                BackgroundColor="Gray"

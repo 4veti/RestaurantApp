@@ -25,8 +25,7 @@ public partial class FrontOfficeFoodsPage : ContentPage
                 ShowFoodEditForm(new FoodDto() { Id = food.Id, Name = food.Name, NetGrams = food.NetGrams, Price = food.Price, FoodTypeId = food.FoodTypeId });
             }
         }
-        catch (Exception ex)
-        { }
+        catch { }
     }
 
     private void ShowFoodEditForm(FoodDto food)
@@ -40,10 +39,22 @@ public partial class FrontOfficeFoodsPage : ContentPage
             backgroundDim.IsVisible = true;
 
             _viewModel.SelectedFood = food;
-            formFoodTypePicker.SelectedItem = _viewModel.FoodTypesList.First(f => f.Id == food.FoodTypeId);
+
+            if (food.Id > 0)
+            {
+                formFoodTypePicker.SelectedItem = _viewModel.FoodTypesList.First(f => f.Id == food.FoodTypeId);
+            }
+            else
+            {
+                FoodTypeDto? selectedFoodType = formFoodTypePicker.SelectedItem as FoodTypeDto;
+
+                if (selectedFoodType != null)
+                {
+                    food.FoodTypeId= selectedFoodType.Id;
+                }
+            }
         }
-        catch (Exception ex)
-        { }
+        catch { }
     }
 
     private void ClearEditForm()
@@ -57,6 +68,11 @@ public partial class FrontOfficeFoodsPage : ContentPage
         foodsCollection.SelectedItem = null;
     }
 
+    private void AddFoodButton_Clicked(object sender, EventArgs eventArgs)
+    {
+        ShowFoodEditForm(new FoodDto());
+    }
+
     private void SaveButton_Clicked(object sender, EventArgs e)
     {
         ClearEditForm();
@@ -65,5 +81,12 @@ public partial class FrontOfficeFoodsPage : ContentPage
     private void CancelButton_Clicked(object sender, EventArgs e)
     {
         ClearEditForm();
+    }
+    private void formFoodTypePicker_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (formFoodTypePicker.SelectedItem is FoodTypeDto selectedFoodType)
+        {
+            _viewModel.SelectedFood.FoodTypeId = selectedFoodType.Id;
+        }
     }
 }

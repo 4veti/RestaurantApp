@@ -180,18 +180,21 @@ public partial class FrontOfficeViewModel : ObservableObject
     [RelayCommand]
     public async Task UpdateFood()
     {
-        FoodDto updatedFood = new FoodDto()
-        {
-            Id = SelectedFood.Id,
-            Name = SelectedFood.Name,
-            NetGrams = SelectedFood.NetGrams,
-            Price = SelectedFood.Price,
-            FoodTypeId = SelectedFoodType.Id,
-            FoodTypeName = SelectedFoodType.Name,
-        };
+        bool success = false;
 
-        await _service.UpdateFood(updatedFood);
-        await GetFoodItemsAsync();
+        if (SelectedFood.Id > 0)
+        {
+            success = await _service.UpdateFood(SelectedFood);
+        }
+        else
+        {
+            success = await _service.AddFood(SelectedFood);
+        }
+
+        if (success)
+        {
+            await GetFoodItemsAsync();
+        }
     }
 
     [RelayCommand]
@@ -200,8 +203,7 @@ public partial class FrontOfficeViewModel : ObservableObject
         bool success = false;
 
         if (SelectedDrink.Id > 0)
-        {
-            
+        {            
             success = await _service.UpdateDrink(SelectedDrink);
         }
         else

@@ -25,8 +25,7 @@ public partial class FrontOfficeDrinksPage : ContentPage
                 ShowDrinkEditForm(new DrinkDto() { Id = drink.Id, Name = drink.Name, Millilitres = drink.Millilitres, Price = drink.Price, DrinkTypeId = drink.DrinkTypeId });
             }
         }
-        catch (Exception ex)
-        { }
+        catch { }
     }
 
     private void ShowDrinkEditForm(DrinkDto drink)
@@ -42,7 +41,7 @@ public partial class FrontOfficeDrinksPage : ContentPage
 
             if (drink.Id > 0)
             {
-                formDrinkTypePicker.SelectedItem = _viewModel.DrinkTypesList.First(f => f.Id == drink.DrinkTypeId);
+                formDrinkTypePicker.SelectedItem = _viewModel.DrinkTypesList.First(d => d.Id == drink.DrinkTypeId);
             }
             else
             {
@@ -54,8 +53,7 @@ public partial class FrontOfficeDrinksPage : ContentPage
                 }
             }
         }
-        catch (Exception)
-        { }
+        catch { }
     }
 
     private void ClearEditForm()
@@ -86,9 +84,7 @@ public partial class FrontOfficeDrinksPage : ContentPage
 
     private void formDrinkTypePicker_SelectedIndexChanged(object sender, EventArgs e)
     {
-        DrinkTypeDto? selectedDrinkType = formDrinkTypePicker.SelectedItem as DrinkTypeDto;
-
-        if (selectedDrinkType != null)
+        if (formDrinkTypePicker.SelectedItem is DrinkTypeDto selectedDrinkType)
         {
             _viewModel.SelectedDrink.DrinkTypeId = selectedDrinkType.Id;
         }
