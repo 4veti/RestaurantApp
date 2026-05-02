@@ -294,12 +294,15 @@ public partial class MainPage : ContentPage
             _mainStackLayout.Add(collectionView);
         }
 
-        _lastSelectedMenuFrame = (Frame)menuStackLayout.Children.First();
-        _lastSelectedMenuFrame.BackgroundColor = Colors.AliceBlue;
-        _lastSelectedMenuFrame.BorderColor = Colors.Transparent;
-        _lastSelectedMenuFrame.Margin = 0;
-        ((Label)_lastSelectedMenuFrame.Content).FontSize = MenuButtonFontSize + 4;
-        ((Label)_lastSelectedMenuFrame.Content).FontAttributes = FontAttributes.Bold;
+        if (menuStackLayout.Children.Any())
+        {
+            _lastSelectedMenuFrame = (Frame)menuStackLayout.Children.First();
+            _lastSelectedMenuFrame.BackgroundColor = Colors.AliceBlue;
+            _lastSelectedMenuFrame.BorderColor = Colors.Transparent;
+            _lastSelectedMenuFrame.Margin = 0;
+            ((Label)_lastSelectedMenuFrame.Content).FontSize = MenuButtonFontSize + 4;
+            ((Label)_lastSelectedMenuFrame.Content).FontAttributes = FontAttributes.Bold;
+        }
 
         mainScrollView.Content = _mainStackLayout;
     }
