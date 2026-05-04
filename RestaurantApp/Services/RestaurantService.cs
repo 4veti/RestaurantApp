@@ -322,7 +322,7 @@ public class RestaurantService
             {
                 try
                 {
-                    response = await _httpClient.PostAsync(url, JsonContent.Create(orderId));
+                    response = await _httpClient.PutAsync(url, JsonContent.Create(orderId));
                     response.EnsureSuccessStatusCode();
 
                     return true;
