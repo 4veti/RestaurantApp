@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RestaurantApp.Domain;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Services.Contracts;
 
@@ -15,7 +16,7 @@ namespace RestaurantApp.ClientApi.Controllers
             _serviceManager = serviceManager;
         }
 
-        [HttpPost("Order")]
+        [HttpPost(ApiEntityRoutes.Order)]
         public async Task<IActionResult> CreateOrder(OrderDto dto)
         {
             if (dto is null)
@@ -38,7 +39,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Created();
         }
 
-        [HttpGet("Menu")]
+        [HttpGet(ApiEntityRoutes.Menu)]
         public async Task<IActionResult> GetMenu()
         {
             MenuDto menu = await _serviceManager.OrderService.GetMenuAsync();

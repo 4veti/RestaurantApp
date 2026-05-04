@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using RestaurantApp.Domain;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Services.Contracts;
 
@@ -16,7 +17,7 @@ namespace RestaurantApp.Api.Controllers
         }
 
         [HttpGet]
-        [Route("AnyOrders")]
+        [Route(ApiEntityRoutes.AnyOrders)]
         public async Task<IActionResult> AnyOrders([FromQuery] int lastOrderId)
         {
             OrderQueryParams queryParams = new OrderQueryParams()
@@ -32,7 +33,7 @@ namespace RestaurantApp.Api.Controllers
         }
 
         [HttpGet]
-        [Route("Orders")]
+        [Route(ApiEntityRoutes.Orders)]
         public async Task<IActionResult> GetOrders([FromQuery] int lastOrderId)
         {
             OrderQueryParams queryParams = new OrderQueryParams()
@@ -47,7 +48,7 @@ namespace RestaurantApp.Api.Controllers
         }
 
         [HttpPost]
-        [Route("OrderServed")]
+        [Route(ApiEntityRoutes.OrderServed)]
         public async Task<IActionResult> MarkOrderAsServed([FromBody] int orderId)
         {
             if (await _serviceManager.OrderService.MarkServedAsync(orderId) == false)

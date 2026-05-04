@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using RestaurantApp.Domain;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Domain.Entities;
 using RestaurantApp.Models;
@@ -214,7 +215,7 @@ public class RestaurantService
 
     public async Task<bool?> AnyNewOrders(int lastOrderId)
     {
-        bool? result = await GetResponseFromApi<bool>(HttpVerb.Get, KITCHEN_CONTROLLER, "AnyOrders", [("lastOrderId", lastOrderId)], null);
+        bool? result = await GetResponseFromApi<bool>(HttpVerb.Get, KITCHEN_CONTROLLER, ApiEntityRoutes.AnyOrders, [("lastOrderId", lastOrderId)], null);
 
         return result ?? false;
 
@@ -386,7 +387,7 @@ public class RestaurantService
 
     public async Task<List<DrinkTypeDto>> GetDrinkTypes()
     {
-        List<DrinkTypeDto>? result = await GetResponseFromApi<List<DrinkTypeDto>>(HttpVerb.Get, FRONTDESK_CONTROLLER, "DrinkType", null, null);
+        List<DrinkTypeDto>? result = await GetResponseFromApi<List<DrinkTypeDto>>(HttpVerb.Get, FRONTDESK_CONTROLLER, ApiEntityRoutes.DrinkType, null, null);
 
         return result ?? new();
 

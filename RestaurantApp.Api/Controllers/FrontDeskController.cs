@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RestaurantApp.Domain;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Services.Contracts;
 
@@ -15,7 +16,7 @@ namespace RestaurantApp.ClientApi.Controllers
             _serviceManager = serviceManager;
         }
 
-        [HttpPost("Food")]
+        [HttpPost(ApiEntityRoutes.Food)]
         public async Task<IActionResult> AddFood([FromBody] FoodDto dto)
         {
             if (dto is null)
@@ -38,7 +39,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Created();
         }
 
-        [HttpPut("Food")]
+        [HttpPut(ApiEntityRoutes.Food)]
         public async Task<IActionResult> UpdateFood([FromBody] FoodDto dto)
         {
             if (dto is null)
@@ -65,7 +66,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Ok();
         }
 
-        [HttpDelete("Food")]
+        [HttpDelete(ApiEntityRoutes.Food)]
         public async Task<IActionResult> DeleteFood([FromBody] int foodId)
         {
             string? deletedResult = await _serviceManager.FoodService.DeleteByIdAsync(foodId);
@@ -82,7 +83,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return NoContent();
         }
 
-        [HttpPost("Drink")]
+        [HttpPost(ApiEntityRoutes.Drink)]
         public async Task<IActionResult> AddDrink([FromBody] DrinkDto dto)
         {
             if (dto is null)
@@ -105,7 +106,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Created();
         }
 
-        [HttpPut("Drink")]
+        [HttpPut(ApiEntityRoutes.Drink)]
         public async Task<IActionResult> UpdateDrink([FromBody] DrinkDto dto)
         {
             if (dto is null)
@@ -132,7 +133,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Ok();
         }
 
-        [HttpDelete("Drink")]
+        [HttpDelete(ApiEntityRoutes.Drink)]
         public async Task<IActionResult> DeleteDrink([FromBody] int drinkId)
         {
             string? deletedResult = await _serviceManager.DrinkService.DeleteByIdAsync(drinkId);
@@ -149,7 +150,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return NoContent();
         }
 
-        [HttpGet("FoodType")]
+        [HttpGet(ApiEntityRoutes.FoodType)]
         public async Task<IActionResult> GetFoodTypes()
         {
             IEnumerable<FoodTypeDto> foodTypes = await _serviceManager.FoodTypeService.GetAllAsync();
@@ -157,7 +158,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Ok(foodTypes);
         }
 
-        [HttpPost("FoodType")]
+        [HttpPost(ApiEntityRoutes.FoodType)]
         public async Task<IActionResult> AddFoodType([FromBody] FoodTypeDto dto)
         {
             if (dto is null)
@@ -175,7 +176,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Created();
         }
 
-        [HttpPut("FoodType")]
+        [HttpPut(ApiEntityRoutes.FoodType)]
         public async Task<IActionResult> UpdateFoodType([FromBody] FoodTypeDto dto)
         {
             if (dto is null)
@@ -197,7 +198,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Ok();
         }
 
-        [HttpDelete("FoodType")]
+        [HttpDelete(ApiEntityRoutes.FoodType)]
         public async Task<IActionResult> DeleteFoodType([FromBody] int foodTypeId)
         {
             string? deleteResult = await _serviceManager.FoodTypeService.DeleteByIdAsync(foodTypeId);
@@ -214,7 +215,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return NoContent();
         }
 
-        [HttpGet("DrinkType")]
+        [HttpGet(ApiEntityRoutes.DrinkType)]
         public async Task<IActionResult> GetDrinkTypes()
         {
             IEnumerable<DrinkTypeDto> drinkTypes = await _serviceManager.DrinkTypeService.GetAllAsync();
@@ -222,7 +223,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Ok(drinkTypes);
         }
 
-        [HttpPost("DrinkType")]
+        [HttpPost(ApiEntityRoutes.DrinkType)]
         public async Task<IActionResult> AddDrinkType([FromBody] DrinkTypeDto dto)
         {
             if (dto is null)
@@ -240,7 +241,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Created();
         }
 
-        [HttpPut("DrinkType")]
+        [HttpPut(ApiEntityRoutes.DrinkType)]
         public async Task<IActionResult> UpdateDrinkType([FromBody] DrinkTypeDto dto)
         {
             if (dto is null)
@@ -262,7 +263,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Ok();
         }
 
-        [HttpDelete("DrinkType")]
+        [HttpDelete(ApiEntityRoutes.DrinkType)]
         public async Task<IActionResult> DeleteDrinkType(int drinkTypeId)
         {
             string? deleteResult = await _serviceManager.DrinkTypeService.DeleteByIdAsync(drinkTypeId);
@@ -279,7 +280,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return NoContent();
         }
 
-        [HttpPut("OrderPaid")]
+        [HttpPut(ApiEntityRoutes.OrderPaid)]
         public async Task<IActionResult> MarkOrderAsPaid([FromBody] int orderId)
         {
             if (await _serviceManager.OrderService.MarkPaidAsync(orderId) == false)
@@ -290,7 +291,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Ok();
         }
 
-        [HttpGet("Orders")]
+        [HttpGet(ApiEntityRoutes.Orders)]
         public async Task<IActionResult> GeNewOrders([FromQuery] int lastOrderId, [FromQuery] bool? isPaid)
         {
             OrderQueryParams queryParams = new OrderQueryParams()
