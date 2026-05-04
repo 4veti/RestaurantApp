@@ -279,24 +279,26 @@ public class RestaurantService
         try
         {
             string url = "http://localhost:5000/Kitchen/OrderServed";
+            HttpResponseMessage? response = null;
 
-            HttpResponseMessage? response = await _httpClient.PostAsync(url, JsonContent.Create(orderId));
-            response?.EnsureSuccessStatusCode();
-
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 3; i++)
             {
-                if (response?.IsSuccessStatusCode ?? false)
+                try
                 {
+                    response = await _httpClient.PostAsync(url, JsonContent.Create(orderId));
+                    response.EnsureSuccessStatusCode();
+
                     return true;
                 }
+                catch (HttpRequestException)
+                {
+                    Debug.WriteLine("Response to mark order as served not successful " + response?.StatusCode);
 
-                Thread.Sleep(1500);
-
-                response = await _httpClient.PostAsync(url, JsonContent.Create(orderId));
-                response?.EnsureSuccessStatusCode();
+                    if (i == 2) throw;
+                    await Task.Delay(1500);
+                }
             }
 
-            Debug.WriteLine("Response to mark order as served not successful " + response?.StatusCode);
             await Shell.Current.DisplayAlert("Грешка!", "Неуспешно маркиране на поръчка като готова.", "Добре");
             return false;
         }
@@ -314,23 +316,26 @@ public class RestaurantService
         {
             string url = "http://localhost:5000/FrontDesk/OrderPaid";
 
-            HttpResponseMessage? response = await _httpClient.PutAsync(url, JsonContent.Create(orderId));
-            response?.EnsureSuccessStatusCode();
+            HttpResponseMessage? response = null;
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 3; i++)
             {
-                if (response?.IsSuccessStatusCode ?? false)
+                try
                 {
+                    response = await _httpClient.PostAsync(url, JsonContent.Create(orderId));
+                    response.EnsureSuccessStatusCode();
+
                     return true;
                 }
+                catch (HttpRequestException)
+                {
+                    Debug.WriteLine("Response to mark order as paid not successful " + response?.StatusCode);
 
-                Thread.Sleep(1500);
-
-                response = await _httpClient.PostAsync(url, JsonContent.Create(orderId));
-                response?.EnsureSuccessStatusCode();
+                    if (i == 2) throw;
+                    await Task.Delay(1500);
+                }
             }
 
-            Debug.WriteLine("Response to mark order as paid not successful " + response?.StatusCode);
             await Shell.Current.DisplayAlert("Грешка!", "Неуспешно маркиране на поръчка като платена.", "Добре");
             return false;
         }
