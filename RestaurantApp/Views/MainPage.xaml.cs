@@ -5,18 +5,18 @@ namespace RestaurantApp.Views;
 
 public partial class MainPage : ContentPage
 {
-    private readonly FoodsViewModel _foodsViewModel;
+    private readonly MainPageViewModel _mainPageViewModel;
     private Frame _lastSelectedMenuFrame;
     private List<(string, double, VisualElement, VisualElement)> _categorySections = new();
     private StackLayout _mainStackLayout;
 
     private int MenuButtonFontSize = 14;
 
-    public MainPage(FoodsViewModel viewModel)
+    public MainPage(MainPageViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;
-        _foodsViewModel = viewModel;
+        _mainPageViewModel = viewModel;
     }
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
@@ -28,7 +28,7 @@ public partial class MainPage : ContentPage
     {
         base.OnAppearing();
 
-        await _foodsViewModel.GetMenutemsAsync();
+        await _mainPageViewModel.GetMenutemsAsync();
 
         LoadMenuStructureAndItems();
 
@@ -90,12 +90,12 @@ public partial class MainPage : ContentPage
 
     private void LoadMenuStructureAndItems()
     {
-        Dictionary<int, List<FoodDto>> foodsGroupedByType = _foodsViewModel.FoodList
+        Dictionary<int, List<FoodDto>> foodsGroupedByType = _mainPageViewModel.FoodList
             .GroupBy(f => f.FoodTypeId)
             .OrderBy(x => x.Key)
             .ToDictionary(f => f.Key, f => f.ToList());
 
-        Dictionary<int, List<DrinkDto>> drinksGroupedByType = _foodsViewModel.DrinksList
+        Dictionary<int, List<DrinkDto>> drinksGroupedByType = _mainPageViewModel.DrinksList
             .GroupBy(d => d.DrinkTypeId)
             .OrderBy(x => x.Key)
             .ToDictionary(d => d.Key, d => d.ToList());
@@ -143,7 +143,7 @@ public partial class MainPage : ContentPage
 
                 TapGestureRecognizer tapGesture = new TapGestureRecognizer
                 {
-                    Command = ((FoodsViewModel)BindingContext).AddFoodToOrderCommand
+                    Command = ((MainPageViewModel)BindingContext).AddFoodToOrderCommand
                 };
 
                 tapGesture.SetBinding(
@@ -241,7 +241,7 @@ public partial class MainPage : ContentPage
 
                 TapGestureRecognizer tapGesture = new TapGestureRecognizer
                 {
-                    Command = ((FoodsViewModel)BindingContext).AddDrinkToOrderCommand
+                    Command = ((MainPageViewModel)BindingContext).AddDrinkToOrderCommand
                 };
 
                 tapGesture.SetBinding(

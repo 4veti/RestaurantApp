@@ -6,3 +6,11 @@ public enum RunMode
     Kitchen = 2,
     FrontDesk = 3
 }
+
+public enum HttpVerb
+{
+    Get = 1,
+    Post = 2,
+    Put = 3,
+    Delete = 4,
+}

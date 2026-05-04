@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace RestaurantApp.ViewModels;
 
-public partial class FoodsViewModel : ObservableObject
+public partial class MainPageViewModel : ObservableObject
 {
     private readonly RestaurantService _service;
 
@@ -18,7 +18,7 @@ public partial class FoodsViewModel : ObservableObject
     [ObservableProperty]
     private bool isBusy;
 
-    public FoodsViewModel(RestaurantService service)
+    public MainPageViewModel(RestaurantService service)
     {
         _service = service;
     }

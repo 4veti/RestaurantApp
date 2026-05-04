@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using Microsoft.Extensions.Options;
 using RestaurantApp.Models;
 using RestaurantApp.ViewModels;
 
@@ -6,13 +6,14 @@ namespace RestaurantApp;
 
 public partial class App : Application
 {
-    public App(FoodsViewModel foodsViewModel,
+    public App(MainPageViewModel MainPageViewModel,
             MyOrderViewModel myOrderViewModel,
             KitchenOrdersPageViewModel kitchenOrdersPageViewModel,
-            FrontOfficeViewModel frontOfficeViewModel)
+            FrontOfficeViewModel frontOfficeViewModel,
+            IOptions<ApplicationSettings> options)
     {
         InitializeComponent();
 
-        MainPage = new AppShell(foodsViewModel, myOrderViewModel, kitchenOrdersPageViewModel, frontOfficeViewModel);
+        MainPage = new AppShell(MainPageViewModel, myOrderViewModel, kitchenOrdersPageViewModel, frontOfficeViewModel, options);
     }
 }

@@ -1,18 +1,29 @@
-﻿using System.Diagnostics;
-using System.Net.Http.Json;
+﻿using Microsoft.Extensions.Options;
 using RestaurantApp.Domain.Contracts.DTOs;
+using RestaurantApp.Domain.Entities;
+using RestaurantApp.Models;
+using System.Diagnostics;
+using System.Net.Http.Json;
+using System.Reflection.Metadata.Ecma335;
+using System.Text.Encodings.Web;
 
 namespace RestaurantApp.Services;
 
 public class RestaurantService
 {
+    private const string CLIENT_CONTROLLER = "Client";
+    private const string KITCHEN_CONTROLLER = "Kitchen";
+    private const string FRONTDESK_CONTROLLER = "FrontDesk";
+
     private HttpClient _httpClient;
     private MenuDto _menu;
+    private string apiBaseAddress;
     private bool completedOrder;
 
-    public RestaurantService()
+    public RestaurantService(IOptions<ApplicationSettings> options)
     {
         _httpClient = new HttpClient();
+        _httpClient.BaseAddress = new Uri(options.Value.BaseAPIUrl);
         ClientOrder = new OrderDto();
         LoadMenu();
     }
@@ -203,9 +214,13 @@ public class RestaurantService
 
     public async Task<bool?> AnyNewOrders(int lastOrderId)
     {
+        bool? result = await GetResponseFromApi<bool>(HttpVerb.Get, KITCHEN_CONTROLLER, "AnyOrders", [("lastOrderId", lastOrderId)], null);
+
+        return result ?? false;
+
         try
         {
-            string url = $"http://localhost:5000/Kitchen/AnyOrders?lastOrderId={lastOrderId}";
+            string url = $"/Kitchen/AnyOrders?lastOrderId={lastOrderId}";
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
 
@@ -371,6 +386,10 @@ public class RestaurantService
 
     public async Task<List<DrinkTypeDto>> GetDrinkTypes()
     {
+        List<DrinkTypeDto>? result = await GetResponseFromApi<List<DrinkTypeDto>>(HttpVerb.Get, FRONTDESK_CONTROLLER, "DrinkType", null, null);
+
+        return result ?? new();
+
         try
         {
             string url = $"http://localhost:5000/FrontDesk/DrinkType";
@@ -389,6 +408,70 @@ public class RestaurantService
             Debug.WriteLine(ex.Message);
             return new();
         }
+    }
+
+    private async Task<T?> GetResponseFromApi<T>(HttpVerb httpVerb, string controller, string targetEntity, IEnumerable<(string, object)>? queryParams = null, object? content = null)
+    {
+        try
+        {
+            string uri = $"{controller}/{targetEntity}";
+
+            if (queryParams is not null)
+            {
+                string query = string.Join("&",
+                    queryParams.Select(p => $"{p.Item1}={Uri.EscapeDataString(p.Item2?.ToString() ?? string.Empty)}"));
+
+                uri += "?" + query;
+            }
+
+            HttpResponseMessage? response = await DoAPICallWithRetry(httpVerb, uri, content);
+
+            if (response is null)
+            {
+                return default;
+            }
+
+            return await response.Content.ReadFromJsonAsync<T>();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+
+            return default;
+        }
+    }
+
+    private async Task<HttpResponseMessage?> DoAPICallWithRetry(HttpVerb httpVerb, string uri, object? content = null)
+    {
+        HttpResponseMessage? response = null;
+
+        for (int i = 0; i < 3; i++)
+        {
+            try
+            {
+                response = httpVerb switch
+                {
+                    HttpVerb.Get => await _httpClient.GetAsync(uri),
+                    HttpVerb.Post => await _httpClient.PostAsync(uri, JsonContent.Create(content)),
+                    HttpVerb.Put => await _httpClient.PutAsync(uri, JsonContent.Create(content)),
+                    HttpVerb.Delete => await _httpClient.DeleteAsync(uri),
+                    _ => throw new ArgumentOutOfRangeException(nameof(httpVerb))
+                };
+
+                response.EnsureSuccessStatusCode();
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Response to mark order as paid not successful. StatusCode: {response?.StatusCode}; Msg: {ex.Message}");
+
+                if (i == 2) throw;
+                await Task.Delay(1500);
+            }
+        }
+
+        return null;
     }
 
     private void LoadMenu()

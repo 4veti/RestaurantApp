@@ -1,5 +1,6 @@
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.ViewModels;
+using System.Threading.Tasks;
 
 namespace RestaurantApp.Views;
 
@@ -14,6 +15,13 @@ public partial class FrontOfficeDrinksPage : ContentPage
         _viewModel = frontOfficeViewModel;
         BindingContext = frontOfficeViewModel;
 	}
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        await _viewModel.InitializeDrinksAsync();
+    }
 
     private void HandleSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {

@@ -22,6 +22,10 @@ public partial class FrontOfficeViewModel : ObservableObject
 
     private bool isDrinkTypesBusy;
 
+    private bool initiatedFoods = false;
+    private bool initiatedDrinks = false;
+
+
     [ObservableProperty]
     private FoodDto selectedFood;
 
@@ -39,10 +43,6 @@ public partial class FrontOfficeViewModel : ObservableObject
     public FrontOfficeViewModel(RestaurantService service)
     {
         _service = service;
-        GetDrinkItemsAsync().GetAwaiter().GetResult();
-        GetFoodItemsAsync().GetAwaiter().GetResult();
-        GetFoodTypes().GetAwaiter().GetResult();
-        GetDrinkTypesAsync().GetAwaiter().GetResult();
     }
     public bool IsFoodsNotBusy => !IsFoodsBusy;
     public bool IsDrinksNotBusy => !IsDrinksBusy;
@@ -54,6 +54,29 @@ public partial class FrontOfficeViewModel : ObservableObject
     public ObservableCollection<OrderDto> ActiveFrontDeskOrders { get; set; } = new();
     public ObservableCollection<OrderDto> PaidOrders { get; set; } = new();
 
+    public async Task InitializeFodsAsync()
+    {
+        if (initiatedFoods)
+        {
+            return;
+        }
+
+        initiatedFoods = true;
+        await GetFoodItemsAsync();
+        await GetFoodTypesAsync();
+    }
+
+    public async Task InitializeDrinksAsync()
+    {
+        if (initiatedDrinks)
+        {
+            return;
+        }
+
+        initiatedDrinks = true;
+        await GetDrinkItemsAsync();
+        await GetDrinkTypesAsync();
+    }
 
     [RelayCommand]
     public async Task GetDrinkItemsAsync()
@@ -147,7 +170,7 @@ public partial class FrontOfficeViewModel : ObservableObject
         }
     }
 
-    public async Task GetFoodTypes()
+    public async Task GetFoodTypesAsync()
     {
         if (isFoodTypesBusy)
             return;

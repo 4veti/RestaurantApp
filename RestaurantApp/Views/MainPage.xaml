@@ -4,7 +4,7 @@
              xmlns:viewmodel="clr-namespace:RestaurantApp.ViewModels"
              xmlns:model="clr-namespace:RestaurantApp.Domain.Contracts.DTOs;assembly=RestaurantApp.Domain"
              xmlns:clientModel="clr-namespace:RestaurantApp.Models;assembly=RestaurantApp.Client"
-             x:DataType="viewmodel:FoodsViewModel"
+             x:DataType="viewmodel:MainPageViewModel"
              x:Class="RestaurantApp.Views.MainPage"
              Title="Храни"
              BackgroundColor="AliceBlue">

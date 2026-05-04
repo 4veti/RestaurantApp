@@ -15,6 +15,13 @@ public partial class FrontOfficeFoodsPage : ContentPage
         BindingContext = frontOfficeViewModel;
 	}
 
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        await _viewModel.InitializeFodsAsync();
+    }
+
     private void HandleSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         try

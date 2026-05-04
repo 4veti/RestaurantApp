@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using Microsoft.Extensions.Options;
 using RestaurantApp.Models;
 using RestaurantApp.ViewModels;
 using RestaurantApp.Views;
@@ -7,27 +7,23 @@ namespace RestaurantApp
 {
     public partial class AppShell : Shell
     {
-        public AppShell(FoodsViewModel foodsViewModel,
+        public AppShell(MainPageViewModel MainPageViewModel,
             MyOrderViewModel myOrderViewModel,
             KitchenOrdersPageViewModel kitchenOrdersPageViewModel,
-            FrontOfficeViewModel frontOfficeViewModel)
+            FrontOfficeViewModel frontOfficeViewModel,
+            IOptions<ApplicationSettings> options)
         {
-            string baseDirPath = AppContext.BaseDirectory;
-
-            string content = File.ReadAllText(baseDirPath + "..\\..\\..\\..\\..\\Resources\\Raw\\appsettings.txt");
-            ApplicationSettings settings = JsonSerializer.Deserialize<ApplicationSettings>(content) ?? new ApplicationSettings() { RunMode = RunMode.Client };
-
-            if (settings.RunMode == RunMode.Kitchen)
+            if (options.Value.RunMode == RunMode.Kitchen)
             {
                 CreateKitchenInterface(kitchenOrdersPageViewModel);
             }
-            else if (settings.RunMode == RunMode.FrontDesk)
+            else if (options.Value.RunMode == RunMode.FrontDesk)
             {
                 CreateFrontOfficeInterface(frontOfficeViewModel);
             }
-            else
+            else if (options.Value.RunMode == RunMode.Client)
             {
-                CreateClientOrderInterface(foodsViewModel, myOrderViewModel);
+                CreateClientOrderInterface(MainPageViewModel, myOrderViewModel);
             }
 
             InitializeComponent();
@@ -62,7 +58,7 @@ namespace RestaurantApp
             Routing.RegisterRoute(nameof(KitchenOrdersPage), typeof(KitchenOrdersPage));
         }
 
-        private void CreateClientOrderInterface(FoodsViewModel foodsViewModel,
+        private void CreateClientOrderInterface(MainPageViewModel mainPageViewModel,
             MyOrderViewModel myOrderViewModel)
         {
             var mainTab = new TabBar
@@ -82,7 +78,7 @@ namespace RestaurantApp
             {
                 Title = "Основна страница ястия",
                 Route = "DishesTabRoute",
-                Content = new MainPage(foodsViewModel)
+                Content = new MainPage(mainPageViewModel)
             });
             // Add tabs to MainTab item
             mainTab.Items.Add(dishesTab);
