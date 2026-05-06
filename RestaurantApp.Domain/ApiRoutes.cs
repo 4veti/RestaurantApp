@@ -1,6 +1,6 @@
 ﻿namespace RestaurantApp.Domain;
 
-public static class ApiEntityRoutes
+public static class ApiRoutes
 {
     public const string Menu = "Menu";
     public const string Order = "Order";

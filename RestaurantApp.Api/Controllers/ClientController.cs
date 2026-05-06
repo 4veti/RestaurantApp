@@ -16,7 +16,7 @@ namespace RestaurantApp.ClientApi.Controllers
             _serviceManager = serviceManager;
         }
 
-        [HttpPost(ApiEntityRoutes.Order)]
+        [HttpPost(ApiRoutes.Order)]
         public async Task<IActionResult> CreateOrder(OrderDto dto)
         {
             if (dto is null)
@@ -39,7 +39,7 @@ namespace RestaurantApp.ClientApi.Controllers
             return Created();
         }
 
-        [HttpGet(ApiEntityRoutes.Menu)]
+        [HttpGet(ApiRoutes.Menu)]
         public async Task<IActionResult> GetMenu()
         {
             MenuDto menu = await _serviceManager.OrderService.GetMenuAsync();

@@ -215,7 +215,7 @@ public class RestaurantService
 
     public async Task<bool?> AnyNewOrders(int lastOrderId)
     {
-        bool? result = await GetResponseFromApi<bool>(HttpVerb.Get, KITCHEN_CONTROLLER, ApiEntityRoutes.AnyOrders, [("lastOrderId", lastOrderId)], null);
+        bool? result = await GetResponseFromApi<bool>(HttpVerb.Get, KITCHEN_CONTROLLER, ApiRoutes.AnyOrders, [("lastOrderId", lastOrderId)], null);
 
         return result ?? false;
 
@@ -387,7 +387,7 @@ public class RestaurantService
 
     public async Task<List<DrinkTypeDto>> GetDrinkTypes()
     {
-        List<DrinkTypeDto>? result = await GetResponseFromApi<List<DrinkTypeDto>>(HttpVerb.Get, FRONTDESK_CONTROLLER, ApiEntityRoutes.DrinkType, null, null);
+        List<DrinkTypeDto>? result = await GetResponseFromApi<List<DrinkTypeDto>>(HttpVerb.Get, FRONTDESK_CONTROLLER, ApiRoutes.DrinkType, null, null);
 
         return result ?? new();
 

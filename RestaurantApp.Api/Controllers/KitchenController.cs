@@ -17,7 +17,7 @@ namespace RestaurantApp.Api.Controllers
         }
 
         [HttpGet]
-        [Route(ApiEntityRoutes.AnyOrders)]
+        [Route(ApiRoutes.AnyOrders)]
         public async Task<IActionResult> AnyOrders([FromQuery] int lastOrderId)
         {
             OrderQueryParams queryParams = new OrderQueryParams()
@@ -33,7 +33,7 @@ namespace RestaurantApp.Api.Controllers
         }
 
         [HttpGet]
-        [Route(ApiEntityRoutes.Orders)]
+        [Route(ApiRoutes.Orders)]
         public async Task<IActionResult> GetOrders([FromQuery] int lastOrderId)
         {
             OrderQueryParams queryParams = new OrderQueryParams()
@@ -48,7 +48,7 @@ namespace RestaurantApp.Api.Controllers
         }
 
         [HttpPost]
-        [Route(ApiEntityRoutes.OrderServed)]
+        [Route(ApiRoutes.OrderServed)]
         public async Task<IActionResult> MarkOrderAsServed([FromBody] int orderId)
         {
             if (await _serviceManager.OrderService.MarkServedAsync(orderId) == false)
