@@ -23,7 +23,7 @@ public partial class KitchenOrdersPageViewModel : ObservableObject
 
     public async Task GetNewOrders()
     {
-        List<OrderDto> newOrders = await _service.GetNewOrders(_lastOrderId);
+        List<OrderDto> newOrders = await _service.GetNewOrdersForKitchen(_lastOrderId);
 
         if (!newOrders.Any())
         {
