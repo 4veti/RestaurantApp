@@ -28,6 +28,8 @@ public partial class MainPage : ContentPage
     {
         base.OnAppearing();
 
+        _mainPageViewModel.ClearOrderIfEmpty();
+
         await _mainPageViewModel.GetMenutemsAsync();
 
         LoadMenuStructureAndItems();

@@ -27,7 +27,6 @@ public class RestaurantService
     }
 
     public OrderDto ClientOrder { get; set; }
-    public bool ReloadMenu { get; set; } = true;
 
     public async Task<List<FoodDto>> GetFoodItemsAsync(bool forceReload = false)
     {
@@ -145,14 +144,14 @@ public class RestaurantService
 
     public async Task<bool> MarkOrderAsServed(int orderId)
     {
-        bool result = await GetResponseFromApi<bool>(HttpVerb.Put, KITCHEN_CONTROLLER, ApiRoutes.OrderServed, queryParams: null, content: orderId);
+        bool result = await GetResponseFromApi<bool>(HttpVerb.Put, FRONTDESK_CONTROLLER, ApiRoutes.OrderServed, queryParams: null, content: orderId);
 
         return result;
     }
 
     public async Task<bool> MarkOrderAsPaid(int orderId)
     {
-        bool result = await GetResponseFromApi<bool>(HttpVerb.Put, KITCHEN_CONTROLLER, ApiRoutes.OrderPaid, queryParams: null, content: orderId);
+        bool result = await GetResponseFromApi<bool>(HttpVerb.Put, FRONTDESK_CONTROLLER, ApiRoutes.OrderPaid, queryParams: null, content: orderId);
 
         return result;
     }
@@ -169,6 +168,11 @@ public class RestaurantService
         List<DrinkTypeDto>? result = await GetResponseFromApi<List<DrinkTypeDto>>(HttpVerb.Get, FRONTDESK_CONTROLLER, ApiRoutes.DrinkType, queryParams: null, content: null);
 
         return result ?? new();
+    }
+
+    private async Task LoadMenu()
+    {
+        _menu = await GetResponseFromApi<MenuDto>(HttpVerb.Get, CLIENT_CONTROLLER, ApiRoutes.Menu, queryParams: null, content: null) ?? new MenuDto();
     }
 
     private async Task<T?> GetResponseFromApi<T>(HttpVerb httpVerb, string controller, string targetEntity, IEnumerable<(string, object)>? queryParams = null, object? content = null)
@@ -192,6 +196,11 @@ public class RestaurantService
                 return default;
             }
             
+            if (typeof(T) == typeof(bool) && response.IsSuccessStatusCode)
+            {
+                return (T)(object)true;
+            }
+
             return await response.Content.ReadFromJsonAsync<T>();
         }
         catch (Exception ex)
@@ -225,7 +234,7 @@ public class RestaurantService
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Response to mark order as paid not successful. StatusCode: {response?.StatusCode}; Msg: {ex.Message}");
+                Debug.WriteLine($"API call not successful. StatusCode: {response?.StatusCode}; Msg: {ex.Message}");
 
                 if (i == 2) throw;
                 await Task.Delay(1500);
@@ -233,10 +242,5 @@ public class RestaurantService
         }
 
         return null;
-    }
-
-    private async Task LoadMenu()
-    {
-        _menu = await GetResponseFromApi<MenuDto>(HttpVerb.Get, CLIENT_CONTROLLER, ApiRoutes.Menu, queryParams: null, content: null) ?? new MenuDto();
     }
 }

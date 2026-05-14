@@ -70,6 +70,15 @@ public partial class MainPageViewModel : ObservableObject
         }
     }
 
+    public void ClearOrderIfEmpty()
+    {
+        if (_service.ClientOrder.Foods.Any() == false && _service.ClientOrder.Foods.Any() == false)
+        {
+            MyFoods.Clear();
+            MyDrinks.Clear();
+        }
+    }
+
     public async Task GetMenutemsAsync()
     {
         if (IsBusy)
