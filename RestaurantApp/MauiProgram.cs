@@ -26,41 +26,24 @@ namespace RestaurantApp
             builder.Services.Configure<ApplicationSettings>(
                     builder.Configuration.GetSection("ApplicationSettings"));
 
-            ApplicationSettings settings = builder.Configuration
-                .GetSection("ApplicationSettings")
-                .Get<ApplicationSettings>() ?? throw new InvalidOperationException("Missing ApplicationSettings in configuration"); ;
-
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
 
             builder.Services.AddSingleton<RestaurantService>();
+            builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddSingleton<MainPageViewModel>();
 
-            //if (settings.RunMode == RunMode.Client)
-            {
-                builder.Services.AddSingleton<MainPage>();
-                builder.Services.AddTransient<MyOrderPage>();
+            builder.Services.AddTransient<MyOrderPage>();
+            builder.Services.AddTransient<MyOrderViewModel>();
 
-                builder.Services.AddSingleton<MainPageViewModel>();
-                builder.Services.AddTransient<MyOrderViewModel>();
-            }
+            builder.Services.AddSingleton<KitchenOrdersPage>();
+            builder.Services.AddSingleton<KitchenOrdersPageViewModel>();
 
-            //if (settings.RunMode == RunMode.Kitchen)
-            {
-                builder.Services.AddSingleton<KitchenOrdersPage>();
-                builder.Services.AddSingleton<KitchenOrdersPageViewModel>();
-            }
-
-            //if (settings.RunMode == RunMode.FrontDesk)
-            {
-                builder.Services.AddSingleton<FrontOfficeViewModel>();
-
-                builder.Services.AddSingleton<FrontOfficeOrdersPage>();
-                builder.Services.AddSingleton<FrontOfficeFoodsPage>();
-                builder.Services.AddSingleton<FrontOfficeDrinksPage>();
-
-                builder.Services.AddSingleton<KitchenOrdersPageViewModel>();
-            }
+            builder.Services.AddSingleton<FrontOfficeOrdersPage>();
+            builder.Services.AddSingleton<FrontOfficeFoodsPage>();
+            builder.Services.AddSingleton<FrontOfficeDrinksPage>();
+            builder.Services.AddSingleton<FrontOfficeViewModel>();
 
             return builder.Build();
         }
