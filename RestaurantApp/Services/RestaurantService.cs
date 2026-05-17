@@ -121,7 +121,7 @@ public class RestaurantService
         return result;
     }
 
-    public async Task<bool?> AnyNewOrders(int lastOrderId)
+    public async Task<bool> AnyNewOrders(int lastOrderId)
     {
         bool result = await GetResponseFromApi<bool>(HttpVerb.Get, KITCHEN_CONTROLLER, ApiRoutes.AnyOrders, [("lastOrderId", lastOrderId)], null);
 
@@ -144,7 +144,7 @@ public class RestaurantService
 
     public async Task<bool> MarkOrderAsServed(int orderId)
     {
-        bool result = await GetResponseFromApi<bool>(HttpVerb.Put, FRONTDESK_CONTROLLER, ApiRoutes.OrderServed, queryParams: null, content: orderId);
+        bool result = await GetResponseFromApi<bool>(HttpVerb.Put, KITCHEN_CONTROLLER, ApiRoutes.OrderServed, queryParams: null, content: orderId);
 
         return result;
     }
@@ -175,7 +175,11 @@ public class RestaurantService
         _menu = await GetResponseFromApi<MenuDto>(HttpVerb.Get, CLIENT_CONTROLLER, ApiRoutes.Menu, queryParams: null, content: null) ?? new MenuDto();
     }
 
-    private async Task<T?> GetResponseFromApi<T>(HttpVerb httpVerb, string controller, string targetEntity, IEnumerable<(string, object)>? queryParams = null, object? content = null)
+    private async Task<T?> GetResponseFromApi<T>(HttpVerb httpVerb,
+        string controller,
+        string targetEntity,
+        IEnumerable<(string, object)>? queryParams = null,
+        object? content = null)
     {
         try
         {

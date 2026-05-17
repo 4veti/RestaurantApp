@@ -12,14 +12,28 @@ public partial class FrontOfficeOrdersPage : ContentPage
         _viewModel = viewModel;
 		BindingContext = viewModel;
 		InitializeComponent();
-
-        _getOrdersTimer = Dispatcher.CreateTimer();
-        _getOrdersTimer.Interval = TimeSpan.FromSeconds(10);
-        _getOrdersTimer.Tick += OrdersTimerTickLogic;
-        _getOrdersTimer.Start();
     }
 
-    private async void OrdersTimerTickLogic(object? sender, EventArgs e)
+    protected override async void OnAppearing()
+    {
+        if (_getOrdersTimer == null)
+        {
+            _getOrdersTimer = Dispatcher.CreateTimer();
+            _getOrdersTimer.Tick += async (_, _) => { await OrdersTimerTickLogic(); };
+            _getOrdersTimer.Interval = TimeSpan.FromSeconds(10);
+            _getOrdersTimer.Start();
+
+            await OrdersTimerTickLogic();
+        }
+        else if (_getOrdersTimer.IsRunning == false)
+        {
+            _getOrdersTimer.Start();
+        }
+
+        base.OnAppearing();
+    }
+
+    private async Task OrdersTimerTickLogic()
     {
         await _viewModel.GetNewOrders();
     }

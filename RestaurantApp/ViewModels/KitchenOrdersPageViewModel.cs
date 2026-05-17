@@ -53,9 +53,9 @@ public partial class KitchenOrdersPageViewModel : ObservableObject
         }
     }
 
-    public async Task<bool?> AnyNewOrders()
+    public async Task<bool> AnyNewOrders()
     {
-        bool? anyNewOrders = await _service.AnyNewOrders(_lastOrderId);
+        bool anyNewOrders = await _service.AnyNewOrders(_lastOrderId);
 
         return anyNewOrders;
     }

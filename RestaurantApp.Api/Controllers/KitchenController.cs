@@ -39,7 +39,8 @@ namespace RestaurantApp.Api.Controllers
             OrderQueryParams queryParams = new OrderQueryParams()
             {
                 LastOrderId = lastOrderId,
-                IsPaid = true
+                IsPaid = true,
+                OnlyNotServed = true
             };
 
             IEnumerable<OrderDto> orders = await _serviceManager.OrderService.GetAllByParamsAsync(queryParams);
@@ -47,7 +48,7 @@ namespace RestaurantApp.Api.Controllers
             return Ok(orders);
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route(ApiRoutes.OrderServed)]
         public async Task<IActionResult> MarkOrderAsServed([FromBody] int orderId)
         {

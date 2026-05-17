@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-using RestaurantApp.Client.Models;
 using RestaurantApp.ViewModels;
 
 namespace RestaurantApp.Views;
@@ -15,21 +13,19 @@ public partial class KitchenOrdersPage : ContentPage
         _viewModel = viewModel;
         InitializeComponent();
 
-        _getOrdersTimer = Dispatcher.CreateTimer();
-        _getOrdersTimer.Interval = TimeSpan.FromSeconds(10);
-        _getOrdersTimer.Tick += OrdersTimerTickLogic;
-        _getOrdersTimer.Start();
-
         _viewModel.UpdateElapsedTimes();
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         if (_getOrdersTimer == null)
         {
             _getOrdersTimer = Dispatcher.CreateTimer();
             _getOrdersTimer.Interval = TimeSpan.FromSeconds(10);
-            _getOrdersTimer.Tick += OrdersTimerTickLogic;
+            _getOrdersTimer.Tick += async (_, _) => { await OrdersTimerTickLogic(); }; _getOrdersTimer.Start();
+            _getOrdersTimer.Start();
+
+            await OrdersTimerTickLogic();
         }
         else if (_getOrdersTimer.IsRunning == false)
         {
@@ -45,11 +41,11 @@ public partial class KitchenOrdersPage : ContentPage
         base.OnDisappearing();
     }
 
-    private async void OrdersTimerTickLogic(object? sender, EventArgs e)
+    private async Task OrdersTimerTickLogic()
     {
-        bool? anyNewOrders = await _viewModel.AnyNewOrders();
+        bool anyNewOrders = await _viewModel.AnyNewOrders();
 
-        if (anyNewOrders is null || anyNewOrders == false)
+        if (anyNewOrders == false)
         {
             _viewModel.UpdateElapsedTimes();
             return;
