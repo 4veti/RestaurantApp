@@ -21,6 +21,19 @@ public class ExtendedOrderDto
         Drinks = order.Drinks;
     }
 
+    public ExtendedOrderDto(ExtendedOrderDto order)
+    {
+        Id = order.Id;
+        Created = order.Created;
+        Completed = order.Completed;
+        OrderName = order.OrderName;
+        IsPaid = order.IsPaid;
+        IsServed = order.IsServed;
+        Foods = order.Foods;
+        Drinks = order.Drinks;
+        ElapsedMinutes = order.ElapsedMinutes;
+    }
+
     public int Id { get; set; }
 
     public DateTime Created { get; set; }

@@ -45,14 +45,13 @@ public partial class KitchenOrdersPage : ContentPage
     {
         bool anyNewOrders = await _viewModel.AnyNewOrders();
 
-        if (anyNewOrders == false)
+        if (anyNewOrders)
         {
-            _viewModel.UpdateElapsedTimes();
-            return;
+            await _viewModel.GetNewOrders();
         }
 
-        await _viewModel.GetNewOrders();
-        FramePendingOrders.IsVisible = true;
+        _viewModel.UpdateElapsedTimes();
+        FramePendingOrders.IsVisible = _viewModel.PendingOrders.Any();
     }
 
     private void ButtonMarkOrderAsActive_Clicked(object sender, EventArgs e)

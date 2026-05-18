@@ -35,7 +35,7 @@
                                                          Padding="10" >
                                             <Grid ColumnDefinitions="0.5*,0.5*">
                                                 <Label Grid.Column="0" FontAttributes="Bold" HorizontalTextAlignment="Start" Text="{Binding OrderName, StringFormat='Поръчка: {0}'}"/>
-                                                <Label Grid.Column="1" HorizontalTextAlignment="End" Text="{Binding ElapsedMinutes, StringFormat='{}Преди {0} минути'}"/>
+                                                <Label Grid.Column="1" HorizontalTextAlignment="End" Text="{Binding ElapsedMinutes, Mode=TwoWay, StringFormat='{}Преди {0} минути'}"/>
                                             </Grid>
 
                                             <CollectionView BackgroundColor="Transparent"
@@ -93,7 +93,7 @@
                                                              Padding="10" >
                                             <Grid ColumnDefinitions="0.5*,0.5*">
                                                 <Label Grid.Column="0" FontAttributes="Bold" HorizontalTextAlignment="Start" Text="{Binding OrderName, StringFormat='Поръчка: {0}'}"/>
-                                                <Label Grid.Column="1" HorizontalTextAlignment="End" Text="{Binding ElapsedMinutes, StringFormat='{}Преди {0} минути'}">
+                                                <Label Grid.Column="1" HorizontalTextAlignment="End" Text="{Binding ElapsedMinutes, Mode=TwoWay, StringFormat='{}Преди {0} минути'}">
                                                 </Label>
                                             </Grid>
 

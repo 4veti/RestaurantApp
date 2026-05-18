@@ -34,9 +34,6 @@ namespace RestaurantApp
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<MainPageViewModel>();
 
-            builder.Services.AddTransient<MyOrderPage>();
-            builder.Services.AddTransient<MyOrderViewModel>();
-
             builder.Services.AddSingleton<KitchenOrdersPage>();
             builder.Services.AddSingleton<KitchenOrdersPageViewModel>();
 

@@ -8,7 +8,6 @@ namespace RestaurantApp
     public partial class AppShell : Shell
     {
         public AppShell(MainPageViewModel MainPageViewModel,
-            MyOrderViewModel myOrderViewModel,
             KitchenOrdersPageViewModel kitchenOrdersPageViewModel,
             FrontOfficeViewModel frontOfficeViewModel,
             IOptions<ApplicationSettings> options)
@@ -23,7 +22,7 @@ namespace RestaurantApp
             }
             else if (options.Value.RunMode == RunMode.Client)
             {
-                CreateClientOrderInterface(MainPageViewModel, myOrderViewModel);
+                CreateClientOrderInterface(MainPageViewModel);
             }
 
             InitializeComponent();
@@ -58,8 +57,7 @@ namespace RestaurantApp
             Routing.RegisterRoute(nameof(KitchenOrdersPage), typeof(KitchenOrdersPage));
         }
 
-        private void CreateClientOrderInterface(MainPageViewModel mainPageViewModel,
-            MyOrderViewModel myOrderViewModel)
+        private void CreateClientOrderInterface(MainPageViewModel mainPageViewModel)
         {
             var mainTab = new TabBar
             {
@@ -83,26 +81,8 @@ namespace RestaurantApp
             // Add tabs to MainTab item
             mainTab.Items.Add(dishesTab);
 
-            // Create tab for orders
-            var ordersTab = new Tab
-            {
-                Title = "Данни за поръчка",
-                Route = "OrdersTabRoute"
-            };
-            // Add the orders tab
-            ordersTab.Items.Add(new ShellContent
-            {
-                Title = "Основна страница поръчка",
-                Route = "MyOrderPage",
-                Content = new MyOrderPage(myOrderViewModel)
-            });
-            // Add tabs to MainTab item
-            mainTab.Items.Add(ordersTab);
-
             // Add MainTab item to shell
             Items.Add(mainTab);
-
-            Routing.RegisterRoute(nameof(MyOrderPage), typeof(MyOrderPage));
         }
 
         private void CreateFrontOfficeInterface(FrontOfficeViewModel frontOfficeViewModel)

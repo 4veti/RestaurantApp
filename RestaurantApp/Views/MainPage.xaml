@@ -39,16 +39,44 @@
                         <DataTemplate x:DataType="clientModel:FoodItemModel">
                             <Grid Padding="10,0,20,0">
                                 <Frame>
-                                    <Label VerticalTextAlignment="Center" Margin="-10"
+                                    <Grid ColumnDefinitions="Auto,*,Auto"
+                                          ColumnSpacing="20">
+                                        <Label Grid.Column="0"
+                                               VerticalTextAlignment="Center"
                                                FontSize="18"
                                                FontAttributes="Italic">
-                                        <Label.Text>
-                                            <MultiBinding StringFormat="{}{0} (x{1})">
-                                                <Binding Path="Name"/>
-                                                <Binding Path="Count"/>
-                                            </MultiBinding>
-                                        </Label.Text>
-                                    </Label>
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}{0} - {2}лв (x{1})">
+                                                    <Binding Path="Name"/>
+                                                    <Binding Path="Count"/>
+                                                    <Binding Path="Price"/>
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+
+                                        <HorizontalStackLayout Grid.Column="2"
+                                                               MaximumHeightRequest="50"
+                                                               Padding="0" Margin="0, -10, 0, -10">
+                                            <Button Text="+" FontSize="Large" FontAttributes="Bold"
+                                                    BorderWidth="1" BorderColor="Transparent"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="Black"
+                                                    Pressed="AnimateButtonAsync_Pressed"
+                                                    Released="AnimateButtonAsync_Released"
+                                                    CommandParameter="{Binding Id}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainPageViewModel}}, x:DataType=viewmodel:MainPageViewModel, Path=IncreaseFoodItemCountCommand}">
+                                            </Button>
+
+                                            <Button Text="-" FontSize="Large" FontAttributes="Bold"
+                                                    BorderWidth="1" BorderColor="Transparent"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="Black"
+                                                    Pressed="AnimateButtonAsync_Pressed"
+                                                    Released="AnimateButtonAsync_Released"
+                                                    CommandParameter="{Binding Id}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainPageViewModel}}, x:DataType=viewmodel:MainPageViewModel, Path=DecreaseFoodItemCountCommand}"/>
+                                        </HorizontalStackLayout>
+                                    </Grid>
                                 </Frame>
                             </Grid>
                         </DataTemplate>
@@ -63,21 +91,63 @@
                         <DataTemplate x:DataType="clientModel:DrinkItemModel">
                             <Grid Padding="10,0,20,0">
                                 <Frame>
-                                    <Label VerticalTextAlignment="Center" Margin="-10"
+                                    <Grid ColumnDefinitions="Auto,*,Auto"
+                                          ColumnSpacing="20">
+                                        <Label VerticalTextAlignment="Center" Margin="-10"
                                                FontSize="18"
                                                FontAttributes="Italic">
-                                        <Label.Text>
-                                            <MultiBinding StringFormat="{}{0} (x{1})">
-                                                <Binding Path="Name"/>
-                                                <Binding Path="Count"/>
-                                            </MultiBinding>
-                                        </Label.Text>
-                                    </Label>
+                                            <Label.Text>
+                                                <MultiBinding StringFormat="{}{0} - {2}лв (x{1})">
+                                                    <Binding Path="Name"/>
+                                                    <Binding Path="Count"/>
+                                                    <Binding Path="Price"/>
+                                                </MultiBinding>
+                                            </Label.Text>
+                                        </Label>
+
+                                        <HorizontalStackLayout Grid.Column="2"
+                                                               MaximumHeightRequest="50"
+                                                               Padding="0" Margin="0, -10, 0, -10">
+                                            <Button Text="+" FontSize="Large" FontAttributes="Bold"
+                                                    BorderWidth="1" BorderColor="Transparent"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="Black"
+                                                    Pressed="AnimateButtonAsync_Pressed"
+                                                    Released="AnimateButtonAsync_Released"
+                                                    CommandParameter="{Binding Id}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainPageViewModel}}, x:DataType=viewmodel:MainPageViewModel, Path=IncreaseDrinkItemCountCommand}">
+                                            </Button>
+
+                                            <Button Text="-" FontSize="Large" FontAttributes="Bold"
+                                                    BorderWidth="1" BorderColor="Transparent"
+                                                    BackgroundColor="Transparent"
+                                                    TextColor="Black"
+                                                    Pressed="AnimateButtonAsync_Pressed"
+                                                    Released="AnimateButtonAsync_Released"
+                                                    CommandParameter="{Binding Id}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:MainPageViewModel}}, x:DataType=viewmodel:MainPageViewModel, Path=DecreaseDrinkItemCountCommand}"/>
+                                        </HorizontalStackLayout>
+                                    </Grid>
                                 </Frame>
                             </Grid>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
+                <Grid ColumnDefinitions="0.5*,0.5*"
+                          ColumnSpacing="10"
+                          Margin="10, 20, 20, 0">
+                    <Label Text="{Binding TotalPrice, StringFormat='Общо: {0}лв'}"
+                           Grid.Column="0"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"
+                           FontSize="Medium"
+                           FontAttributes="Italic,Bold"/>
+                    <Button Text="Поръчай!"
+                            Grid.Column="1"
+                            BackgroundColor="ForestGreen"
+                            FontSize="Medium"
+                            Command="{Binding PlaceOrderCommand}"/>
+                </Grid>
             </VerticalStackLayout>
 
             <ActivityIndicator IsVisible="{Binding IsBusy}"

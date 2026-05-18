@@ -32,10 +32,41 @@ public partial class MainPage : ContentPage
 
         await _mainPageViewModel.GetMenutemsAsync();
 
+        _mainPageViewModel.LoadOrderItems();
+        _mainPageViewModel.SetTotalPrice();
+
         LoadMenuStructureAndItems();
 
         await Task.Delay(300);
         CaptureSectionPositions();
+    }
+
+    private async Task AnimateButtonPressAsync(Button button)
+    {
+        await button.ScaleTo(0.8, 70, Easing.CubicOut);
+    }
+
+    private async Task AnimateButtonReleaseAsync(Button button)
+    {
+        await button.ScaleTo(1.0, 90, Easing.CubicOut);
+    }
+
+    private async void AnimateButtonAsync_Pressed(object sender, EventArgs e)
+    {
+        if (sender is Button button)
+        {
+            button.BorderColor = Colors.LightGray;
+            await AnimateButtonPressAsync(button);
+        }
+    }
+
+    private async void AnimateButtonAsync_Released(object sender, EventArgs e)
+    {
+        if (sender is Button button)
+        {
+            await AnimateButtonReleaseAsync(button);
+            button.BorderColor = Colors.Transparent;
+        }
     }
 
     private void ButtonStartOrder_Clicked(object sender, EventArgs e)
@@ -125,7 +156,7 @@ public partial class MainPage : ContentPage
 
                 Label priceLabel = new Label();
                 priceLabel.SetBinding(Label.TextProperty,
-                    new Binding("Price", stringFormat: "Price: {0:C2}"));
+                    new Binding("Price", stringFormat: "Цена: {0:C2}"));
 
                 VerticalStackLayout stack = new VerticalStackLayout
                 {
@@ -217,7 +248,7 @@ public partial class MainPage : ContentPage
 
                 Label priceLabel = new Label();
                 priceLabel.SetBinding(Label.TextProperty,
-                    new Binding("Price", stringFormat: "Price: {0:C2}"));
+                    new Binding("Price", stringFormat: "Цена: {0:C2}"));
 
                 Label alcoholicLabel = new Label();
                 alcoholicLabel.SetBinding(Label.TextProperty,

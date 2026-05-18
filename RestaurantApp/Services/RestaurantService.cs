@@ -200,7 +200,7 @@ public class RestaurantService
                 return default;
             }
             
-            if (typeof(T) == typeof(bool) && response.IsSuccessStatusCode)
+            if (typeof(T) == typeof(bool) && response.IsSuccessStatusCode && string.IsNullOrWhiteSpace(await response.Content.ReadAsStringAsync()))
             {
                 return (T)(object)true;
             }

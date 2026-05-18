@@ -30,6 +30,81 @@ public partial class MainPageViewModel : ObservableObject
 
     public bool IsNotBusy => !IsBusy;
 
+    public void LoadOrderItems()
+    {
+        MyFoods.Clear();
+        MyDrinks.Clear();
+
+        foreach (FoodDto food in _service.ClientOrder.Foods)
+        {
+            MyFoods.Add(new FoodItemModel(food));
+        }
+
+        foreach (DrinkDto drink in _service.ClientOrder.Drinks)
+        {
+            MyDrinks.Add(new DrinkItemModel(drink));
+        }
+    }
+
+    [RelayCommand]
+    private void IncreaseFoodItemCount(int foodId)
+    {
+        FoodItemModel foodModel = MyFoods.First(x => x.Id == foodId);
+
+        if (foodModel.Count < 15)
+        {
+            foodModel.Count++;
+            _service.SetFoodItemCount(foodId, foodModel.Count);
+        }
+
+        TotalPrice += foodModel.Price;
+    }
+
+    [RelayCommand]
+    private void DecreaseFoodItemCount(int foodId)
+    {
+        FoodItemModel foodModel = MyFoods.First(x => x.Id == foodId);
+        foodModel.Count--;
+
+        if (foodModel.Count < 1)
+        {
+            MyFoods.Remove(foodModel);
+        }
+
+        _service.SetFoodItemCount(foodId, foodModel.Count);
+        TotalPrice -= foodModel.Price;
+    }
+
+    [RelayCommand]
+    private void IncreaseDrinkItemCount(int drinkId)
+    {
+        DrinkItemModel drinkModel = MyDrinks.First(x => x.Id == drinkId);
+
+        if (drinkModel.Count < 15)
+        {
+            drinkModel.Count++;
+            _service.SetDrinkItemCount(drinkId, drinkModel.Count);
+        }
+
+        TotalPrice += drinkModel.Price;
+    }
+
+    [RelayCommand]
+    private void DecreaseDrinkItemCount(int drinkId)
+    {
+        DrinkItemModel drinkModel = MyDrinks.First(x => x.Id == drinkId);
+        drinkModel.Count--;
+
+        if (drinkModel.Count < 1)
+        {
+            MyDrinks.Remove(drinkModel);
+        }
+
+        _service.SetDrinkItemCount(drinkId, drinkModel.Count);
+        TotalPrice -= drinkModel.Price;
+
+    }
+
     [RelayCommand]
     private void AddFoodToOrder(FoodDto foodDto)
     {
@@ -48,6 +123,8 @@ public partial class MainPageViewModel : ObservableObject
             MyFoods.Add(new FoodItemModel(foodDto));
             _service.ClientOrder.Foods.Add(foodDto);
         }
+
+        TotalPrice += foodDto.Price;
     }
 
     [RelayCommand]
@@ -68,6 +145,34 @@ public partial class MainPageViewModel : ObservableObject
             MyDrinks.Add(new DrinkItemModel(drinkDto));
             _service.ClientOrder.Drinks.Add(drinkDto);
         }
+
+        TotalPrice += drinkDto.Price;
+    }
+
+    [RelayCommand]
+    private async Task PlaceOrder()
+    {
+        if (MyFoods.Any() || MyDrinks.Any())
+        {
+            bool orderSuccess = await _service.PlaceOrder();
+
+            if (orderSuccess)
+            {
+                MyFoods.Clear();
+                MyDrinks.Clear();
+
+                SetTotalPrice();
+            }
+
+            return;
+        }
+
+        await Shell.Current.DisplayAlert("Грешка!", "Трябва да имате поне един избран елемент, за да направите поръчка.", "Добре");
+    }
+
+    public void SetTotalPrice()
+    {
+        TotalPrice = MyFoods.Sum(x => x.Price * x.Count) + MyDrinks.Sum(x => x.Price * x.Count);
     }
 
     public void ClearOrderIfEmpty()
