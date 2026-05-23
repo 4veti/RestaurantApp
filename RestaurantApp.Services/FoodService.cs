@@ -74,7 +74,7 @@ internal class FoodService : IFoodService
     public async Task<IEnumerable<FoodDto>> GetAllByFoodTypeIdAsync(int foodTypeId)
     {
         List<FoodDto> foods = await _repositoryManager.FoodRepository
-            .GetAllAsync(true)
+            .GetAll(true)
             .Include(f => f.FoodType)
             .Select(f => new FoodDto()
             {
@@ -155,7 +155,7 @@ internal class FoodService : IFoodService
         if (isNameChanged)
         {
             bool nameExists = await _repositoryManager.FoodRepository
-                .GetAllAsync()
+                .GetAll()
                 .Where(f => f.Name == dto.Name)
                 .AnyAsync();
 

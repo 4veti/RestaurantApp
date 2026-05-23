@@ -24,7 +24,9 @@ namespace RestaurantApp.Api.Controllers
             {
                 LastOrderId = lastOrderId,
                 IsPaid = true,
-                OnlyNotServed = true
+                OnlyNotServed = true,
+                FromDate = DateTime.Today,
+                MustHaveFoods = true
             };
 
             bool anyOrders = await _serviceManager.OrderService.GetAllCountByParamsAsync(queryParams);
@@ -40,7 +42,9 @@ namespace RestaurantApp.Api.Controllers
             {
                 LastOrderId = lastOrderId,
                 IsPaid = true,
-                OnlyNotServed = true
+                OnlyNotServed = true,
+                FromDate = DateTime.Today,
+                MustHaveFoods = true
             };
 
             IEnumerable<OrderDto> orders = await _serviceManager.OrderService.GetAllByParamsAsync(queryParams);

@@ -1,6 +1,7 @@
 ﻿using System.Data.Common;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using RestaurantApp.Domain;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Domain.Entities;
@@ -34,7 +35,8 @@ internal class OrderService : IOrderService
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
                 OrderName = dto.OrderName,
-                IsPaid = dto.IsPaid
+                IsPaid = dto.IsPaid,
+                IsServed = dto.Foods.Count == 0
             };
 
             await _repositoryManager.OrderRepository.InsertAsync(addOrder);
@@ -112,6 +114,11 @@ internal class OrderService : IOrderService
             {
                 Name = f.Food.Name,
                 Count = f.Count
+            }).ToList(),
+            Drinks = o.DrinksOrders.Select(d => new DrinkDto()
+            {
+                Name = d.Drink.Name,
+                Count = d.Count
             }).ToList()
         })
         .ToListAsync();
@@ -202,7 +209,7 @@ internal class OrderService : IOrderService
     public async Task<MenuDto> GetMenuAsync()
     {
         List<FoodDto> foods = await _repositoryManager.FoodRepository
-            .GetAllAsync()
+            .GetAll()
             .Select(f => new FoodDto()
             {
                 Id = f.Id,
@@ -214,7 +221,7 @@ internal class OrderService : IOrderService
             }).ToListAsync();
 
         List<DrinkDto> drinks = await _repositoryManager.DrinkRepository
-            .GetAllAsync()
+            .GetAll()
             .Select(d => new DrinkDto()
             {
                 Id = d.Id,
@@ -254,6 +261,23 @@ internal class OrderService : IOrderService
         return menu;
     }
 
+    public async Task<(IEnumerable<int>?, string)> GetServedOrderIDsAsync(int oldestNotServedOrderId)
+    {
+        if (oldestNotServedOrderId < 1)
+        {
+            return (null, ErrorMessages.IdMustBeAboveZero);
+        }
+
+        // We filter by Paid because currently only paid orders can be viewed by the kitchen, and therefore served.
+        List<int> servedOrders = await _repositoryManager.OrderRepository
+            .GetAll()
+            .Where(o => o.Id >= oldestNotServedOrderId && o.IsPaid && o.IsServed)
+            .Select(o => o.Id)
+            .ToListAsync();
+
+        return (servedOrders, string.Empty);
+    }
+
     private async Task<List<string>> ValidateOrder(OrderDto dto)
     {
         List<string> errors = new List<string>();
@@ -270,7 +294,7 @@ internal class OrderService : IOrderService
             if (dto.Foods.Any())
             {
                 List<int> validFoodIDs = await _repositoryManager.FoodRepository
-                    .GetAllAsync()
+                    .GetAll()
                     .Select(f => f.Id)
                     .ToListAsync();
 
@@ -290,7 +314,7 @@ internal class OrderService : IOrderService
             if (dto.Drinks.Any())
             {
                 List<int> validDrinkIDs = await _repositoryManager.DrinkRepository
-                .GetAllAsync()
+                .GetAll()
                 .Select(d => d.Id)
                 .ToListAsync();
 
@@ -332,6 +356,16 @@ internal class OrderService : IOrderService
         if (queryParams.OnlyNotServed ?? false)
         {
             query = query.Where(o => !o.IsServed);
+        }
+
+        if (queryParams.FromDate is not null)
+        {
+            query = query.Where(o => o.Created >= queryParams.FromDate);
+        }
+
+        if (queryParams.MustHaveFoods)
+        {
+            query = query.Where(o => o.FoodsOrders.Any());
         }
 
         return query;

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using RestaurantApp.Client.Models;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Models;
 using RestaurantApp.Services;
@@ -10,7 +11,8 @@ namespace RestaurantApp.ViewModels;
 
 public partial class FrontOfficeViewModel : ObservableObject
 {
-    private int _lastOrderId = 0;
+    private int _oldestNotServedOrderID = int.MaxValue;
+    private int _lastOrderID = 0;
 
     [ObservableProperty]
     private bool isFoodsBusy;
@@ -21,9 +23,6 @@ public partial class FrontOfficeViewModel : ObservableObject
     private bool isFoodTypesBusy;
 
     private bool isDrinkTypesBusy;
-
-    private bool initiatedFoods = false;
-    private bool initiatedDrinks = false;
 
 
     [ObservableProperty]
@@ -51,29 +50,17 @@ public partial class FrontOfficeViewModel : ObservableObject
     public ObservableCollection<FoodDto> FoodList { get; } = new();
     public ObservableCollection<FoodTypeDto> FoodTypesList { get; } = new();
     public ObservableCollection<DrinkTypeDto> DrinkTypesList { get; } = new();
-    public ObservableCollection<OrderDto> ActiveFrontDeskOrders { get; set; } = new();
-    public ObservableCollection<OrderDto> PaidOrders { get; set; } = new();
+    public ObservableCollection<ExtendedOrderDto> ActiveFrontDeskOrders { get; set; } = new();
+    public ObservableCollection<ExtendedOrderDto> PaidOrders { get; set; } = new();
 
-    public async Task InitializeFodsAsync()
+    public async Task InitializeFoodsAsync()
     {
-        if (initiatedFoods)
-        {
-            return;
-        }
-
-        initiatedFoods = true;
         await GetFoodItemsAsync();
         await GetFoodTypesAsync();
     }
 
     public async Task InitializeDrinksAsync()
     {
-        if (initiatedDrinks)
-        {
-            return;
-        }
-
-        initiatedDrinks = true;
         await GetDrinkItemsAsync();
         await GetDrinkTypesAsync();
     }
@@ -242,40 +229,89 @@ public partial class FrontOfficeViewModel : ObservableObject
 
     public async Task GetNewOrders()
     {
-        List<OrderDto> newOrders = await _service.GetNewOrdersForFrontDesk(_lastOrderId);
+        GetOrdersFrontDeskDTO? ordersResponse = await _service.GetNewOrdersForFrontDesk(_oldestNotServedOrderID, _lastOrderID);
 
-        if (!newOrders.Any())
+        if (ordersResponse is null)
         {
             return;
         }
 
-        foreach (OrderDto order in newOrders)
+        if (!string.IsNullOrWhiteSpace(ordersResponse.ErrorMessage))
+        {
+            Debug.WriteLine(ordersResponse.ErrorMessage);
+        }
+
+        List<OrderDto> newOrders = ordersResponse.NewOrders;
+
+        foreach (OrderDto order in newOrders.OrderBy(o => o.Id))
         {
             if (order.IsPaid)
             {
-                PaidOrders.Add(order);
+                PaidOrders.Insert(0, new ExtendedOrderDto(order));
             }
             else
             {
-                ActiveFrontDeskOrders.Add(order);
+                ActiveFrontDeskOrders.Insert(0, new ExtendedOrderDto(order));
             }
 
-            if (order.Id > _lastOrderId)
+            if (order.Id > _lastOrderID)
             {
-                _lastOrderId = order.Id;
+                _lastOrderID = order.Id;
+            }            
+        }
+
+        if (ordersResponse.ServedOrderIDs is null)
+        {
+            return;
+        }
+
+        Debug.WriteLine($"New served order IDs: {string.Join(", ", ordersResponse.ServedOrderIDs)}");
+        Debug.WriteLine($"Current paid order IDs: {string.Join(", ", PaidOrders.Select(po => po.Id))}");
+
+        foreach (ExtendedOrderDto paidOrder in PaidOrders)
+        {
+            if (paidOrder.IsServed == false && ordersResponse.ServedOrderIDs.Contains(paidOrder.Id))
+            {
+                paidOrder.IsServed = true;
+            }
+            else if (paidOrder.IsServed == false)
+            {
+                _oldestNotServedOrderID = paidOrder.Id;
             }
         }
+
+        Debug.WriteLine($"Oldest not served order ID: {_oldestNotServedOrderID}");
     }
 
     [RelayCommand]
-    private async Task MarkAsPaid(OrderDto orderToMark)
+    private async Task MarkAsPaid(ExtendedOrderDto orderToMark)
     {
         bool success = await _service.MarkOrderAsPaid(orderToMark.Id);
 
         if (success)
         {
-            ActiveFrontDeskOrders.Remove(orderToMark);
-            PaidOrders.Add(orderToMark);
+            ExtendedOrderDto existingOrderToMark = ActiveFrontDeskOrders.First(o => o.Id == orderToMark.Id);
+            ActiveFrontDeskOrders.Remove(existingOrderToMark);
+
+            int insertIndex = GetInsertOrderIndex(PaidOrders, orderToMark.Id);
+            PaidOrders.Insert(insertIndex, existingOrderToMark);
         }
+    }
+
+    private int GetInsertOrderIndex(IEnumerable<ExtendedOrderDto> orders, int insertOrderID)
+    {
+        int index = 0;
+
+        foreach (ExtendedOrderDto order in orders)
+        {
+            if (insertOrderID > order.Id)
+            {
+                break;
+            }
+
+            index++;
+        }
+
+        return index;
     }
 }

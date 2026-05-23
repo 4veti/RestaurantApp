@@ -292,17 +292,26 @@ namespace RestaurantApp.ClientApi.Controllers
         }
 
         [HttpGet(ApiRoutes.Orders)]
-        public async Task<IActionResult> GeNewOrders([FromQuery] int lastOrderId, [FromQuery] bool? isPaid)
+        public async Task<IActionResult> GeNewOrders([FromQuery] int oldestNotServedOrderID, [FromQuery] int lastOrderId, [FromQuery] bool? isPaid)
         {
             OrderQueryParams queryParams = new OrderQueryParams()
             {
                 LastOrderId = lastOrderId,
-                IsPaid = isPaid
+                IsPaid = isPaid,
+                FromDate = DateTime.Today
+            };
+            
+            List<OrderDto> newOrders = (await _serviceManager.OrderService.GetAllByParamsAsync(queryParams)).ToList();
+            (IEnumerable<int>? servedOrderIDs, string errorMessage) = await _serviceManager.OrderService.GetServedOrderIDsAsync(oldestNotServedOrderID);
+
+            GetOrdersFrontDeskDTO response = new()
+            {
+                NewOrders = newOrders,
+                ServedOrderIDs = servedOrderIDs,
+                ErrorMessage = errorMessage
             };
 
-            IEnumerable<OrderDto> orders = await _serviceManager.OrderService.GetAllByParamsAsync(queryParams);
-
-            return Ok(orders);
+            return Ok(response);
         }
     }
 }

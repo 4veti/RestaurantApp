@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodel="clr-namespace:RestaurantApp.ViewModels"
              xmlns:model="clr-namespace:RestaurantApp.Domain.Contracts.DTOs;assembly=RestaurantApp.Domain"
+             xmlns:clientModel="clr-namespace:RestaurantApp.Client.Models;assembly=RestaurantApp.Client"
              x:DataType="viewmodel:FrontOfficeViewModel"
              x:Class="RestaurantApp.Views.FrontOfficeOrdersPage"
              Title="FrontOfficeOrdersPage">
@@ -21,7 +22,7 @@
                                         ItemsSource="{Binding ActiveFrontDeskOrders}"
                                         SelectionMode="None">
                             <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="model:OrderDto">
+                                <DataTemplate x:DataType="clientModel:ExtendedOrderDto">
                                     <Frame Padding="10"
                                            BackgroundColor="LightSeaGreen">
                                         <VerticalStackLayout x:Name="orderStatsInfo"
@@ -33,7 +34,24 @@
                                                         SelectionMode="None">
                                                 <CollectionView.ItemTemplate>
                                                     <DataTemplate x:DataType="model:FoodDto">
-                                                        <Label>
+                                                        <Label FontAttributes="Italic">
+                                                            <Label.Text>
+                                                                <MultiBinding StringFormat="{} -{0} (x{1})">
+                                                                    <Binding Path="Name"/>
+                                                                    <Binding Path="Count"/>
+                                                                </MultiBinding>
+                                                            </Label.Text>
+                                                        </Label>
+                                                    </DataTemplate>
+                                                </CollectionView.ItemTemplate>
+                                            </CollectionView>
+
+                                            <CollectionView BackgroundColor="Transparent"
+                                                        ItemsSource="{Binding Drinks}"
+                                                        SelectionMode="None">
+                                                <CollectionView.ItemTemplate>
+                                                    <DataTemplate x:DataType="model:DrinkDto">
+                                                        <Label FontAttributes="Italic">
                                                             <Label.Text>
                                                                 <MultiBinding StringFormat="{} -{0} (x{1})">
                                                                     <Binding Path="Name"/>
@@ -47,11 +65,11 @@
 
                                             <Button HeightRequest="10"
                                                     Margin="0,10,0,0"
-                                                Text="Платено!"
-                                                BackgroundColor="ForestGreen"
-                                                TextColor="White"
-                                                CommandParameter="{Binding .}"
-                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:FrontOfficeViewModel}}, x:DataType=viewmodel:FrontOfficeViewModel, Path=MarkAsPaidCommand}"/>
+                                                    Text="Платено!"
+                                                    BackgroundColor="ForestGreen"
+                                                    TextColor="White"
+                                                    CommandParameter="{Binding .}"
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:FrontOfficeViewModel}}, x:DataType=viewmodel:FrontOfficeViewModel, Path=MarkAsPaidCommand}"/>
                                         </VerticalStackLayout>
                                     </Frame>
                                 </DataTemplate>
@@ -68,7 +86,7 @@
                                         ItemsSource="{Binding PaidOrders}"
                                         SelectionMode="None">
                             <CollectionView.ItemTemplate>
-                                <DataTemplate x:DataType="model:OrderDto">
+                                <DataTemplate x:DataType="clientModel:ExtendedOrderDto">
                                     <Frame Padding="10"
                                            BackgroundColor="CornflowerBlue">
                                         <VerticalStackLayout x:Name="orderStatsInfo"
@@ -91,6 +109,37 @@
                                                     </DataTemplate>
                                                 </CollectionView.ItemTemplate>
                                             </CollectionView>
+
+                                            <CollectionView BackgroundColor="Transparent"
+                                                        ItemsSource="{Binding Drinks}"
+                                                        SelectionMode="None">
+                                                <CollectionView.ItemTemplate>
+                                                    <DataTemplate x:DataType="model:DrinkDto">
+                                                        <Label FontAttributes="Italic">
+                                                            <Label.Text>
+                                                                <MultiBinding StringFormat="{} - {0} (x{1})">
+                                                                    <Binding Path="Name"/>
+                                                                    <Binding Path="Count"/>
+                                                                </MultiBinding>
+                                                            </Label.Text>
+                                                        </Label>
+                                                    </DataTemplate>
+                                                </CollectionView.ItemTemplate>
+                                            </CollectionView>
+
+                                            <Frame CornerRadius="5"
+                                                   IsVisible="{Binding IsServed}"
+                                                   Margin="0,5,0,0"
+                                                   Padding="5, 5, 11, 5"
+                                                   BackgroundColor="LightSeaGreen"
+                                                   HorizontalOptions="Start"
+                                                   VerticalOptions="Center">
+                                                <Label FontAttributes="Bold,Italic"
+                                                       FontSize="Small"
+                                                       Text="Сервирано!"
+                                                       HorizontalOptions="Center"
+                                                       VerticalOptions="Center"/>
+                                            </Frame>
                                         </VerticalStackLayout>
                                     </Frame>
                                 </DataTemplate>

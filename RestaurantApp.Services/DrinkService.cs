@@ -76,7 +76,7 @@ internal class DrinkService : IDrinkService
     public async Task<IEnumerable<DrinkDto>> GetAllByDrinkTypeIdAsync(int drinkType)
     {
         List<DrinkDto> drinks = await _repositoryManager.DrinkRepository
-            .GetAllAsync(true)
+            .GetAll(true)
             .Include(d => d.DrinkType)
             .Where(d => d.DrinkTypeId == drinkType)
             .Select(d => new DrinkDto()
@@ -164,7 +164,7 @@ internal class DrinkService : IDrinkService
         if (isNameChanged)
         {
             bool nameExists = await _repositoryManager.DrinkRepository
-                .GetAllAsync()
+                .GetAll()
                 .Where(d => d.Name == dto.Name)
                 .AnyAsync();
 

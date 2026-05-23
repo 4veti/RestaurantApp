@@ -24,4 +24,5 @@ public class Order
     public bool IsServed { get; set; } = false;
 
     public IEnumerable<FoodOrder> FoodsOrders { get; set; } = new List<FoodOrder>();
+    public IEnumerable<DrinkOrder> DrinksOrders { get; set; } = new List<DrinkOrder>();
 }

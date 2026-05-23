@@ -19,7 +19,7 @@ public partial class FrontOfficeFoodsPage : ContentPage
     {
         base.OnAppearing();
 
-        await _viewModel.InitializeFodsAsync();
+        await _viewModel.InitializeFoodsAsync();
     }
 
     private void HandleSelectionChanged(object? sender, SelectionChangedEventArgs e)

@@ -22,7 +22,7 @@ public partial class KitchenOrdersPage : ContentPage
         {
             _getOrdersTimer = Dispatcher.CreateTimer();
             _getOrdersTimer.Interval = TimeSpan.FromSeconds(10);
-            _getOrdersTimer.Tick += async (_, _) => { await OrdersTimerTickLogic(); }; _getOrdersTimer.Start();
+            _getOrdersTimer.Tick += async (_, _) => { await OrdersTimerTickLogic(); };
             _getOrdersTimer.Start();
 
             await OrdersTimerTickLogic();

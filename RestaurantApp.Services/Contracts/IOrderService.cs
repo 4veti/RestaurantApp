@@ -13,4 +13,5 @@ public interface IOrderService
     Task<bool> DeleteByIdAsync(int orderId);
     Task<bool> MarkPaidAsync(int orderId);
     Task<bool> MarkServedAsync(int orderId);
+    Task<(IEnumerable<int>?, string)> GetServedOrderIDsAsync (int oldestNotServedOrderId);
 }

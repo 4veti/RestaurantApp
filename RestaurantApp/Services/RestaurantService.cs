@@ -135,11 +135,13 @@ public class RestaurantService
         return result ?? new();
     }
 
-    public async Task<List<OrderDto>> GetNewOrdersForFrontDesk(int lastOrderId)
+    public async Task<GetOrdersFrontDeskDTO?> GetNewOrdersForFrontDesk(int oldestNotServedOrderID, int lastOrderId)
     {
-        List<OrderDto>? result = await GetResponseFromApi<List<OrderDto>>(HttpVerb.Get, FRONTDESK_CONTROLLER, ApiRoutes.Orders, queryParams: [("lastOrderId", lastOrderId)], content: null);
+        List<(string, object)> queryParameters = [("oldestNotServedOrderID", oldestNotServedOrderID), ("lastOrderId", lastOrderId)];
 
-        return result ?? new();
+        GetOrdersFrontDeskDTO? result = await GetResponseFromApi<GetOrdersFrontDeskDTO>(HttpVerb.Get, FRONTDESK_CONTROLLER, ApiRoutes.Orders, queryParams: queryParameters, content: null);
+
+        return result;
     }
 
     public async Task<bool> MarkOrderAsServed(int orderId)

@@ -26,7 +26,7 @@ public static class ErrorMessages
     public const string FoodNameAlreadyExists = "ERROR: Food with name \"{0}\" already exists!";
     public const string DrinkNameAlreadyExists = "ERROR: Drink with name \"{0}\" already exists!";
     public const string IdMustBeAboveZero = "ERROR: Id must be a positive number above zero!";
-    public const string NotAllOrderItemsWereInserted = "ERROR: Not all order items were inserted for order with ID: {}";
+    public const string NotAllOrderItemsWereInserted = "ERROR: Not all order items were inserted for order with ID: {0}";
     public const string AlcoholByVolumeIsMandatory = "ERROR: Alcoholic percentage is mandatory when the drink is alcoholic!";
     public const string AlcoholByVolumeIsOnlyForAlcoholicDrinks = "ERROR: Alcoholic percentage is only for alcoholic drinks!";
 

@@ -13,7 +13,7 @@ public sealed class FoodRepository : IFoodRepository
         _context = context;
     }
 
-    public IQueryable<Food> GetAllAsync(bool asNoTracking = false)
+    public IQueryable<Food> GetAll(bool asNoTracking = false)
     {
         IQueryable<Food> orders = _context.Set<Food>();
 
