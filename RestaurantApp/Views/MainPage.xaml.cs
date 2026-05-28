@@ -32,7 +32,6 @@ public partial class MainPage : ContentPage
 
         await _mainPageViewModel.GetMenutemsAsync();
 
-        _mainPageViewModel.LoadOrderItems();
         _mainPageViewModel.SetTotalPrice();
 
         LoadMenuStructureAndItems();
@@ -73,6 +72,22 @@ public partial class MainPage : ContentPage
     {
         gWelcomeScreen.IsEnabled = false;
         gWelcomeScreen.IsVisible = false;
+        fWelcomeScreenShade.IsEnabled = false;
+        fWelcomeScreenShade.IsVisible = false;
+    }
+
+    private void ButtonFinishOrder_Clicked(object sender, EventArgs e)
+    {
+        fConfirmPlaceOrder.IsEnabled = true;
+        fConfirmPlaceOrder.IsVisible = true;
+        fWelcomeScreenShade.IsEnabled = true;
+        fWelcomeScreenShade.IsVisible = true;
+    }
+
+    private void ButtonResumeOrder_Clicked(object sender, EventArgs e)
+    {
+        fConfirmPlaceOrder.IsEnabled = false;
+        fConfirmPlaceOrder.IsVisible = false;
         fWelcomeScreenShade.IsEnabled = false;
         fWelcomeScreenShade.IsVisible = false;
     }
