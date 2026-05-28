@@ -11,7 +11,7 @@
 
     <Grid>
         <Grid x:Name="mainGrid"
-            ColumnDefinitions="0.1*,0.6*,0.3*"
+            ColumnDefinitions="0.15*,0.45*,0.4*"
             ColumnSpacing="0"
             RowDefinitions="*,Auto"
             RowSpacing="20">
@@ -40,7 +40,7 @@
                             <Grid Padding="10,0,20,0">
                                 <Frame>
                                     <Grid ColumnDefinitions="Auto,*,Auto"
-                                          ColumnSpacing="20">
+                                          ColumnSpacing="10">
                                         <Label Grid.Column="0"
                                                VerticalTextAlignment="Center"
                                                FontSize="18"
