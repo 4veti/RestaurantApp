@@ -18,6 +18,9 @@ public class RestaurantAppDbContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<FoodOrder> FoodsOrders { get; set; }
     public DbSet<DrinkOrder> DrinksOrders { get; set; }
+    public DbSet<Terminal> Terminals { get; set; }
+    public DbSet<TerminalType> TerminalTypes { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

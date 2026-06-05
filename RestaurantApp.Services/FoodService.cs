@@ -31,8 +31,8 @@ internal class FoodService : IFoodService
             NetGrams = foodDto.NetGrams,
             Price = foodDto.Price,
             FoodTypeId = foodDto.FoodTypeId,
-            Created = DateTime.Now,
-            Modified = DateTime.Now
+            Created = DateTime.UtcNow,
+            Modified = DateTime.UtcNow
         };
 
         await _repositoryManager.FoodRepository.InsertAsync(addFood);
@@ -135,7 +135,7 @@ internal class FoodService : IFoodService
         originalFood.NetGrams = foodDto.NetGrams;
         originalFood.Price = foodDto.Price;
         originalFood.FoodTypeId = foodDto.FoodTypeId;
-        originalFood.Modified = DateTime.Now;
+        originalFood.Modified = DateTime.UtcNow;
 
         _repositoryManager.FoodRepository.Update(originalFood);
         bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;

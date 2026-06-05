@@ -290,11 +290,14 @@ public partial class FrontOfficeViewModel : ObservableObject
 
         if (success)
         {
-            ExtendedOrderDto existingOrderToMark = ActiveFrontDeskOrders.First(o => o.Id == orderToMark.Id);
-            ActiveFrontDeskOrders.Remove(existingOrderToMark);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                ExtendedOrderDto existingOrderToMark = ActiveFrontDeskOrders.First(o => o.Id == orderToMark.Id);
+                ActiveFrontDeskOrders.Remove(existingOrderToMark);
 
-            int insertIndex = GetInsertOrderIndex(PaidOrders, orderToMark.Id);
-            PaidOrders.Insert(insertIndex, existingOrderToMark);
+                int insertIndex = GetInsertOrderIndex(PaidOrders, orderToMark.Id);
+                PaidOrders.Insert(insertIndex, existingOrderToMark);
+            });
         }
     }
 

@@ -15,4 +15,7 @@ public static class ApiRoutes
 
     public const string AnyOrders = "AnyOrders";
     public const string OrderServed = "OrderServed";
+
+    public const string Login = "Login";
+    public const string RefreshAccessToken = "RefreshAccessToken";
 }

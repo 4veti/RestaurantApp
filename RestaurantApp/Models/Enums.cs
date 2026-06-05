@@ -1,10 +1,10 @@
 ﻿namespace RestaurantApp.Models;
 
-public enum RunMode
+public enum TerminalType
 {
-    Client = 1,
+    FrontDesk = 1,
     Kitchen = 2,
-    FrontDesk = 3
+    Client = 3
 }
 
 public enum HttpVerb

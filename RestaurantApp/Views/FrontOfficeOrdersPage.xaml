@@ -13,12 +13,13 @@
             <Grid ColumnDefinitions="*,Auto,*"
                   ColumnSpacing="5"
                   RowSpacing="0">
-                <VerticalStackLayout Grid.Column="1" >
+                <VerticalStackLayout Grid.Column="1">
                     <Label Text="{Binding ActiveFrontDeskOrders.Count, StringFormat='Активни поръчки: {0}'}" FontSize="Medium"/>
                     <Frame Margin="0,0,0,30">
                         <CollectionView BackgroundColor="Transparent" x:Name="ActiveFrontDeskOrders"
                                         Grid.Column="1" Grid.Row="1"
                                         MinimumWidthRequest="450"
+                                        MinimumHeightRequest="100"
                                         ItemsSource="{Binding ActiveFrontDeskOrders}"
                                         SelectionMode="None">
                             <CollectionView.ItemTemplate>
@@ -83,6 +84,7 @@
                                         x:Name="ActiveOrders"
                                         Grid.Column="1" Grid.Row="1"
                                         MinimumWidthRequest="450"
+                                        MinimumHeightRequest="100"
                                         ItemsSource="{Binding PaidOrders}"
                                         SelectionMode="None">
                             <CollectionView.ItemTemplate>

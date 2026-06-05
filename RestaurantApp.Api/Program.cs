@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using RestaurantApp.ClientApi.ExceptionHandlers;
+using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Infrastructure;
 using RestaurantApp.Services;
 using RestaurantApp.Services.Contracts;
+using System.Text;
 
-namespace RestaurantApp.Api
+namespace RestaurantApp.ClientApi
 {
     public class Program
     {
@@ -26,7 +28,29 @@ namespace RestaurantApp.Api
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
 
+            builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false);
+
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SigningSecret"]!)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ClockSkew = TimeSpan.FromMinutes(1)
+                    };
+                });
+
+            builder.Services.Configure<JwtOptions>(
+                builder.Configuration.GetSection("Jwt"));
+
+            builder.Services.Configure<TerminalSecrets>(
+                builder.Configuration.GetSection("TerminalSecrets"));
 
             var app = builder.Build();
 
@@ -36,6 +60,7 @@ namespace RestaurantApp.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseExceptionHandler();

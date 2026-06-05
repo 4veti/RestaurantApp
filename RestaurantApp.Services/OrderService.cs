@@ -32,8 +32,8 @@ internal class OrderService : IOrderService
 
             Order addOrder = new Order()
             {
-                Created = DateTime.Now,
-                Modified = DateTime.Now,
+                Created = DateTime.UtcNow,
+                Modified = DateTime.UtcNow,
                 OrderName = dto.OrderName,
                 IsPaid = dto.IsPaid,
                 IsServed = dto.Foods.Count == 0
@@ -165,7 +165,7 @@ internal class OrderService : IOrderService
         }
 
         order.IsServed = true;
-        order.Completed = DateTime.Now;
+        order.Completed = DateTime.UtcNow;
 
         bool isMarkedSuccessfully = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
 
@@ -198,7 +198,7 @@ internal class OrderService : IOrderService
         }
 
         originalOrder.OrderName = dto.OrderName;
-        originalOrder.Modified = DateTime.Now;
+        originalOrder.Modified = DateTime.UtcNow;
 
         _repositoryManager.OrderRepository.Update(originalOrder);
         bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;

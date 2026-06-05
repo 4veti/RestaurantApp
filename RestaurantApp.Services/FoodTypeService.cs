@@ -26,8 +26,8 @@ internal class FoodTypeService : IFoodTypeService
         FoodType addFoodType = new FoodType()
         {
             Name = dto.Name,
-            Created = DateTime.Now,
-            Modified = DateTime.Now,
+            Created = DateTime.UtcNow,
+            Modified = DateTime.UtcNow,
         };
 
         await _repositoryManager.FoodTypeRepository.InsertAsync(addFoodType);
@@ -117,7 +117,7 @@ internal class FoodTypeService : IFoodTypeService
         }
 
         originalFoodType.Name = dto.Name;
-        originalFoodType.Modified = DateTime.Now;
+        originalFoodType.Modified = DateTime.UtcNow;
 
         _repositoryManager.FoodTypeRepository.Update(originalFoodType);
         bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;

@@ -26,8 +26,8 @@ internal class DrinkTypeService : IDrinkTypeService
         DrinkType addDrinkType = new DrinkType()
         {
             Name = dto.Name,
-            Created = DateTime.Now,
-            Modified = DateTime.Now,
+            Created = DateTime.UtcNow,
+            Modified = DateTime.UtcNow,
         };
 
         await _repositoryManager.DrinkTypeRepository.InsertAsync(addDrinkType);
@@ -111,7 +111,7 @@ internal class DrinkTypeService : IDrinkTypeService
         }
 
         originalDrinkType.Name = dto.Name;
-        originalDrinkType.Modified = DateTime.Now;
+        originalDrinkType.Modified = DateTime.UtcNow;
 
         _repositoryManager.DrinkTypeRepository.Update(originalDrinkType);
         bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;

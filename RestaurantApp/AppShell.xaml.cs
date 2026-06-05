@@ -10,22 +10,22 @@ namespace RestaurantApp
         public AppShell(MainPageViewModel MainPageViewModel,
             KitchenOrdersPageViewModel kitchenOrdersPageViewModel,
             FrontOfficeViewModel frontOfficeViewModel,
-            IOptions<ApplicationSettings> options)
+            int terminalType)
         {
-            if (options.Value.RunMode == RunMode.Kitchen)
+            InitializeComponent();
+
+            if ((TerminalType)terminalType == TerminalType.Kitchen)
             {
                 CreateKitchenInterface(kitchenOrdersPageViewModel);
             }
-            else if (options.Value.RunMode == RunMode.FrontDesk)
+            else if ((TerminalType)terminalType == TerminalType.FrontDesk)
             {
                 CreateFrontOfficeInterface(frontOfficeViewModel);
             }
-            else if (options.Value.RunMode == RunMode.Client)
+            else if ((TerminalType)terminalType == TerminalType.Client)
             {
                 CreateClientOrderInterface(MainPageViewModel);
             }
-
-            InitializeComponent();
         }
 
         private void CreateKitchenInterface(KitchenOrdersPageViewModel viewModel)

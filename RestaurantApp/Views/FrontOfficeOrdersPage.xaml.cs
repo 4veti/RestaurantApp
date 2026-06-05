@@ -9,13 +9,15 @@ public partial class FrontOfficeOrdersPage : ContentPage
 
 	public FrontOfficeOrdersPage(FrontOfficeViewModel viewModel)
 	{
+		InitializeComponent();
         _viewModel = viewModel;
 		BindingContext = viewModel;
-		InitializeComponent();
     }
 
     protected override async void OnAppearing()
     {
+        base.OnAppearing();
+
         if (_getOrdersTimer == null)
         {
             _getOrdersTimer = Dispatcher.CreateTimer();
@@ -29,8 +31,6 @@ public partial class FrontOfficeOrdersPage : ContentPage
         {
             _getOrdersTimer.Start();
         }
-
-        base.OnAppearing();
     }
 
     private async Task OrdersTimerTickLogic()
