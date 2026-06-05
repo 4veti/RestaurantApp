@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using RestaurantApp.Models;
 using RestaurantApp.Services;
+using RestaurantApp.Utils;
 using RestaurantApp.ViewModels;
 using RestaurantApp.Views;
 
@@ -25,6 +26,10 @@ namespace RestaurantApp
 
             builder.Services.Configure<ApplicationSettings>(
                     builder.Configuration.GetSection("ApplicationSettings"));
+
+            builder.Services.AddSingleton<AuthHandler>();
+            builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddSingleton<TokenStore>();
 
 #if DEBUG
             builder.Logging.AddDebug();

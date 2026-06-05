@@ -13,7 +13,7 @@ public sealed class DrinkRepository : IDrinkRepository
         _context = context;
     }
 
-    public IQueryable<Drink> GetAllAsync(bool asNoTracking = false)
+    public IQueryable<Drink> GetAll(bool asNoTracking = false)
     {
         IQueryable<Drink> drinks = _context.Set<Drink>();
 

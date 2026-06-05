@@ -42,14 +42,12 @@ public partial class KitchenOrdersPageViewModel : ObservableObject
     {
         for (int i = 0; i < PendingOrders.Count; i++)
         {
-            PendingOrders[i].ElapsedMinutes = (int)(DateTime.Now - PendingOrders[i].Created).TotalMinutes;
-            PendingOrders[i] = new ExtendedOrderDto(PendingOrders[i]);
+            PendingOrders[i].ElapsedMinutes = (int)(DateTime.UtcNow - PendingOrders[i].Created).TotalMinutes;
         }
 
         for (int i = 0; i < ActiveOrders.Count; i++)
         {
-            ActiveOrders[i].ElapsedMinutes = (int)(DateTime.Now - ActiveOrders[i].Created).TotalMinutes;
-            ActiveOrders[i] = new ExtendedOrderDto(ActiveOrders[i]);
+            ActiveOrders[i].ElapsedMinutes = (int)(DateTime.UtcNow - ActiveOrders[i].Created).TotalMinutes;
         }
     }
 

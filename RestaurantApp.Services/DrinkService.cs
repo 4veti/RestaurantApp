@@ -32,8 +32,8 @@ internal class DrinkService : IDrinkService
             DrinkTypeId = dto.DrinkTypeId,
             Millilitres = dto.Millilitres,
             IsAlcoholic = dto.IsAlcoholic,
-            Created = DateTime.Now,
-            Modified = DateTime.Now,
+            Created = DateTime.UtcNow,
+            Modified = DateTime.UtcNow,
             AlcoholPercentage = dto.AlcoholPercentage,
         };
 
@@ -76,7 +76,7 @@ internal class DrinkService : IDrinkService
     public async Task<IEnumerable<DrinkDto>> GetAllByDrinkTypeIdAsync(int drinkType)
     {
         List<DrinkDto> drinks = await _repositoryManager.DrinkRepository
-            .GetAllAsync(true)
+            .GetAll(true)
             .Include(d => d.DrinkType)
             .Where(d => d.DrinkTypeId == drinkType)
             .Select(d => new DrinkDto()
@@ -144,7 +144,7 @@ internal class DrinkService : IDrinkService
         originalDrink.Millilitres = dto.Millilitres;
         originalDrink.IsAlcoholic = dto.IsAlcoholic;
         originalDrink.AlcoholPercentage = dto.AlcoholPercentage;
-        originalDrink.Modified = DateTime.Now;
+        originalDrink.Modified = DateTime.UtcNow;
 
         _repositoryManager.DrinkRepository.Update(originalDrink);
         bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
@@ -164,7 +164,7 @@ internal class DrinkService : IDrinkService
         if (isNameChanged)
         {
             bool nameExists = await _repositoryManager.DrinkRepository
-                .GetAllAsync()
+                .GetAll()
                 .Where(d => d.Name == dto.Name)
                 .AnyAsync();
 

@@ -25,4 +25,8 @@ public static class Constants
 
     public const double MinPrice = 0.1;
     public const double MaxPrice = 350;
+
+    public const int TerminalDescriptionMaxLength = 150;
+    public const int TerminalTypeMaxLength = 30;
+    public const int RefreshTokenMaxLength = 250;
 }

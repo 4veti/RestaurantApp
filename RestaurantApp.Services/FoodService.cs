@@ -31,8 +31,8 @@ internal class FoodService : IFoodService
             NetGrams = foodDto.NetGrams,
             Price = foodDto.Price,
             FoodTypeId = foodDto.FoodTypeId,
-            Created = DateTime.Now,
-            Modified = DateTime.Now
+            Created = DateTime.UtcNow,
+            Modified = DateTime.UtcNow
         };
 
         await _repositoryManager.FoodRepository.InsertAsync(addFood);
@@ -74,7 +74,7 @@ internal class FoodService : IFoodService
     public async Task<IEnumerable<FoodDto>> GetAllByFoodTypeIdAsync(int foodTypeId)
     {
         List<FoodDto> foods = await _repositoryManager.FoodRepository
-            .GetAllAsync(true)
+            .GetAll(true)
             .Include(f => f.FoodType)
             .Select(f => new FoodDto()
             {
@@ -135,7 +135,7 @@ internal class FoodService : IFoodService
         originalFood.NetGrams = foodDto.NetGrams;
         originalFood.Price = foodDto.Price;
         originalFood.FoodTypeId = foodDto.FoodTypeId;
-        originalFood.Modified = DateTime.Now;
+        originalFood.Modified = DateTime.UtcNow;
 
         _repositoryManager.FoodRepository.Update(originalFood);
         bool successfulUpdate = await _repositoryManager.UnitOfWork.SaveChangesAsync() > 0;
@@ -155,7 +155,7 @@ internal class FoodService : IFoodService
         if (isNameChanged)
         {
             bool nameExists = await _repositoryManager.FoodRepository
-                .GetAllAsync()
+                .GetAll()
                 .Where(f => f.Name == dto.Name)
                 .AnyAsync();
 

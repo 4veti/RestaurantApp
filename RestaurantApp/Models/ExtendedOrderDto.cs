@@ -1,8 +1,9 @@
-﻿using RestaurantApp.Domain.Contracts.DTOs;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using RestaurantApp.Domain.Contracts.DTOs;
 
 namespace RestaurantApp.Client.Models;
 
-public class ExtendedOrderDto
+public partial class ExtendedOrderDto : ObservableObject
 {
     public ExtendedOrderDto()
     {
@@ -31,7 +32,7 @@ public class ExtendedOrderDto
         IsServed = order.IsServed;
         Foods = order.Foods;
         Drinks = order.Drinks;
-        ElapsedMinutes = order.ElapsedMinutes;
+        elapsedMinutes = order.elapsedMinutes;
     }
 
     public int Id { get; set; }
@@ -44,9 +45,11 @@ public class ExtendedOrderDto
 
     public bool IsPaid { get; set; } = false;
 
-    public bool IsServed { get; set; } = false;
+    [ObservableProperty]
+    public bool isServed;
 
     public ICollection<FoodDto> Foods { get; set; } = new List<FoodDto>();
     public ICollection<DrinkDto> Drinks { get; set; } = new List<DrinkDto>();
-    public int ElapsedMinutes { get; set; }
+    [ObservableProperty]
+    public int elapsedMinutes;
 }

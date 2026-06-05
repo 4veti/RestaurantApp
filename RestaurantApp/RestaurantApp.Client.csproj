@@ -89,6 +89,12 @@
 	  <Compile Update="Views\FrontOfficeDrinksPage.xaml.cs">
 	    <DependentUpon>FrontOfficeDrinksPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="Views\FailedConnection.xaml.cs">
+	    <DependentUpon>FailedConnection.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\LoadingPage.xaml.cs">
+	    <DependentUpon>LoadingPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -102,6 +108,12 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\KitchenOrdersPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\FailedConnection.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\LoadingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

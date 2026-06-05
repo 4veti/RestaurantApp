@@ -7,4 +7,5 @@ public interface IServiceManager
     IOrderService OrderService { get; }
     IFoodTypeService FoodTypeService { get; }
     IDrinkTypeService DrinkTypeService { get; }
+    IAuthorizationService AuthorizationService { get; }
 }

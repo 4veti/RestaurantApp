@@ -1,50 +1,52 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RestaurantApp.Domain;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Services.Contracts;
 
-namespace RestaurantApp.ClientApi.Controllers
+namespace RestaurantApp.ClientApi.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+[Authorize(Roles = "Client")]
+public class ClientController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class ClientController : ControllerBase
+    private readonly IServiceManager _serviceManager;
+
+    public ClientController(IServiceManager serviceManager)
     {
-        private readonly IServiceManager _serviceManager;
+        _serviceManager = serviceManager;
+    }
 
-        public ClientController(IServiceManager serviceManager)
+    [HttpPost(ApiRoutes.Order)]
+    public async Task<IActionResult> CreateOrder(OrderDto dto)
+    {
+        if (dto is null)
         {
-            _serviceManager = serviceManager;
+            return BadRequest();
         }
 
-        [HttpPost(ApiRoutes.Order)]
-        public async Task<IActionResult> CreateOrder(OrderDto dto)
+        if (ModelState.IsValid == false)
         {
-            if (dto is null)
-            {
-                return BadRequest();
-            }
-
-            if (ModelState.IsValid == false)
-            {
-                return BadRequest(ModelState);
-            }
-
-            string addResult = await _serviceManager.OrderService.AddAsync(dto);
-
-            if (!string.IsNullOrEmpty(addResult))
-            {
-                return BadRequest(addResult);
-            }
-
-            return Created();
+            return BadRequest(ModelState);
         }
 
-        [HttpGet(ApiRoutes.Menu)]
-        public async Task<IActionResult> GetMenu()
-        {
-            MenuDto menu = await _serviceManager.OrderService.GetMenuAsync();
+        string addResult = await _serviceManager.OrderService.AddAsync(dto);
 
-            return Ok(menu);
+        if (!string.IsNullOrEmpty(addResult))
+        {
+            return BadRequest(addResult);
         }
+
+        return Created();
+    }
+
+    [Authorize(Roles = "Client,Cashier")]
+    [HttpGet(ApiRoutes.Menu)]
+    public async Task<IActionResult> GetMenu()
+    {
+        MenuDto menu = await _serviceManager.OrderService.GetMenuAsync();
+
+        return Ok(menu);
     }
 }

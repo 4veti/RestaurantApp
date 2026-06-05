@@ -30,21 +30,6 @@ public partial class MainPageViewModel : ObservableObject
 
     public bool IsNotBusy => !IsBusy;
 
-    public void LoadOrderItems()
-    {
-        MyFoods.Clear();
-        MyDrinks.Clear();
-
-        foreach (FoodDto food in _service.ClientOrder.Foods)
-        {
-            MyFoods.Add(new FoodItemModel(food));
-        }
-
-        foreach (DrinkDto drink in _service.ClientOrder.Drinks)
-        {
-            MyDrinks.Add(new DrinkItemModel(drink));
-        }
-    }
 
     [RelayCommand]
     private void IncreaseFoodItemCount(int foodId)
@@ -120,6 +105,7 @@ public partial class MainPageViewModel : ObservableObject
         }
         else
         {
+            foodDto.Count = 1;
             MyFoods.Add(new FoodItemModel(foodDto));
             _service.ClientOrder.Foods.Add(foodDto);
         }
@@ -142,6 +128,7 @@ public partial class MainPageViewModel : ObservableObject
         }
         else
         {
+            drinkDto.Count = 1;
             MyDrinks.Add(new DrinkItemModel(drinkDto));
             _service.ClientOrder.Drinks.Add(drinkDto);
         }

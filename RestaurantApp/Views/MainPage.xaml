@@ -11,7 +11,7 @@
 
     <Grid>
         <Grid x:Name="mainGrid"
-            ColumnDefinitions="0.1*,0.6*,0.3*"
+            ColumnDefinitions="0.15*,0.45*,0.4*"
             ColumnSpacing="0"
             RowDefinitions="*,Auto"
             RowSpacing="20">
@@ -40,7 +40,7 @@
                             <Grid Padding="10,0,20,0">
                                 <Frame>
                                     <Grid ColumnDefinitions="Auto,*,Auto"
-                                          ColumnSpacing="20">
+                                          ColumnSpacing="10">
                                         <Label Grid.Column="0"
                                                VerticalTextAlignment="Center"
                                                FontSize="18"
@@ -146,7 +146,7 @@
                             Grid.Column="1"
                             BackgroundColor="ForestGreen"
                             FontSize="Medium"
-                            Command="{Binding PlaceOrderCommand}"/>
+                            Clicked="ButtonFinishOrder_Clicked"/>
                 </Grid>
             </VerticalStackLayout>
 
@@ -159,16 +159,58 @@
 
         </Grid>
 
-        <Frame x:Name="fWelcomeScreenShade" BackgroundColor="DarkOliveGreen" Opacity="0.69"
-               VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+        <Frame x:Name="fWelcomeScreenShade"
+               BackgroundColor="DarkOliveGreen"
+               Opacity="0.69"
+               VerticalOptions="FillAndExpand"
+               HorizontalOptions="FillAndExpand"
                BorderColor="Transparent"/>
+
+        <Frame x:Name="fConfirmPlaceOrder"
+               IsVisible="False"
+               IsEnabled="False"
+               WidthRequest="700"
+               HeightRequest="150">
+            <Grid ColumnDefinitions="0.5*, 0.5*"
+                  RowDefinitions="Auto, Auto"
+                  RowSpacing="25"
+                  ColumnSpacing="10">
+                <Label Grid.ColumnSpan="2"
+                       Grid.Row="0"
+                       Text="Сигурни ли сте, че искате да завършите поръчката?"
+                       FontSize="Medium" FontAttributes="Italic"/>
+                <Button Text="Върни се към менюто"
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        BackgroundColor="LightGray"
+                        FontSize="Medium"
+                        Clicked="ButtonResumeOrder_Clicked"/>
+                <Button Text="Поръчай!"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        BackgroundColor="ForestGreen"
+                        FontSize="Medium"
+                        Clicked="ButtonResumeOrder_Clicked"
+                        Command="{Binding PlaceOrderCommand}"/>
+            </Grid>
+        </Frame>
+
         <Grid x:Name="gWelcomeScreen" 
-              ColumnDefinitions="0.2*,Auto,0.2*" RowDefinitions="0.2*,0.6*,0.2*">
-            <VerticalStackLayout Grid.Column="1" Grid.Row="1" Spacing="20">
-                <Frame BorderColor="Transparent" BackgroundColor="Transparent">
-                    <Label HorizontalTextAlignment="Center" FontSize="30" Text="Добре дошли!"/>
+              ColumnDefinitions="0.2*,Auto,0.2*"
+              RowDefinitions="0.2*,0.6*,0.2*">
+            <VerticalStackLayout Grid.Column="1"
+                                 Grid.Row="1"
+                                 Spacing="20">
+                <Frame BorderColor="Transparent"
+                       BackgroundColor="Transparent">
+                    <Label HorizontalTextAlignment="Center"
+                           FontSize="30"
+                           Text="Добре дошли!"/>
                 </Frame>
-                <Button Text="Направи поръчка" FontSize="24" Clicked="ButtonStartOrder_Clicked"/>
+                
+                <Button Text="Направи поръчка"
+                        FontSize="24"
+                        Clicked="ButtonStartOrder_Clicked"/>
             </VerticalStackLayout>
         </Grid>
     </Grid>

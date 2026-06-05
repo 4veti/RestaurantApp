@@ -3,6 +3,7 @@ using RestaurantApp.Domain;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Domain.Entities;
 using RestaurantApp.Models;
+using RestaurantApp.Utils;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Reflection.Metadata.Ecma335;
@@ -19,9 +20,9 @@ public class RestaurantService
     private HttpClient _httpClient;
     private MenuDto _menu = new MenuDto();
 
-    public RestaurantService(IOptions<ApplicationSettings> options)
+    public RestaurantService(IOptions<ApplicationSettings> options, AuthHandler authHandler)
     {
-        _httpClient = new HttpClient();
+        _httpClient = new HttpClient(authHandler);
         _httpClient.BaseAddress = new Uri(options.Value.BaseAPIUrl);
         ClientOrder = new OrderDto();
     }
@@ -78,7 +79,7 @@ public class RestaurantService
 
     public async Task<bool> PlaceOrder()
     {
-        DateTime now = DateTime.Now;
+        DateTime now = DateTime.UtcNow;
         ClientOrder.OrderName = $"{now.Hour}{now.Minute}{now.Second}";
 
         bool result = await GetResponseFromApi<bool>(HttpVerb.Post, CLIENT_CONTROLLER, ApiRoutes.Order, queryParams: null, content: ClientOrder);
@@ -135,11 +136,13 @@ public class RestaurantService
         return result ?? new();
     }
 
-    public async Task<List<OrderDto>> GetNewOrdersForFrontDesk(int lastOrderId)
+    public async Task<GetOrdersFrontDeskDTO?> GetNewOrdersForFrontDesk(int oldestNotServedOrderID, int lastOrderId)
     {
-        List<OrderDto>? result = await GetResponseFromApi<List<OrderDto>>(HttpVerb.Get, FRONTDESK_CONTROLLER, ApiRoutes.Orders, queryParams: [("lastOrderId", lastOrderId)], content: null);
+        List<(string, object)> queryParameters = [("oldestNotServedOrderID", oldestNotServedOrderID), ("lastOrderId", lastOrderId)];
 
-        return result ?? new();
+        GetOrdersFrontDeskDTO? result = await GetResponseFromApi<GetOrdersFrontDeskDTO>(HttpVerb.Get, FRONTDESK_CONTROLLER, ApiRoutes.Orders, queryParams: queryParameters, content: null);
+
+        return result;
     }
 
     public async Task<bool> MarkOrderAsServed(int orderId)

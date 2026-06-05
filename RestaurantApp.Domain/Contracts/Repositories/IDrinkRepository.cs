@@ -4,7 +4,7 @@ namespace RestaurantApp.Domain.Contracts.Repositories;
 
 public interface IDrinkRepository
 {
-    IQueryable<Drink> GetAllAsync(bool asNoTracking = false);
+    IQueryable<Drink> GetAll(bool asNoTracking = false);
     Task<Drink?> GetByIdAsync(int id);
     Task InsertAsync(Drink drink);
     void Update(Drink drink);

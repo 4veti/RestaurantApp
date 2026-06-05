@@ -221,6 +221,86 @@ namespace RestaurantApp.Infrastructure.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("RestaurantApp.Domain.Entities.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HashsedToken")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("TerminalId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TerminalId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("RestaurantApp.Domain.Entities.Terminal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("HashedSecret")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsLockedOut")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("TerminalTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TerminalTypeId");
+
+                    b.ToTable("Terminals");
+                });
+
+            modelBuilder.Entity("RestaurantApp.Domain.Entities.TerminalType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TerminalTypes");
+                });
+
             modelBuilder.Entity("RestaurantApp.Domain.Entities.Drink", b =>
                 {
                     b.HasOne("RestaurantApp.Domain.Entities.DrinkType", "DrinkType")
@@ -241,7 +321,7 @@ namespace RestaurantApp.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("RestaurantApp.Domain.Entities.Order", "Order")
-                        .WithMany()
+                        .WithMany("DrinksOrders")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -281,6 +361,28 @@ namespace RestaurantApp.Infrastructure.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("RestaurantApp.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("RestaurantApp.Domain.Entities.Terminal", "Terminal")
+                        .WithMany()
+                        .HasForeignKey("TerminalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Terminal");
+                });
+
+            modelBuilder.Entity("RestaurantApp.Domain.Entities.Terminal", b =>
+                {
+                    b.HasOne("RestaurantApp.Domain.Entities.TerminalType", "TerminalType")
+                        .WithMany()
+                        .HasForeignKey("TerminalTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TerminalType");
+                });
+
             modelBuilder.Entity("RestaurantApp.Domain.Entities.DrinkType", b =>
                 {
                     b.Navigation("Drinks");
@@ -298,6 +400,8 @@ namespace RestaurantApp.Infrastructure.Migrations
 
             modelBuilder.Entity("RestaurantApp.Domain.Entities.Order", b =>
                 {
+                    b.Navigation("DrinksOrders");
+
                     b.Navigation("FoodsOrders");
                 });
 #pragma warning restore 612, 618

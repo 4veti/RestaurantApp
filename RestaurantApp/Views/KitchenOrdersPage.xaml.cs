@@ -9,20 +9,22 @@ public partial class KitchenOrdersPage : ContentPage
 
     public KitchenOrdersPage(KitchenOrdersPageViewModel viewModel)
     {
+        InitializeComponent();
         BindingContext = viewModel;
         _viewModel = viewModel;
-        InitializeComponent();
 
         _viewModel.UpdateElapsedTimes();
     }
 
     protected override async void OnAppearing()
     {
+        base.OnAppearing();
+
         if (_getOrdersTimer == null)
         {
             _getOrdersTimer = Dispatcher.CreateTimer();
             _getOrdersTimer.Interval = TimeSpan.FromSeconds(10);
-            _getOrdersTimer.Tick += async (_, _) => { await OrdersTimerTickLogic(); }; _getOrdersTimer.Start();
+            _getOrdersTimer.Tick += async (_, _) => { await OrdersTimerTickLogic(); };
             _getOrdersTimer.Start();
 
             await OrdersTimerTickLogic();
@@ -31,8 +33,6 @@ public partial class KitchenOrdersPage : ContentPage
         {
             _getOrdersTimer.Start();
         }
-
-        base.OnAppearing();
     }
 
     protected override void OnDisappearing()
