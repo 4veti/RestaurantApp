@@ -37,8 +37,6 @@ public partial class App : Application
 
     private async Task InitializeAsync()
     {
-        await Task.Delay(200);
-
         try
         {
             string refreshToken = await SecureStorage.GetAsync(RefreshTokenKey) ?? string.Empty;
