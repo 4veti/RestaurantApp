@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using RestaurantApp.ClientApi.ExceptionHandlers;
 using RestaurantApp.Domain.Contracts.DTOs;
 using RestaurantApp.Infrastructure;

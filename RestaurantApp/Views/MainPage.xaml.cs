@@ -28,6 +28,11 @@ public partial class MainPage : ContentPage
     {
         base.OnAppearing();
 
+        await HandleAppearingLogic();
+    }
+
+    private async Task HandleAppearingLogic()
+    {
         _mainPageViewModel.ClearOrderIfEmpty();
 
         await _mainPageViewModel.GetMenutemsAsync();
