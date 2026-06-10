@@ -39,6 +39,10 @@ public partial class App : Application
     {
         try
         {
+#if DEBUG
+            SecureStorage.RemoveAll();
+#endif
+
             string refreshToken = await SecureStorage.GetAsync(RefreshTokenKey) ?? string.Empty;
             int terminalType;
 

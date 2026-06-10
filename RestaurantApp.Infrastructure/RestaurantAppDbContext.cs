@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RestaurantApp.Domain.Entities;
+using RestaurantApp.Infrastructure.Configuration;
 
 namespace RestaurantApp.Infrastructure;
 
@@ -24,6 +25,11 @@ public class RestaurantAppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.ApplyConfiguration(new FoodTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new DrinkTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new TerminalTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new TerminalConfiguration());
+
         modelBuilder.Entity<FoodOrder>()
             .HasKey(fo => new { fo.FoodId, fo.OrderId });
 

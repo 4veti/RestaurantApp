@@ -8,7 +8,7 @@ namespace RestaurantApp.ClientApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-[Authorize(Roles = "Client")]
+[Authorize(Roles = "Client,Cashier")]
 public class ClientController : ControllerBase
 {
     private readonly IServiceManager _serviceManager;
@@ -41,7 +41,6 @@ public class ClientController : ControllerBase
         return Created();
     }
 
-    [Authorize(Roles = "Client,Cashier")]
     [HttpGet(ApiRoutes.Menu)]
     public async Task<IActionResult> GetMenu()
     {
