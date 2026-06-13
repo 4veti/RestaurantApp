@@ -30,7 +30,7 @@ public partial class FrontOfficeDrinksPage : ContentPage
             DrinkDto? drink = e.CurrentSelection.FirstOrDefault() as DrinkDto;
             if (drink != null)
             {
-                ShowDrinkEditForm(new DrinkDto() { Id = drink.Id, Name = drink.Name, Millilitres = drink.Millilitres, Price = drink.Price, DrinkTypeId = drink.DrinkTypeId });
+                ShowDrinkEditForm(new DrinkDto() { Id = drink.Id, Name = drink.Name, Millilitres = drink.Millilitres, IsAlcoholic = drink.IsAlcoholic, AlcoholPercentage = drink.AlcoholPercentage, Price = drink.Price, DrinkTypeId = drink.DrinkTypeId });
             }
         }
         catch { }
@@ -50,6 +50,13 @@ public partial class FrontOfficeDrinksPage : ContentPage
             if (drink.Id > 0)
             {
                 formDrinkTypePicker.SelectedItem = _viewModel.DrinkTypesList.First(d => d.Id == drink.DrinkTypeId);
+
+                ShowHideAlcoholicBevarageField(drink.IsAlcoholic);
+
+                if (drink.IsAlcoholic)
+                {
+                    formDrinkAlcoholPercentage.Text = drink.AlcoholPercentage?.ToString().Replace(',', '.');
+                }
             }
             else
             {
@@ -100,9 +107,14 @@ public partial class FrontOfficeDrinksPage : ContentPage
 
     private void chIsAlcoholicBevarage_CheckedChanged(object sender, CheckedChangedEventArgs e)
     {
-        lbAlcPercentage.IsVisible = chIsAlcoholicBevarage.IsChecked;
-        lbAlcPercentage.IsEnabled = chIsAlcoholicBevarage.IsChecked;
-        formDrinkAlcoholPercentage.IsVisible = chIsAlcoholicBevarage.IsChecked;
-        formDrinkAlcoholPercentage.IsEnabled = chIsAlcoholicBevarage.IsChecked;
+        ShowHideAlcoholicBevarageField(chIsAlcoholicBevarage.IsChecked);
+    }
+
+    private void ShowHideAlcoholicBevarageField(bool show)
+    {
+        lbAlcPercentage.IsVisible = show;
+        lbAlcPercentage.IsEnabled = show;
+        formDrinkAlcoholPercentage.IsVisible = show;
+        formDrinkAlcoholPercentage.IsEnabled = show;
     }
 }

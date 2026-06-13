@@ -76,8 +76,10 @@
                     <Label Text="Милилитри:" Margin="0, 0, 0, 5"/>
                     <Entry x:Name="formDrinkGrams" Margin="0, 0, 0, 10" Placeholder="000" Text="{Binding SelectedDrink.Millilitres, Converter={StaticResource integerConverter}}" BackgroundColor="White" Keyboard="Numeric"/>
 
-                    <Label Text="Алкохолна напитка"/>
-                    <CheckBox x:Name="chIsAlcoholicBevarage" IsChecked="{Binding SelectedDrink.IsAlcoholic}" CheckedChanged="chIsAlcoholicBevarage_CheckedChanged"/>
+                    <Grid ColumnDefinitions="Auto, Auto" ColumnSpacing="15">
+                        <Label Text="Алкохолна напитка" Grid.Column="0" VerticalTextAlignment="Center" />
+                        <CheckBox x:Name="chIsAlcoholicBevarage" Grid.Column="1" IsChecked="{Binding SelectedDrink.IsAlcoholic}" CheckedChanged="chIsAlcoholicBevarage_CheckedChanged"/>
+                    </Grid>
 
                     <Label x:Name="lbAlcPercentage" Text="Алк. процент:" Margin="0, 0, 0, 5" IsVisible="False"/>
                     <Entry x:Name="formDrinkAlcoholPercentage" Margin="0, 0, 0, 10" IsVisible="False" Placeholder="0.00" Text="{Binding SelectedDrink.AlcoholPercentage, Converter={StaticResource decimalConverter}}" BackgroundColor="White" Keyboard="Numeric"/>
