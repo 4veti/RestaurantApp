@@ -21,8 +21,19 @@ namespace RestaurantApp
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            string config = "appsettings.json";
+            string[] args = Environment.GetCommandLineArgs();
 
-            builder.Configuration.AddJsonFile("appsettings.json", optional: false);
+            for (int i = 0; i < args.Length - 1; i++)
+            {
+                if (args[i] == "--config")
+                {
+                    config = args[i + 1];
+                    break;
+                }
+            }
+
+            builder.Configuration.AddJsonFile(config, optional: false);
 
             builder.Services.Configure<ApplicationSettings>(
                     builder.Configuration.GetSection("ApplicationSettings"));

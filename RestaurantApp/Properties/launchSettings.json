@@ -1,11 +1,19 @@
 {
   "profiles": {
-    "Windows Machine": {
+    "Client (Windows Machine)": {
       "commandName": "MsixPackage",
-      "nativeDebugging": false
+      "nativeDebugging": false,
+      "commandLineArgs": "--config appsettings-client.json"
     },
-    "Profile 1": {
-      "commandName": "Project"
+    "Kitchen (Windows Machine)": {
+      "commandName": "MsixPackage",
+      "nativeDebugging": false,
+      "commandLineArgs": "--config appsettings-kitchen.json"
+    },
+    "Cashier (Windows Machine)": {
+      "commandName": "MsixPackage",
+      "nativeDebugging": false,
+      "commandLineArgs": "--config appsettings-cashier.json"
     }
   }
 }
