@@ -18,6 +18,7 @@ namespace RestaurantApp.ClientApi
 
             // Add services to the container.
 
+            builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false);
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString") ?? string.Empty;
 
             builder.Services.AddDbContext<RestaurantAppDbContext>(options =>
@@ -30,7 +31,6 @@ namespace RestaurantApp.ClientApi
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
             builder.Services.AddProblemDetails();
 
-            builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false);
 
             builder.Services.AddSwaggerGen();
 
