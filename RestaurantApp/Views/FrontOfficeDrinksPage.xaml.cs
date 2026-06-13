@@ -97,4 +97,12 @@ public partial class FrontOfficeDrinksPage : ContentPage
             _viewModel.SelectedDrink.DrinkTypeId = selectedDrinkType.Id;
         }
     }
+
+    private void chIsAlcoholicBevarage_CheckedChanged(object sender, CheckedChangedEventArgs e)
+    {
+        lbAlcPercentage.IsVisible = chIsAlcoholicBevarage.IsChecked;
+        lbAlcPercentage.IsEnabled = chIsAlcoholicBevarage.IsChecked;
+        formDrinkAlcoholPercentage.IsVisible = chIsAlcoholicBevarage.IsChecked;
+        formDrinkAlcoholPercentage.IsEnabled = chIsAlcoholicBevarage.IsChecked;
+    }
 }

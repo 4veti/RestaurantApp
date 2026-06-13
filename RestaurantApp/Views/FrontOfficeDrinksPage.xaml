@@ -72,8 +72,16 @@
                 <VerticalStackLayout>
                     <Label Text="Име:" Margin="0, 0, 0, 5"/>
                     <Entry x:Name="formDrinkName" Margin="0, 0, 0, 10" Placeholder="..." Text="{Binding SelectedDrink.Name}" BackgroundColor="White" Keyboard="Text"/>
+
                     <Label Text="Милилитри:" Margin="0, 0, 0, 5"/>
                     <Entry x:Name="formDrinkGrams" Margin="0, 0, 0, 10" Placeholder="000" Text="{Binding SelectedDrink.Millilitres, Converter={StaticResource integerConverter}}" BackgroundColor="White" Keyboard="Numeric"/>
+
+                    <Label Text="Алкохолна напитка"/>
+                    <CheckBox x:Name="chIsAlcoholicBevarage" IsChecked="{Binding SelectedDrink.IsAlcoholic}" CheckedChanged="chIsAlcoholicBevarage_CheckedChanged"/>
+
+                    <Label x:Name="lbAlcPercentage" Text="Алк. процент:" Margin="0, 0, 0, 5" IsVisible="False"/>
+                    <Entry x:Name="formDrinkAlcoholPercentage" Margin="0, 0, 0, 10" IsVisible="False" Placeholder="0.00" Text="{Binding SelectedDrink.AlcoholPercentage, Converter={StaticResource decimalConverter}}" BackgroundColor="White" Keyboard="Numeric"/>
+
                     <Label Text="Цена:" Margin="0, 0, 0, 5"/>
                     <Entry x:Name="formDrinkPrice" Margin="0, 0, 0, 10" Placeholder="0.00" Text="{Binding SelectedDrink.Price, Converter={StaticResource decimalConverter}}" BackgroundColor="White" Keyboard="Numeric"/>
 

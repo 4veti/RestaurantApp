@@ -205,6 +205,10 @@ public partial class FrontOfficeViewModel : ObservableObject
         {
             await GetFoodItemsAsync();
         }
+        else
+        {
+            await Shell.Current.DisplayAlert("Грешка!", "Неуспешно запазване на ястие.", "Добре");
+        }
     }
 
     [RelayCommand]
@@ -224,6 +228,10 @@ public partial class FrontOfficeViewModel : ObservableObject
         if (success)
         {
             await GetDrinkItemsAsync();
+        }
+        else
+        {
+            await Shell.Current.DisplayAlert("Грешка!", "Неуспешно запазване на напитка.", "Добре");
         }
     }
 
